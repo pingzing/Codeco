@@ -1,0 +1,52 @@
+﻿<common:BindablePage
+    x:Class="CodeStore8UI.MainPage"
+    xmlns:common="using:CodeStore8UI.Common"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:CodeStore8UI"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid Margin="12,0,12,0" VerticalAlignment="Center">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" 
+                   Text="🔑" 
+                   FontSize="30" 
+                   HorizontalAlignment="Center"/>
+            <TextBlock x:Name="KeyBlock" 
+                   Grid.Row="1"  
+                   Style="{ThemeResource SubheaderTextBlockStyle}" 
+                   Text="{Binding CodeText}" 
+                   HorizontalAlignment="Center"/>
+            <TextBox Grid.Row="2"  
+                 Header="Input"
+                 HorizontalAlignment="Center"
+                 InputScope="Number" 
+                 MaxLength="{Binding LongestCode}" 
+                 Text="{Binding InputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        </Grid>
+        <Border VerticalAlignment="Bottom" Background="DarkBlue" HorizontalAlignment="Stretch" Tapped="Border_Tapped">
+            <TextBlock Text="..." FontSize="30" HorizontalAlignment="Right" Margin="0,-5,12,0"/>
+        </Border>
+    </Grid>
+
+    <Page.BottomAppBar>
+        <CommandBar x:Name="AppBar" IsOpen="False" Background="DarkBlue">
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Label="Delete Active File" Icon="Delete" Command="{Binding DeleteCodesCommand}"/>
+            </CommandBar.SecondaryCommands>
+            <AppBarButton Label="Re-enter Password" Icon="Permissions" Command="{Binding ChangePasswordCommand}"/>
+            <AppBarButton Label="Add File" Icon="Add" Command="{Binding AddFileCommand}"/>
+        </CommandBar>
+    </Page.BottomAppBar>
+</common:BindablePage>
