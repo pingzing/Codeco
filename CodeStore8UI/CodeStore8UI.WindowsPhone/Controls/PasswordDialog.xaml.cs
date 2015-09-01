@@ -37,7 +37,7 @@ namespace CodeStore8UI.Controls
         public PasswordDialog()
         {
             this.InitializeComponent();
-            ((FrameworkElement)this.Content).DataContext = this;
+            ((FrameworkElement)this.Content).DataContext = this;            
         }
 
         private void ContentDialog_PrimaryButtonClick(object sender, ContentDialogButtonClickEventArgs args) { }
@@ -78,6 +78,16 @@ namespace CodeStore8UI.Controls
             {
                 SubmitEnabled = false;
             }
+        }
+
+        private void ContentDialog_Loaded(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void PasswordEntryBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            PasswordEntryBox.Focus(FocusState.Programmatic);
         }
     }
 }
