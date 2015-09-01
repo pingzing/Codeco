@@ -17,8 +17,13 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Common\BindablePage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\INavigable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\SavedFilesControl.xaml.cs">
+      <DependentUpon>SavedFilesControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)EncryptionManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\AddFileDialogOutput.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\BindableStorageFile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\MainViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ViewModelLocator.cs" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\LightGray.png" />
@@ -26,5 +31,11 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\DarkGray.png" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\SuspensionManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\ObservableDictionary.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\SavedFilesControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 </Project>

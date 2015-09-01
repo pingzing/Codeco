@@ -1,5 +1,6 @@
 ﻿using CodeStore8UI.Common;
 using CodeStore8UI.Controls;
+using CodeStore8UI.Model;
 using CodeStore8UI.ViewModel;
 using Coding4Fun.Toolkit.Controls;
 using System;
@@ -30,12 +31,26 @@ namespace CodeStore8UI
     {       
         public MainPage()
         {
-            this.InitializeComponent();            
-        }               
+            this.InitializeComponent();                    
+        }                       
 
         public async void ContinueFileOpenPicker(FileOpenPickerContinuationEventArgs args)
         {
             await (DataContext as MainViewModel).AddFile_PhoneContinued(args);
+        }
+
+        private void SavedFilesControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(e.AddedItems.Count > 0)
+            {
+                var file = ((BindableStorageFile)e.AddedItems[0]).BackingFile;
+                (this.DataContext as MainViewModel).ChangeActiveFileCommand.Execute(file);
+            }
+        }
+
+        private void BindablePage_Loaded(object sender, RoutedEventArgs e)
+        {
+            SavedFiles.ItemsSource = (this.DataContext as MainViewModel).SavedFiles;
         }
     }
 }

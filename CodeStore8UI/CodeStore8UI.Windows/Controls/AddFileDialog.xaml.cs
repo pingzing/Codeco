@@ -21,12 +21,19 @@ using Windows.UI.Xaml.Navigation;
 
 namespace CodeStore8UI.Controls
 {
-    public sealed partial class PasswordDialog : CustomDialog, INotifyPropertyChanged
+    public sealed partial class AddFileDialog : Callisto.Controls.CustomDialog, INotifyPropertyChanged
     {
         public enum Result { Ok, Cancel };
-        public event EventHandler<PasswordDialogClosedEventArgs> PasswordDialogClosed;        
+        public event EventHandler<AddFileDialogClosedEventArgs> PasswordDialogClosed;        
 
-        public static readonly DependencyProperty PasswordProperty = DependencyProperty.Register("Password", typeof(string), typeof(PasswordDialog), new PropertyMetadata(""));
+        public static readonly DependencyProperty FileNameProperty = DependencyProperty.Register("FileName", typeof(string), typeof(AddFileDialog), new PropertyMetadata(""));
+        public string FileName
+        {
+            get { return (string)GetValue(FileNameProperty); }
+            set { SetValue(FileNameProperty, value); }
+        }
+
+        public static readonly DependencyProperty PasswordProperty = DependencyProperty.Register("Password", typeof(string), typeof(AddFileDialog), new PropertyMetadata(""));
         public string Password
         {
             get { return (string)GetValue(PasswordProperty); }
@@ -48,7 +55,7 @@ namespace CodeStore8UI.Controls
             }
         }
         
-        public PasswordDialog()
+        public AddFileDialog()
         {
             this.InitializeComponent();
             ((FrameworkElement)this.Content).DataContext = this;
@@ -56,23 +63,23 @@ namespace CodeStore8UI.Controls
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {                        
-            this.PasswordDialogClosed(this, new PasswordDialogClosedEventArgs(Result.Cancel));
+            this.PasswordDialogClosed(this, new AddFileDialogClosedEventArgs(Result.Cancel));
             this.IsOpen = false;
         }
 
         private void SubmitButton_Click(object sender, RoutedEventArgs e)
         {
-            this.PasswordDialogClosed(this, new PasswordDialogClosedEventArgs(Result.Ok));
+            this.PasswordDialogClosed(this, new AddFileDialogClosedEventArgs(Result.Ok));
             this.IsOpen = false;
         }
 
-        public Task<PasswordDialogClosedEventArgs> WhenClosed()
+        public Task<AddFileDialogClosedEventArgs> WhenClosed()
         {
-            var tcs = new TaskCompletionSource<PasswordDialogClosedEventArgs>();
-            EventHandler<PasswordDialogClosedEventArgs> handler = null;
+            var tcs = new TaskCompletionSource<AddFileDialogClosedEventArgs>();
+            EventHandler<AddFileDialogClosedEventArgs> handler = null;
             handler = (s, args) =>
             {
-                tcs.TrySetResult(new PasswordDialogClosedEventArgs(args.DialogResult));
+                tcs.TrySetResult(new AddFileDialogClosedEventArgs(args.DialogResult));
                 this.PasswordDialogClosed -= handler;
             };
             this.PasswordDialogClosed += handler;
@@ -98,7 +105,7 @@ namespace CodeStore8UI.Controls
 
         private void UpdateSubmitEnabled()
         {
-            if(!String.IsNullOrEmpty(PasswordBox.Password))
+            if(!String.IsNullOrEmpty(FileNameBox.Text) && !String.IsNullOrEmpty(PasswordBox.Password))
             {
                 SubmitEnabled = true;
             }
@@ -109,11 +116,11 @@ namespace CodeStore8UI.Controls
         }
     }
 
-    public class PasswordDialogClosedEventArgs
+    public class AddFileDialogClosedEventArgs
     {        
-        public PasswordDialog.Result DialogResult { get; set; }
+        public AddFileDialog.Result DialogResult { get; set; }
 
-        public PasswordDialogClosedEventArgs(PasswordDialog.Result dialogResult)
+        public AddFileDialogClosedEventArgs(AddFileDialog.Result dialogResult)
         {
             DialogResult = dialogResult;
         }

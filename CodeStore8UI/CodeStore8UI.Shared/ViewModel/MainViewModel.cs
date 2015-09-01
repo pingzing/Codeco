@@ -13,13 +13,14 @@ using Windows.UI.Xaml.Controls;
 using CodeStore8UI.Controls;
 using System.Linq;
 using System.Diagnostics;
+using System.Collections.ObjectModel;
+using CodeStore8UI.Model;
 
 namespace CodeStore8UI.ViewModel
 {    
     public class MainViewModel : ViewModelBase, INavigable
-    {
-        private string _sessionPassword;
-        private Dictionary<string, string> _codeDictionary = new Dictionary<string, string>();
+    {        
+        private Dictionary<string, string> _codeDictionary = new Dictionary<string, string>();        
 
         private RelayCommand _addFileCommand;
         public RelayCommand AddFileCommand => _addFileCommand ?? (_addFileCommand = new RelayCommand(AddFile));
@@ -30,8 +31,11 @@ namespace CodeStore8UI.ViewModel
         private RelayCommand _deleteCodesCommand;
         public RelayCommand DeleteCodesCommand => _deleteCodesCommand ?? (_deleteCodesCommand = new RelayCommand(DeleteCodes));
 
+        private RelayCommand<StorageFile> _changeActiveFileCommand;
+        public RelayCommand<StorageFile> ChangeActiveFileCommand => _changeActiveFileCommand 
+            ?? (_changeActiveFileCommand = new RelayCommand<StorageFile>(ChangeActiveFile));      
 
-        private int _longestCode = int.MaxValue;        
+        private int _longestCode = 1;        
         #region LongestCode Property
         public int LongestCode
         {
@@ -65,7 +69,7 @@ namespace CodeStore8UI.ViewModel
         }
         #endregion
 
-        private string _inputText = "";
+        private string _inputText = "5";
         #region InputText Property
         public string InputText
         {
@@ -77,17 +81,59 @@ namespace CodeStore8UI.ViewModel
                     return;
                 }
                 _inputText = value;
-                Debug.WriteLine("New input value is: " + value);
-                LookupCode(_inputText); //Binding is always a character behind if we just use EventToCommand behaviors, so we cheat.
+                LookupCode(_inputText); //Binding is always a character behind if we just use EventToCommand behaviors, so we cheat with Two-Way Binding and manually Setting.
                 RaisePropertyChanged(nameof(InputText));
             }
         }
-#endregion
+        #endregion
+
+        private ObservableCollection<BindableStorageFile> _savedFiles = new ObservableCollection<BindableStorageFile>();
+        public ObservableCollection<BindableStorageFile> SavedFiles
+        {
+            get { return _savedFiles; }
+            set
+            {
+                if(_savedFiles == value)
+                {
+                    return;
+                }
+                _savedFiles = value;
+                RaisePropertyChanged(nameof(SavedFiles));
+            }
+        }
+
+        private StorageFile _activeFile;
+        public StorageFile ActiveFile
+        {
+            get { return _activeFile; }
+            set
+            {
+                if(_activeFile == value)
+                {
+                    return;
+                }
+                _activeFile = value;
+                OpenFileText = value.Name;
+                RaisePropertyChanged(nameof(ActiveFile));
+            }
+        }
+
+        private string _openFileText = "No active file";
+        public string OpenFileText
+        {
+            get { return _openFileText; }
+            set
+            {
+                _openFileText = "Active File: " + value;
+                RaisePropertyChanged(nameof(OpenFileText));
+            }
+        }
 
         public bool AllowGoingBack { get; set; }
 
         public MainViewModel()
-        {            
+        {
+            //not much to do here            
         }
 
         private async void AddFile()
@@ -98,98 +144,92 @@ namespace CodeStore8UI.ViewModel
             picker.FileTypeFilter.Add(".csv");
             picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
 #if WINDOWS_PHONE_APP
-            picker.PickMultipleFilesAndContinue();
+            picker.PickSingleFileAndContinue();
 #else
-            IReadOnlyList<StorageFile> files = await picker.PickMultipleFilesAsync();
-            StringBuilder sb = new StringBuilder();
-            foreach (var file in files)
+            StorageFile file = await picker.PickSingleFileAsync();
+            AddFileDialogOutput output = await ShowAddFileDialog();
+            if(output == null)
             {
-                if (_sessionPassword == null)
-                {
-                    return;
-                }
-                sb.Append(await FileIO.ReadTextAsync(file));
+                return;
             }
-            if (sb.Length > 0)
-            {
-                await FileManager.AppendToEncryptedFile(sb.ToString(), _sessionPassword);
-            }
-            _codeDictionary = await LoadCodes();
+            string contents = await FileIO.ReadTextAsync(file);
+            string savedFileName = await FileManager.SaveAndEncryptFile(contents, output.FileName, output.Password);
+            ActiveFile = await FileManager.GetEncryptedFile(savedFileName);
+            BindableStorageFile bsf = await BindableStorageFile.Create(ActiveFile);
+            SavedFiles.Add(bsf);
+            _codeDictionary = await GetCodes(output.Password);
 #endif
         }
 
 #if WINDOWS_PHONE_APP
         public async Task AddFile_PhoneContinued(FileOpenPickerContinuationEventArgs args)
         {
-            IReadOnlyList<StorageFile> files = args.Files;
-            StringBuilder sb = new StringBuilder();
-            foreach (var file in files)
+            AddFileDialogOutput output = await ShowAddFileDialog();
+            if(output == null)
             {
-                if (_sessionPassword == null)
-                {
-                    return;
-                }
-                sb.Append(await FileIO.ReadTextAsync(file));
+                return;
             }
-            if (sb.Length > 0)
-            {
-                await FileManager.AppendToEncryptedFile(sb.ToString(), _sessionPassword);
-            }
-            _codeDictionary = await LoadCodes();
+
+            StorageFile file = args.Files[0];
+            string contents = await FileIO.ReadTextAsync(file);
+            string savedFiledName = await FileManager.SaveAndEncryptFile(contents, output.FileName, output.Password);
+            ActiveFile = await FileManager.GetEncryptedFile(savedFiledName);
+            BindableStorageFile bsf = await BindableStorageFile.Create(ActiveFile);
+            SavedFiles.Add(bsf);
+            _codeDictionary = await GetCodes(output.Password);
         }
 #endif
 
         private async void ChangePassword()
         {
-            await ShowPasswordDialog(force: true);
+            //todo: show change password dialog (request old pass & new pass)
         }
 
-        private async Task ShowPasswordDialog(bool force = false)
+        private async Task<AddFileDialogOutput> ShowAddFileDialog()
         {
 #if WINDOWS_PHONE_APP
-            PasswordDialog dialog = new PasswordDialog();
-            dialog.Closed += PasswordDialog_Closed;
-            await dialog.ShowAsync();  
+            AddFileDialog dialog = new AddFileDialog();            
+            if ((await dialog.ShowAsync()) == ContentDialogResult.Primary)
+            {
+                return new AddFileDialogOutput
+                {
+                    FileName = dialog.FileName,
+                    Password = dialog.Password
+                };                
+            }
+            else
+            {
+                return null;
+            }
 #else
-            PasswordDialog dialog = new PasswordDialog();
-            dialog.PasswordDialogClosed += PasswordDialog_Closed;
+            AddFileDialog dialog = new AddFileDialog();            
             dialog.IsOpen = true;
-#endif
-
-        }
-
-#if WINDOWS_PHONE_APP
-        private async void PasswordDialog_Closed(ContentDialog sender, ContentDialogClosedEventArgs args)
-        {
-            if (args.Result == ContentDialogResult.Primary)
+            if ((await dialog.WhenClosed()).DialogResult == AddFileDialog.Result.Ok)
             {
-                _sessionPassword = (sender as PasswordDialog).Password;
-                //todo: verify password here
-                _codeDictionary = await LoadCodes();
+                return new AddFileDialogOutput
+                {
+                    FileName = dialog.FileName,
+                    Password = dialog.Password
+                };
             }
-        }
-#else
-        private async void PasswordDialog_Closed(object sender, PasswordDialogClosedEventArgs args)
-        {
-            if(args.DialogResult == PasswordDialog.Result.Ok)
+            else
             {
-                _sessionPassword = (sender as PasswordDialog).Password;
-                //todo: verify password here
-                _codeDictionary = await LoadCodes();
+                return null;
             }
-        }
 #endif
+        }
 
-        private async Task<Dictionary<string, string>> LoadCodes()
+        private async Task<Dictionary<string, string>> GetCodes(string password)
         {
             Dictionary<string, string> codeDict = new Dictionary<string, string>();
-            string fileContents = await FileManager.RetrieveEncryptedFile(_sessionPassword);
+            string fileContents = await FileManager.RetrieveFileContents(ActiveFile.Name, password);
 
             if (fileContents == null)
             {
                 return codeDict;
             }
             string[] lines = fileContents.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+            LongestCode = 1;
             foreach (string line in lines)
             {
                 string[] codePair = line
@@ -206,14 +246,13 @@ namespace CodeStore8UI.ViewModel
 
         private async void DeleteCodes()
         {
-            await FileManager.ClearFile();
+            await FileManager.ClearFileAsync(_activeFile.Name);
             _codeDictionary = new Dictionary<string, string>();
         }
 
         private void LookupCode(string newText)
         {
-            string foundValue = "";            
-            Debug.WriteLine("LookupCode fired with input: " + newText);
+            string foundValue = "";                        
             if (_codeDictionary.TryGetValue(newText, out foundValue))
             {
                 CodeText = foundValue;
@@ -224,12 +263,48 @@ namespace CodeStore8UI.ViewModel
             }
         }
 
+        private async void ChangeActiveFile(StorageFile arg)
+        {
+            ActiveFile = arg;
+            string password = await GetPassword();
+            _codeDictionary = await GetCodes(password);
+        }
+
+        private async Task<string> GetPassword()
+        {
+#if WINDOWS_PHONE_APP
+            PasswordDialog dialog = new PasswordDialog();
+            var result = await dialog.ShowAsync();
+            if(result == ContentDialogResult.Primary)
+            {
+                return dialog.Password;
+            }
+            else
+            {
+                return null;
+            }
+#else
+            PasswordDialog dialog = new PasswordDialog();
+            dialog.IsOpen = true;
+            if((await dialog.WhenClosed()).DialogResult == PasswordDialog.Result.Ok)
+            {
+                return dialog.Password;
+            }
+            else
+            {
+                return null;
+            }
+#endif
+        }
+
         public async void Activate(object parameter, NavigationMode navigationMode)
         {
-            if(_sessionPassword == null)
-            {
-                await ShowPasswordDialog();
-            }
+           var files = new ObservableCollection<StorageFile>(await FileManager.GetFiles());
+           foreach(var file in files)
+           {
+                BindableStorageFile bsf = await BindableStorageFile.Create(file);
+                SavedFiles.Add(bsf);
+           }
         }
 
         public void Deactivate(object parameter)

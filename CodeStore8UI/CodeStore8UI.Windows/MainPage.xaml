@@ -1,6 +1,7 @@
 ﻿<common:BindablePage
     x:Class="CodeStore8UI.MainPage"
     xmlns:common="using:CodeStore8UI.Common"
+    xmlns:controls="using:CodeStore8UI.Controls"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:CodeStore8UI"
@@ -11,7 +12,19 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <Grid Margin="12,0,12,0" VerticalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        
+        <TextBlock Text="{Binding OpenFileText}" Style="{StaticResource HeaderTextBlockStyle}" Margin="12,12,0,0" LineHeight="56"/>
+        
+        <Grid Grid.Row="1" Margin="12,0,12,0" VerticalAlignment="Center">
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -35,8 +48,30 @@
                  MaxLength="{Binding LongestCode}" 
                  Text="{Binding InputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
-        <Border VerticalAlignment="Bottom" Background="DarkBlue" HorizontalAlignment="Stretch" Tapped="Border_Tapped">
-            <TextBlock Text="..." FontSize="30" HorizontalAlignment="Right" Margin="0,-5,12,0"/>
+
+        <controls:SavedFilesControl Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" ItemsSource="{Binding SavedFiles}" Margin="0,12,12,0" FileListSelectionChanged="SavedFilesControl_SelectionChanged">
+            <controls:SavedFilesControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="12,0,0,4">
+                        <TextBlock Text="{Binding Name}" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                        <TextBlock Text="{Binding CreateDate}" Style="{StaticResource BaseTextBlockStyle}"/>
+                        <TextBlock Text="{Binding FileSize}" Style="{StaticResource BaseTextBlockStyle}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </controls:SavedFilesControl.ItemTemplate>
+            
+        </controls:SavedFilesControl>
+        
+        <Border Grid.Row="2" 
+                Grid.ColumnSpan="2" 
+                VerticalAlignment="Bottom" 
+                Background="DarkBlue" 
+                HorizontalAlignment="Stretch" 
+                Tapped="Border_Tapped">
+            <TextBlock Text="..." 
+                       FontSize="30" 
+                       HorizontalAlignment="Right" 
+                       Margin="0,-5,12,0"/>
         </Border>
     </Grid>
 

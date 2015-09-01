@@ -10,7 +10,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace CodeStore8UI.Controls
 {
-    public sealed partial class PasswordDialog : ContentDialog, INotifyPropertyChanged
+    public sealed partial class AddFileDialog : ContentDialog, INotifyPropertyChanged
     {
         private bool _submitEnabled = false;
         public bool SubmitEnabled
@@ -27,14 +27,21 @@ namespace CodeStore8UI.Controls
             }
         }
 
-        public static readonly DependencyProperty PasswordProperty = DependencyProperty.Register("Password", typeof(string), typeof(PasswordDialog), new PropertyMetadata(""));
+        public static readonly DependencyProperty PasswordProperty = DependencyProperty.Register("Password", typeof(string), typeof(AddFileDialog), new PropertyMetadata(""));
         public string Password
         {
             get { return (string)GetValue(PasswordProperty); }
             set { SetValue(PasswordProperty, value); }
-        }        
+        }
+
+        public static readonly DependencyProperty FileNameProperty = DependencyProperty.Register("FileName", typeof(string), typeof(AddFileDialog), new PropertyMetadata(""));
+        public string FileName
+        {
+            get { return (string)GetValue(FileNameProperty); }
+            set { SetValue(FileNameProperty, value); }
+        }
         
-        public PasswordDialog()
+        public AddFileDialog()
         {
             this.InitializeComponent();
             ((FrameworkElement)this.Content).DataContext = this;
@@ -66,11 +73,16 @@ namespace CodeStore8UI.Controls
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
             UpdatedSubmitEnabled();
-        }        
+        }
+
+        private void FileNameBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            UpdatedSubmitEnabled();
+        }
 
         private void UpdatedSubmitEnabled()
         {
-            if(!String.IsNullOrEmpty(PasswordEntryBox.Password))
+            if(!String.IsNullOrEmpty(FileNameBox.Text) && !String.IsNullOrEmpty(PasswordBox.Password))
             {
                 SubmitEnabled = true;
             }

@@ -105,13 +105,20 @@ namespace CodeStore8UI
                 rootFrame.Navigated += this.RootFrame_FirstNavigated;
 #endif
 
-                // When the navigation stack isn't restored navigate to the first page,
-                // configuring the new page by passing required information as a navigation
-                // parameter
+// When the navigation stack isn't restored navigate to the first page,
+// configuring the new page by passing required information as a navigation
+// parameter
+#if WINDOWS_PHONE_APP
+            if(!rootFrame.Navigate(typeof(MainPage), e.Arguments))
+                {
+                    throw new Exception("Failed to create MainPage");
+                }
+#else
                 if (!rootFrame.Navigate(typeof(MainPage), e.Arguments))
                 {
                     throw new Exception("Failed to create initial page");
                 }
+#endif
             }
 
             // Ensure the current window is active

@@ -1,6 +1,7 @@
 ﻿<common:BindablePage
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:common="using:CodeStore8UI.Common"
+    xmlns:controls="using:CodeStore8UI.Controls"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:CodeStore8UI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -8,42 +9,72 @@
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     x:Class="CodeStore8UI.MainPage"
     mc:Ignorable="d"
-    NavigationCacheMode="Required"    
+    NavigationCacheMode="Required"        
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Loaded="BindablePage_Loaded" >
 
     <Page.BottomAppBar>
         <CommandBar>
+            <AppBarButton Icon="Add" Label="add file" Command="{Binding AddFileCommand}"/>
+            <AppBarButton Icon="Permissions" Label="password" Command="{Binding ChangePasswordCommand}"/>
             <CommandBar.SecondaryCommands>
                 <AppBarButton Label="delete active file" Command="{Binding DeleteCodesCommand}"/>
             </CommandBar.SecondaryCommands>
-            <AppBarButton Icon="Add" Label="add file" Command="{Binding AddFileCommand}"/>
-            <AppBarButton Icon="Permissions" Label="re-enter&#x0a;password" Command="{Binding ChangePasswordCommand}"/>
         </CommandBar>
     </Page.BottomAppBar>
 
-    <Grid Margin="12,12,12,0" VerticalAlignment="Center">
+    <Pivot Title="KEYPER" DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
+        <PivotItem Header="active">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+                <TextBlock Text="{Binding OpenFileText}" Style="{StaticResource HeaderTextBlockStyle}" FontSize="45"/>
 
-        <TextBlock Grid.Row="0"  
-                   Text="🔑" 
-                   FontSize="30" 
-                   HorizontalAlignment="Center"/>
-        <TextBlock x:Name="KeyBlock"
-                   Grid.Row="1" 
-                   Style="{ThemeResource ListViewItemTextBlockStyle}" 
-                   HorizontalAlignment="Center"
-                   Text="{Binding CodeText}"/>
-        <TextBox Grid.Row="2"
-                 Header="Input" 
-                 InputScope="Number" 
-                 MaxLength="{Binding LongestCode}" 
-                 Text="{Binding InputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-    </Grid>
+                <Grid Grid.Row="1" Margin="12,12,12,0" VerticalAlignment="Center">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0"  
+                               Text="🔑" 
+                               FontSize="30" 
+                               HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="KeyBlock"
+                               Grid.Row="1" 
+                               Style="{ThemeResource ListViewItemTextBlockStyle}" 
+                               HorizontalAlignment="Center"
+                               Text="{Binding CodeText}"/>
+                    <TextBox x:Name="InputBox"
+                             Grid.Row="2"
+                             Header="Input" 
+                             InputScope="Number"          
+                             MaxLength="{Binding LongestCode}"
+                             Text="{Binding InputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </Grid>
+            </Grid>
+        </PivotItem>
+
+        <PivotItem Header="saved files" >
+            <!--ItemsSource is declared in codebehind. Binding fails at runtime for some reason.-->
+            <controls:SavedFilesControl x:Name="SavedFiles" HeaderVisibility="Collapsed" ItemsSource="{Binding SavedFiles}" FileListSelectionChanged="SavedFilesControl_SelectionChanged">
+                <controls:SavedFilesControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="12,0,0,4">
+                            <TextBlock Text="{Binding Name}" Style="{StaticResource ListViewItemSubheaderTextBlockStyle}"/>
+                            <TextBlock Text="{Binding CreateDate}" Style="{StaticResource BaseTextBlockStyle}"/>
+                            <TextBlock Text="{Binding FileSize}" Style="{StaticResource BaseTextBlockStyle}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </controls:SavedFilesControl.ItemTemplate>
+            </controls:SavedFilesControl>
+        </PivotItem>
+    </Pivot>
 
 </common:BindablePage>
