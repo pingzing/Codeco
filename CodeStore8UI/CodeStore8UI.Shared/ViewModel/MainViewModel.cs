@@ -69,7 +69,7 @@ namespace CodeStore8UI.ViewModel
         }
         #endregion
 
-        private string _inputText = "5";
+        private string _inputText = "";
         #region InputText Property
         public string InputText
         {
