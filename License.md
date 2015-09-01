@@ -1,3 +1,6 @@
+#Licenses
+
+##Keyper
 The MIT License (MIT)
 
 Copyright (c) 2015 Neil McAlister
@@ -20,6 +23,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
+##Libraries
+###Callisto
 The [Callisto library](https://github.com/timheuer/callisto) is included in binary form, and is licensed under the MS-PL license. The full text of Callisto's license is below:
 
 Copyright (c) 2012,2013 Tim Heuer
