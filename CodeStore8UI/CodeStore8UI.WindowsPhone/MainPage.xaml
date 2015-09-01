@@ -31,7 +31,7 @@
         </CommandBar>
     </Page.BottomAppBar>
 
-    <Pivot x:Name="MainPivot" Title="KEYPER" DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
+    <Pivot x:Name="MainPivot" Title="CODECO" DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
         <PivotItem x:Name="ActivePivotItem" Header="active">
             <Grid>
                 <Grid.RowDefinitions>
