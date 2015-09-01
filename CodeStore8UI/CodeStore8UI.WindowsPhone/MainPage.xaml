@@ -14,6 +14,13 @@
     DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
     Loaded="BindablePage_Loaded" >
 
+    <Page.Resources>
+        <MenuFlyout x:Key="SavedFilesFlyout">
+            <MenuFlyoutItem Text="delete" Command="{Binding DeleteFileCommand}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem Text="rename" Command="{Binding RenameFileCommand}" CommandParameter="{Binding}"/>
+        </MenuFlyout>
+    </Page.Resources>
+
     <Page.BottomAppBar>
         <CommandBar>
             <AppBarButton Icon="Add" Label="add file" Command="{Binding AddFileCommand}"/>
@@ -24,8 +31,8 @@
         </CommandBar>
     </Page.BottomAppBar>
 
-    <Pivot Title="KEYPER" DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
-        <PivotItem Header="active">
+    <Pivot x:Name="MainPivot" Title="KEYPER" DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
+        <PivotItem x:Name="ActivePivotItem" Header="active">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -61,15 +68,18 @@
             </Grid>
         </PivotItem>
 
-        <PivotItem Header="saved files" >
+        <PivotItem x:Name="SavedPivotItem" Header="saved files">
             <!--ItemsSource is declared in codebehind. Binding fails at runtime for some reason.-->
-            <controls:SavedFilesControl x:Name="SavedFiles" HeaderVisibility="Collapsed" ItemsSource="{Binding SavedFiles}" FileListSelectionChanged="SavedFilesControl_SelectionChanged">
+            <controls:SavedFilesControl x:Name="SavedFiles" 
+                                        HeaderVisibility="Collapsed" 
+                                        ItemsSource="{Binding SavedFiles}" 
+                                        FileListSelectionChanged="SavedFilesControl_SelectionChanged">
                 <controls:SavedFilesControl.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Margin="12,0,0,4">
-                            <TextBlock Text="{Binding Name}" Style="{StaticResource ListViewItemSubheaderTextBlockStyle}"/>
-                            <TextBlock Text="{Binding CreateDate}" Style="{StaticResource BaseTextBlockStyle}"/>
-                            <TextBlock Text="{Binding FileSize}" Style="{StaticResource BaseTextBlockStyle}"/>
+                        <StackPanel RightTapped="SavedFile_RightTapped" FlyoutBase.AttachedFlyout="{StaticResource SavedFilesFlyout}">
+                            <TextBlock Text="{Binding Name}" Style="{StaticResource ListViewItemTextBlockStyle}"/>
+                            <TextBlock Text="{Binding CreateDate}" Style="{StaticResource ListViewItemSubheaderTextBlockStyle}"/>
+                            <TextBlock Text="{Binding FileSize}" Style="{StaticResource ListViewItemSubheaderTextBlockStyle}"/>
                         </StackPanel>
                     </DataTemplate>
                 </controls:SavedFilesControl.ItemTemplate>

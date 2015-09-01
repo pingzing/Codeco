@@ -42,15 +42,25 @@ namespace CodeStore8UI
         private void SavedFilesControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if(e.AddedItems.Count > 0)
-            {
-                var file = ((BindableStorageFile)e.AddedItems[0]).BackingFile;
-                (this.DataContext as MainViewModel).ChangeActiveFileCommand.Execute(file);
+            {               
+                //Fire ViewModel commands
+                StorageFile file = ((BindableStorageFile)e.AddedItems[0]).BackingFile;
+                (this.DataContext as MainViewModel).ChangeActiveFileCommand.Execute(file);                
             }
         }
 
         private void BindablePage_Loaded(object sender, RoutedEventArgs e)
         {
             SavedFiles.ItemsSource = (this.DataContext as MainViewModel).SavedFiles;
+        }
+
+        private void SavedFile_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            var item = sender as FrameworkElement;
+            if(item != null)
+            {
+                FlyoutBase.ShowAttachedFlyout(item);
+            }
         }
     }
 }

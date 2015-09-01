@@ -42,5 +42,15 @@ namespace CodeStore8UI
                 (this.DataContext as MainViewModel).ChangeActiveFileCommand.Execute(file);
             }
         }
+
+        private void SavedFile_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            var item = sender as FrameworkElement;
+            if (item != null)
+            {
+                FlyoutBase.ShowAttachedFlyout(item);
+                e.Handled = true;
+            }
+        }
     }
 }

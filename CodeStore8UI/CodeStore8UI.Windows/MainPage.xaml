@@ -11,6 +11,13 @@
     DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
+    <Page.Resources>
+        <MenuFlyout x:Key="SavedFileFlyout">
+            <MenuFlyoutItem Text="Delete" Command="{Binding Main.DeleteFileCommand, Mode=OneWay, Source={StaticResource Locator}}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem Text="Rename" Command="{Binding Main.RenameFileCommand, Mode=OneWay, Source={StaticResource Locator}}" CommandParameter="{Binding}"/>
+        </MenuFlyout>
+    </Page.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -21,8 +28,11 @@
             <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        
-        <TextBlock Text="{Binding OpenFileText}" Style="{StaticResource HeaderTextBlockStyle}" Margin="12,12,0,0" LineHeight="56"/>
+
+        <TextBlock Style="{StaticResource HeaderTextBlockStyle}" Margin="12,12,0,0" LineHeight="56">
+            <Run Text="Active File"/>
+            <Run Text="{Binding OpenFileText}" FontSize="40"/>
+        </TextBlock>
         
         <Grid Grid.Row="1" Margin="12,0,12,0" VerticalAlignment="Center">
 
@@ -49,10 +59,15 @@
                  Text="{Binding InputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
 
-        <controls:SavedFilesControl Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" ItemsSource="{Binding SavedFiles}" Margin="0,12,12,0" FileListSelectionChanged="SavedFilesControl_SelectionChanged">
+        <controls:SavedFilesControl Grid.Row="0" 
+                                    Grid.RowSpan="2" 
+                                    Grid.Column="1" 
+                                    ItemsSource="{Binding SavedFiles}" 
+                                    Margin="0,12,12,0" 
+                                    FileListSelectionChanged="SavedFilesControl_SelectionChanged">
             <controls:SavedFilesControl.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Margin="12,0,0,4">
+                    <StackPanel Margin="12,0,0,4" RightTapped="SavedFile_RightTapped" FlyoutBase.AttachedFlyout="{StaticResource SavedFileFlyout}">
                         <TextBlock Text="{Binding Name}" Style="{StaticResource SubtitleTextBlockStyle}"/>
                         <TextBlock Text="{Binding CreateDate}" Style="{StaticResource BaseTextBlockStyle}"/>
                         <TextBlock Text="{Binding FileSize}" Style="{StaticResource BaseTextBlockStyle}"/>
@@ -65,7 +80,7 @@
         <Border Grid.Row="2" 
                 Grid.ColumnSpan="2" 
                 VerticalAlignment="Bottom" 
-                Background="DarkBlue" 
+                Background="Goldenrod" 
                 HorizontalAlignment="Stretch" 
                 Tapped="Border_Tapped">
             <TextBlock Text="..." 
@@ -76,7 +91,7 @@
     </Grid>
 
     <Page.BottomAppBar>
-        <CommandBar x:Name="AppBar" IsOpen="False" Background="DarkBlue">
+        <CommandBar x:Name="AppBar" IsOpen="False" Background="Goldenrod">
             <CommandBar.SecondaryCommands>
                 <AppBarButton Label="Delete Active File" Icon="Delete" Command="{Binding DeleteCodesCommand}"/>
             </CommandBar.SecondaryCommands>

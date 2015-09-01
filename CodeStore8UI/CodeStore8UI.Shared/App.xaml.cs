@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using CodeStore8UI.Common;
+using Windows.UI.ViewManagement;
 
 // The Universal Hub Application project template is documented at http://go.microsoft.com/fwlink/?LinkID=391955
 
@@ -113,14 +114,13 @@ namespace CodeStore8UI
                 {
                     throw new Exception("Failed to create MainPage");
                 }
-#else
+#else                
                 if (!rootFrame.Navigate(typeof(MainPage), e.Arguments))
                 {
                     throw new Exception("Failed to create initial page");
                 }
 #endif
             }
-
             // Ensure the current window is active
             Window.Current.Activate();
         }
@@ -161,9 +161,7 @@ namespace CodeStore8UI
                 //assuming we've already navigated to the MainPage at this point
                 ContinuationManager manager = new ContinuationManager();
                 manager.Continue(continuationEventArgs, rootFrame);
-            }
-            
-            
+            }                        
 #endif
         }
 

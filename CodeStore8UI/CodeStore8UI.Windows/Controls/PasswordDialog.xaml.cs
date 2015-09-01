@@ -50,8 +50,8 @@ namespace CodeStore8UI.Controls
         
         public PasswordDialog()
         {
-            this.InitializeComponent();
-            ((FrameworkElement)this.Content).DataContext = this;
+            this.InitializeComponent();            
+            ((FrameworkElement)this.Content).DataContext = this;                                                         
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
@@ -106,6 +106,23 @@ namespace CodeStore8UI.Controls
             {
                 SubmitEnabled = false;
             }
+        }        
+
+        private void PasswordBox_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                if (SubmitEnabled)
+                {
+                    SubmitButton_Click(sender, null);
+                }
+            }
+        }
+
+        private async void PasswordBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            await Window.Current.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                () => PasswordBox.Focus(FocusState.Programmatic));
         }
     }
 

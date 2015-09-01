@@ -33,7 +33,15 @@ namespace CodeStore8UI.ViewModel
 
         private RelayCommand<StorageFile> _changeActiveFileCommand;
         public RelayCommand<StorageFile> ChangeActiveFileCommand => _changeActiveFileCommand 
-            ?? (_changeActiveFileCommand = new RelayCommand<StorageFile>(ChangeActiveFile));      
+            ?? (_changeActiveFileCommand = new RelayCommand<StorageFile>(ChangeActiveFile));
+
+        private RelayCommand<BindableStorageFile> _deleteFileCommand;
+        public RelayCommand<BindableStorageFile> DeleteFileCommand => _deleteFileCommand 
+            ?? (_deleteFileCommand = new RelayCommand<BindableStorageFile>(DeleteFile));
+
+        private RelayCommand<BindableStorageFile> _renameFileCommand;
+        public RelayCommand<BindableStorageFile> RenameFileCommand => _renameFileCommand 
+            ?? (_renameFileCommand = new RelayCommand<BindableStorageFile>(RenameFile));
 
         private int _longestCode = 1;        
         #region LongestCode Property
@@ -118,13 +126,13 @@ namespace CodeStore8UI.ViewModel
             }
         }
 
-        private string _openFileText = "No active file";
+        private string _openFileText = "";
         public string OpenFileText
         {
             get { return _openFileText; }
             set
             {
-                _openFileText = "Active File: " + value;
+                _openFileText = value;
                 RaisePropertyChanged(nameof(OpenFileText));
             }
         }
@@ -132,8 +140,7 @@ namespace CodeStore8UI.ViewModel
         public bool AllowGoingBack { get; set; }
 
         public MainViewModel()
-        {
-            //not much to do here            
+        {            
         }
 
         private async void AddFile()
@@ -147,7 +154,7 @@ namespace CodeStore8UI.ViewModel
             picker.PickSingleFileAndContinue();
 #else
             StorageFile file = await picker.PickSingleFileAsync();
-            AddFileDialogOutput output = await ShowAddFileDialog();
+            AddFileDialogOutput output = await ShowAddFileDialog(file.Name);
             if(output == null)
             {
                 return;
@@ -164,7 +171,7 @@ namespace CodeStore8UI.ViewModel
 #if WINDOWS_PHONE_APP
         public async Task AddFile_PhoneContinued(FileOpenPickerContinuationEventArgs args)
         {
-            AddFileDialogOutput output = await ShowAddFileDialog();
+            AddFileDialogOutput output = await ShowAddFileDialog(args.Files[0].Name);
             if(output == null)
             {
                 return;
@@ -185,10 +192,11 @@ namespace CodeStore8UI.ViewModel
             //todo: show change password dialog (request old pass & new pass)
         }
 
-        private async Task<AddFileDialogOutput> ShowAddFileDialog()
+        private async Task<AddFileDialogOutput> ShowAddFileDialog(string fileName)
         {
 #if WINDOWS_PHONE_APP
-            AddFileDialog dialog = new AddFileDialog();            
+            AddFileDialog dialog = new AddFileDialog();    
+            dialog.FileName = fileName;        
             if ((await dialog.ShowAsync()) == ContentDialogResult.Primary)
             {
                 return new AddFileDialogOutput
@@ -202,7 +210,8 @@ namespace CodeStore8UI.ViewModel
                 return null;
             }
 #else
-            AddFileDialog dialog = new AddFileDialog();            
+            AddFileDialog dialog = new AddFileDialog();
+            dialog.FileName = fileName;      
             dialog.IsOpen = true;
             if ((await dialog.WhenClosed()).DialogResult == AddFileDialog.Result.Ok)
             {
@@ -267,7 +276,10 @@ namespace CodeStore8UI.ViewModel
         {
             ActiveFile = arg;
             string password = await GetPassword();
-            _codeDictionary = await GetCodes(password);
+            if (password != null)
+            {
+                _codeDictionary = await GetCodes(password);
+            }
         }
 
         private async Task<string> GetPassword()
@@ -295,6 +307,16 @@ namespace CodeStore8UI.ViewModel
                 return null;
             }
 #endif
+        }
+
+        private void DeleteFile(BindableStorageFile item)
+        {
+            SavedFiles.Remove(item);
+        }
+
+        private void RenameFile(BindableStorageFile item)
+        {
+            throw new NotImplementedException();
         }
 
         public async void Activate(object parameter, NavigationMode navigationMode)

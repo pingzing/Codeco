@@ -75,8 +75,8 @@ namespace CodeStore8UI
         private static string PadPassword(string password)
         {
             uint passMultiple = 32;
-            //Password byte-length must be a multiple of 32 (or 16? not sure)            
-            while (password.ToCharArray().Length * sizeof(char) < passMultiple)
+            //Password byte-length must be a multiple of 32, so let's pad it if it's not
+            while (password.ToCharArray().Length * sizeof(char) % passMultiple != 0)
             {
                 password += password;
             }
@@ -84,7 +84,7 @@ namespace CodeStore8UI
             {
                 password = new string(password
                     .ToCharArray()
-                    .Take((int)(passMultiple / sizeof(char))) //Take the first passMultiple bytes worth of characters
+                    .Take(((password.Length / (int)passMultiple) * (int)passMultiple)) //Clamp length to a multiple of passMultiple.
                     .ToArray());
             }
 

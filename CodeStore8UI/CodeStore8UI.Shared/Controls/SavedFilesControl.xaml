@@ -8,12 +8,18 @@
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
-    
-    <StackPanel>
-        <TextBlock Text="Saved Files" Style="{StaticResource HeaderTextBlockStyle}" LineHeight="56" Visibility="{Binding HeaderVisibility, Mode=TwoWay}"/>
-        <ListView ItemsSource="{Binding ItemsSource, Mode=TwoWay}" 
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="Saved Files" Style="{StaticResource HeaderTextBlockStyle}" Margin="12,0,0,0" LineHeight="56" Visibility="{Binding HeaderVisibility, Mode=TwoWay}"/>
+        <ListView x:Name="SavedFiledListView"  
+                  Grid.Row="1" 
+                  ItemsSource="{Binding ItemsSource, Mode=TwoWay}"                   
                   ItemTemplate="{Binding ItemTemplate, Mode=TwoWay}"
-                  Margin="0,12,0,0"
+                  Margin="0,12,0,0"                  
                   SelectionChanged="ListView_SelectionChanged"/>
-    </StackPanel>
+    </Grid>
 </UserControl>
