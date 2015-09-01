@@ -62,11 +62,7 @@ namespace CodeStore8UI.Controls
         {
             this.InitializeComponent();
             ((FrameworkElement)this.Content).DataContext = this;
-#if WINDOWS_PHONE_APP
             SavedFiledListView.SelectionMode = ListViewSelectionMode.Single;
-#else
-            SavedFiledListView.SelectionMode = ListViewSelectionMode.None;
-#endif
         }
 
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)

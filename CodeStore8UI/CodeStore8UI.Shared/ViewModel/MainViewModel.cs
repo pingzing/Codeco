@@ -273,11 +273,11 @@ namespace CodeStore8UI.ViewModel
         }
 
         private async void ChangeActiveFile(StorageFile arg)
-        {
-            ActiveFile = arg;
+        {            
             string password = await GetPassword();
             if (password != null)
             {
+                ActiveFile = arg;
                 _codeDictionary = await GetCodes(password);
             }
         }
@@ -309,9 +309,10 @@ namespace CodeStore8UI.ViewModel
 #endif
         }
 
-        private void DeleteFile(BindableStorageFile item)
+        private async void DeleteFile(BindableStorageFile item)
         {
             SavedFiles.Remove(item);
+            await FileManager.DeleteFileAsync(item.BackingFile);
         }
 
         private void RenameFile(BindableStorageFile item)

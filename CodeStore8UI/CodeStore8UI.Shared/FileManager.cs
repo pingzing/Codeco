@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -82,6 +83,26 @@ namespace CodeStore8UI
             StorageFile file = await _localFolder.GetFileAsync(fileName);
             await FileIO.WriteTextAsync(file, "");
         }
+
+        public static async Task<bool> DeleteFileAsync(string fileName)
+        {
+            StorageFile file = await _localFolder.GetFileAsync(fileName);
+            return await DeleteFileAsync(file);
+        }
+
+        public static async Task<bool> DeleteFileAsync(StorageFile file)
+        {
+            try
+            {
+                await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Failed to delete file: " + ex.ToString());
+                return false;
+            }
+        }        
 
         /// <summary>
         /// Get all the saved files.
