@@ -16,12 +16,14 @@ using System.Diagnostics;
 using System.Collections.ObjectModel;
 using CodeStore8UI.Model;
 using Windows.UI.Popups;
+using CodeStore8UI.Services;
 
 namespace CodeStore8UI.ViewModel
 {    
     public class MainViewModel : ViewModelBase, INavigable
     {        
-        private Dictionary<string, string> _codeDictionary = new Dictionary<string, string>();        
+        private Dictionary<string, string> _codeDictionary = new Dictionary<string, string>();
+        private FileService _fileService;       
 
         private RelayCommand _addFileCommand;
         public RelayCommand AddFileCommand => _addFileCommand ?? (_addFileCommand = new RelayCommand(AddFile));
@@ -102,7 +104,7 @@ namespace CodeStore8UI.ViewModel
             get { return _savedFiles; }
             set
             {
-                if(_savedFiles == value)
+                if (_savedFiles == value)
                 {
                     return;
                 }
@@ -144,8 +146,9 @@ namespace CodeStore8UI.ViewModel
 
         public bool AllowGoingBack { get; set; }
 
-        public MainViewModel()
-        {            
+        public MainViewModel(IService fileService)
+        {
+            _fileService = (fileService as FileService);
         }
 
         private async void AddFile()
@@ -173,7 +176,7 @@ namespace CodeStore8UI.ViewModel
 
         private async Task OpenFile(StorageFile file)
         {
-            bool isValid = await FileManager.ValidateFile(file);
+            bool isValid = await FileUtilities.ValidateFileAsync(file);
             if(!isValid)
             {
                 MessageDialog dialog = new MessageDialog("The file you tried to open was not formatted correctly. Are you sure it's a two-column comma-delimited file?", "Unable to read file");                
@@ -186,10 +189,7 @@ namespace CodeStore8UI.ViewModel
                 return;
             }
             string contents = await FileIO.ReadTextAsync(file);
-            string savedFileName = await FileManager.SaveAndEncryptFile(contents, output.FileName, output.Password);
-            ActiveFile = await FileManager.GetEncryptedFile(savedFileName);
-            BindableStorageFile bsf = await BindableStorageFile.Create(ActiveFile);
-            SavedFiles.Add(bsf);
+            ActiveFile = await _fileService.SaveAndEncryptFileAsync(contents, output.FileName, output.Password);            
             _codeDictionary = await GetCodes(output.Password);
         }
 
@@ -237,7 +237,7 @@ namespace CodeStore8UI.ViewModel
         private async Task<Dictionary<string, string>> GetCodes(string password)
         {
             Dictionary<string, string> codeDict = new Dictionary<string, string>();
-            string fileContents = await FileManager.RetrieveFileContents(ActiveFile.Name, password);
+            string fileContents = await _fileService.RetrieveFileContentsAsync(ActiveFile.Name, password);
 
             if (fileContents == null)
             {
@@ -261,7 +261,7 @@ namespace CodeStore8UI.ViewModel
 
         private async void DeleteCodes()
         {
-            await FileManager.ClearFileAsync(_activeFile.Name);
+            await _fileService.ClearFileAsync(_activeFile.Name);
             _codeDictionary = new Dictionary<string, string>();
         }
 
@@ -316,9 +316,8 @@ namespace CodeStore8UI.ViewModel
         }
 
         private async void DeleteFile(BindableStorageFile item)
-        {
-            SavedFiles.Remove(item);
-            await FileManager.DeleteFileAsync(item.BackingFile);
+        {            
+            await _fileService.DeleteFileAsync(item.BackingFile);
         }
 
         private void RenameFile(BindableStorageFile item)
@@ -328,12 +327,8 @@ namespace CodeStore8UI.ViewModel
 
         public async void Activate(object parameter, NavigationMode navigationMode)
         {
-           var files = new ObservableCollection<StorageFile>(await FileManager.GetFiles());
-           foreach(var file in files)
-           {
-                BindableStorageFile bsf = await BindableStorageFile.Create(file);
-                SavedFiles.Add(bsf);
-           }            
+            await _fileService.InitializeAsync();
+            SavedFiles = _fileService.LoadedFiles;
         }
 
         public void Deactivate(object parameter)

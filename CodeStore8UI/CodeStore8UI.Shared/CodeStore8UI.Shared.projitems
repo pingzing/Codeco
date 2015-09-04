@@ -21,9 +21,14 @@
       <DependentUpon>SavedFilesControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)EncryptionManager.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)FileManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileUtilities.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model\AddFileDialogOutput.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model\BindableStorageFile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\SavedFiles.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\FileService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\IService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\ServiceBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\ServiceNotInitializedException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\MainViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\SettingsViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ViewModelLocator.cs" />

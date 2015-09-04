@@ -5,13 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using System.Linq;
+using CodeStore8UI.Model;
 
 namespace CodeStore8UI
 {
     //TODO: Add an async lock on these two methods. Otherwise race cases yaaaay
-    public static class FileManager
+    public static class FileUtilities
     {      
-        private static readonly StorageFolder _localFolder = ApplicationData.Current.RoamingFolder;        
+        private static readonly StorageFolder _localFolder = ApplicationData.Current.LocalFolder;
+        private static readonly StorageFolder _roamingFolder = ApplicationData.Current.RoamingFolder;  
 
         /// <summary>
         /// Attempts to save the given contents with the given filename, and encrypt it with the given password.
@@ -20,7 +22,7 @@ namespace CodeStore8UI
         /// <param name="fileName"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public static async Task<string> SaveAndEncryptFile(string contents, string fileName, string password)
+        public static async Task<string> SaveAndEncryptFileAsync(string contents, string fileName, string password)
         {
             if (contents.Length > 0)
             {
@@ -40,7 +42,7 @@ namespace CodeStore8UI
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        public static async Task<StorageFile> GetEncryptedFile(string fileName)
+        public static async Task<StorageFile> GetEncryptedFileAsync(string fileName)
         {
             return await _localFolder.GetFileAsync(fileName);
         }
@@ -50,7 +52,7 @@ namespace CodeStore8UI
         /// </summary>
         /// <param name="encryptedContents"></param>
         /// <returns></returns>
-        public static async Task AppendToEncryptedFile(string fileName, string contents, string password)
+        public static async Task AppendToEncryptedFileAsync(string fileName, string contents, string password)
         {
             StorageFile file = await _localFolder.GetFileAsync(fileName);
             string encryptedContents = EncryptionManager.Encrypt(contents, password);
@@ -64,7 +66,7 @@ namespace CodeStore8UI
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns>A string of the files contents.</returns>
-        public static async Task<string> RetrieveFileContents(string fileName, string password)
+        public static async Task<string> RetrieveFileContentsAsync(string fileName, string password)
         {
             StorageFile file = await _localFolder.GetFileAsync(fileName);
             string encryptedContents = await FileIO.ReadTextAsync(file);
@@ -112,7 +114,7 @@ namespace CodeStore8UI
         /// </summary>
         /// <param name="file">The file to investigate.</param>
         /// <returns>True if formatted properly, false otherwise.</returns>
-        public static async Task<bool> ValidateFile(StorageFile file)
+        public static async Task<bool> ValidateFileAsync(StorageFile file)
         {
             IList<string> lines = (await FileIO.ReadLinesAsync(file))
                 .Where(x => !String.IsNullOrWhiteSpace(x))
@@ -136,9 +138,15 @@ namespace CodeStore8UI
         /// Get all the saved files.
         /// </summary>
         /// <returns></returns>
-        public static async Task<IEnumerable<StorageFile>> GetFiles()
+        public static async Task<SavedFiles> GetFilesAsync()
         {
-            return await _localFolder.GetFilesAsync();
+            SavedFiles allFiles = new SavedFiles
+            {
+                //Ignore files beginning with underscores. This allows us to use those as config (etc) files.
+                LocalFiles = (await _localFolder.GetFilesAsync()).Where(x => x.Name[0] != '_'),
+                RoamingFiles = (await _roamingFolder.GetFilesAsync()).Where(x => x.Name[0] != '_')
+            };
+            return allFiles;
         }
     }
 }

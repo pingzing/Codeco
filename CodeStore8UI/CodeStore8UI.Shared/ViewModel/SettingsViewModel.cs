@@ -8,11 +8,26 @@ using Windows.Storage.Search;
 using Windows.UI.Xaml.Navigation;
 using System.Linq;
 using System.Collections.ObjectModel;
+using CodeStore8UI.Services;
+using CodeStore8UI.Model;
+using GalaSoft.MvvmLight.Command;
 
 namespace CodeStore8UI.ViewModel
 {
     public class SettingsViewModel : ViewModelBase, INavigable
     {
+        private FileService _fileService;
+
+        public bool AllowGoingBack { get; set; }
+
+        private RelayCommand<BindableStorageFile> _syncFileCommand;
+        public RelayCommand<BindableStorageFile> SyncFileCommand => 
+            _syncFileCommand ?? (_syncFileCommand = new RelayCommand<BindableStorageFile>(SyncFile));
+
+        private RelayCommand<BindableStorageFile> _removeFileFromSyncCommand;
+        public RelayCommand<BindableStorageFile> RemoveFileFromSyncCommand => 
+            _removeFileFromSyncCommand ?? (_removeFileFromSyncCommand = new RelayCommand<BindableStorageFile>(RemoveFileFromSync));        
+
         private ulong _roamingSpaceUsed = 0;
         public ulong RoamingSpaceUsed
         {
@@ -28,8 +43,8 @@ namespace CodeStore8UI.ViewModel
             }
         }
 
-        private ObservableCollection<StorageFile> _syncingFiles = new ObservableCollection<StorageFile>();
-        public ObservableCollection<StorageFile> SyncingFiles
+        private ObservableCollection<BindableStorageFile> _syncingFiles = new ObservableCollection<BindableStorageFile>();
+        public ObservableCollection<BindableStorageFile> SyncingFiles
         {
             get { return _syncingFiles; }
             set
@@ -41,18 +56,36 @@ namespace CodeStore8UI.ViewModel
                 _syncingFiles = value;
                 RaisePropertyChanged();
             }
+        }        
+
+        public SettingsViewModel(IService fileService)
+        {
+            _fileService = fileService as FileService;
         }
 
-        public bool AllowGoingBack { get; set; }
+        private void SyncFile(BindableStorageFile file)
+        {
+            //_fileService.RoamFile(file);
+        }
+
+        private void RemoveFileFromSync(BindableStorageFile file)
+        {
+            //_fileService.StopRoamingFile(file);
+        }
 
         public async void Activate(object parameter, NavigationMode navigationMode)
         {
-            var files = await ApplicationData.Current.RoamingFolder.GetFilesAsync(CommonFileQuery.DefaultQuery);
-            foreach(var file in files)
+            await _fileService.InitializeAsync();
+            SyncingFiles.Clear();
+            foreach(var file in _fileService.LoadedFiles)
             {
-                var props = await file.GetBasicPropertiesAsync();
-                _roamingSpaceUsed += props.Size;
-            }
+                if(file.IsRoamed)
+                {
+                    SyncingFiles.Add(file);
+                }
+            }            
+
+
         }
 
         public void Deactivate(object parameter)

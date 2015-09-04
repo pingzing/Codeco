@@ -1,6 +1,7 @@
 ﻿using CodeStore8UI.Common;
 using CodeStore8UI.Model;
 using CodeStore8UI.ViewModel;
+using System;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -42,6 +43,11 @@ namespace CodeStore8UI
                 FlyoutBase.ShowAttachedFlyout(item);
                 e.Handled = true;
             }
+        }
+
+        private async void AppBarButton_Click(object sender, RoutedEventArgs e)
+        {
+            await ApplicationData.Current.ClearAsync();
         }
     }
 }
