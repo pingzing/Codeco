@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
+using System.Linq;
 
 namespace CodeStore8UI
 {
@@ -56,11 +57,13 @@ namespace CodeStore8UI
             await FileIO.AppendTextAsync(file, encryptedContents);
         }
 
+
+        //TODO: Consider directly returning a List<string>?
         /// <summary>
         /// Decrypts and returns the contents of the file. Returns null if the file is empty, or full only of whitespace.
         /// </summary>
         /// <param name="fileName"></param>
-        /// <returns></returns>
+        /// <returns>A string of the files contents.</returns>
         public static async Task<string> RetrieveFileContents(string fileName, string password)
         {
             StorageFile file = await _localFolder.GetFileAsync(fileName);
@@ -102,7 +105,32 @@ namespace CodeStore8UI
                 Debug.WriteLine("Failed to delete file: " + ex.ToString());
                 return false;
             }
-        }        
+        }
+
+        /// <summary>
+        /// Ensures that the given file conforms to the formatting constraints (two-column csv)
+        /// </summary>
+        /// <param name="file">The file to investigate.</param>
+        /// <returns>True if formatted properly, false otherwise.</returns>
+        public static async Task<bool> ValidateFile(StorageFile file)
+        {
+            IList<string> lines = (await FileIO.ReadLinesAsync(file))
+                .Where(x => !String.IsNullOrWhiteSpace(x))
+                .ToList();
+            if(lines.Count == 0)
+            {
+                return false;
+            }
+            foreach(string line in lines)
+            {
+                string[] splitString = line.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                if(splitString.Length != 2)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
 
         /// <summary>
         /// Get all the saved files.

@@ -86,7 +86,7 @@ namespace CodeStore8UI
                 }
 
                 // Place the frame in the current Window
-                Window.Current.Content = rootFrame;
+                Window.Current.Content = rootFrame;                
             }
 
             if (rootFrame.Content == null)

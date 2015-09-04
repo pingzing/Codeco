@@ -15,6 +15,7 @@ using System.Linq;
 using System.Diagnostics;
 using System.Collections.ObjectModel;
 using CodeStore8UI.Model;
+using Windows.UI.Popups;
 
 namespace CodeStore8UI.ViewModel
 {    
@@ -131,7 +132,11 @@ namespace CodeStore8UI.ViewModel
         {
             get { return _openFileText; }
             set
-            {
+            {                
+                if(_openFileText == value)
+                {
+                    return;
+                }
                 _openFileText = value;
                 RaisePropertyChanged(nameof(OpenFileText));
             }
@@ -154,8 +159,29 @@ namespace CodeStore8UI.ViewModel
             picker.PickSingleFileAndContinue();
 #else
             StorageFile file = await picker.PickSingleFileAsync();
+            await OpenFile(file);
+#endif
+        }
+
+#if WINDOWS_PHONE_APP
+        public async Task AddFile_PhoneContinued(FileOpenPickerContinuationEventArgs args)
+        {
+            StorageFile file = args.Files[0];
+            await OpenFile(file);
+        }
+#endif
+
+        private async Task OpenFile(StorageFile file)
+        {
+            bool isValid = await FileManager.ValidateFile(file);
+            if(!isValid)
+            {
+                MessageDialog dialog = new MessageDialog("The file you tried to open was not formatted correctly. Are you sure it's a two-column comma-delimited file?", "Unable to read file");                
+                await dialog.ShowAsync();
+                return;
+            }
             AddFileDialogOutput output = await ShowAddFileDialog(file.Name);
-            if(output == null)
+            if (output == null)
             {
                 return;
             }
@@ -165,27 +191,7 @@ namespace CodeStore8UI.ViewModel
             BindableStorageFile bsf = await BindableStorageFile.Create(ActiveFile);
             SavedFiles.Add(bsf);
             _codeDictionary = await GetCodes(output.Password);
-#endif
         }
-
-#if WINDOWS_PHONE_APP
-        public async Task AddFile_PhoneContinued(FileOpenPickerContinuationEventArgs args)
-        {
-            AddFileDialogOutput output = await ShowAddFileDialog(args.Files[0].Name);
-            if(output == null)
-            {
-                return;
-            }
-
-            StorageFile file = args.Files[0];
-            string contents = await FileIO.ReadTextAsync(file);
-            string savedFiledName = await FileManager.SaveAndEncryptFile(contents, output.FileName, output.Password);
-            ActiveFile = await FileManager.GetEncryptedFile(savedFiledName);
-            BindableStorageFile bsf = await BindableStorageFile.Create(ActiveFile);
-            SavedFiles.Add(bsf);
-            _codeDictionary = await GetCodes(output.Password);
-        }
-#endif
 
         private async void ChangePassword()
         {
@@ -327,7 +333,7 @@ namespace CodeStore8UI.ViewModel
            {
                 BindableStorageFile bsf = await BindableStorageFile.Create(file);
                 SavedFiles.Add(bsf);
-           }
+           }            
         }
 
         public void Deactivate(object parameter)
