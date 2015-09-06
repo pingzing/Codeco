@@ -11,14 +11,16 @@ using System.Collections.ObjectModel;
 using CodeStore8UI.Services;
 using CodeStore8UI.Model;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Views;
 
 namespace CodeStore8UI.ViewModel
 {
     public class SettingsViewModel : ViewModelBase, INavigable
     {
         private FileService _fileService;
+        private NavigationService _navigationService;
 
-        public bool AllowGoingBack { get; set; }
+        public bool AllowGoingBack { get; set; } = true;
 
         private RelayCommand<BindableStorageFile> _syncFileCommand;
         public RelayCommand<BindableStorageFile> SyncFileCommand => 
@@ -26,7 +28,10 @@ namespace CodeStore8UI.ViewModel
 
         private RelayCommand<BindableStorageFile> _removeFileFromSyncCommand;
         public RelayCommand<BindableStorageFile> RemoveFileFromSyncCommand => 
-            _removeFileFromSyncCommand ?? (_removeFileFromSyncCommand = new RelayCommand<BindableStorageFile>(RemoveFileFromSync));        
+            _removeFileFromSyncCommand ?? (_removeFileFromSyncCommand = new RelayCommand<BindableStorageFile>(RemoveFileFromSync));
+
+        private RelayCommand _goBackCommand;
+        public RelayCommand GoBackCommand => _goBackCommand ?? (_goBackCommand = new RelayCommand(GoBack));        
 
         private ulong _roamingSpaceUsed = 0;
         public ulong RoamingSpaceUsed
@@ -58,9 +63,10 @@ namespace CodeStore8UI.ViewModel
             }
         }
 
-        public SettingsViewModel(IService fileService)
+        public SettingsViewModel(IService fileService, INavigationService navService)
         {
             _fileService = fileService as FileService;
+            _navigationService = navService as NavigationService;
         }
 
         private void SyncFile(BindableStorageFile file)
@@ -73,11 +79,19 @@ namespace CodeStore8UI.ViewModel
             _fileService.StopRoamingFile(file);
         }
 
+        private void GoBack()
+        {
+            _navigationService.GoBack();
+        }
+
         public async void Activate(object parameter, NavigationMode navigationMode)
         {
-            await _fileService.InitializeAsync();
-            FileGroups.Add(new FileCollection("Synced", _fileService.RoamedFiles));
-            FileGroups.Add(new FileCollection("Local", _fileService.LocalFiles));            
+            if (navigationMode == NavigationMode.New)
+            {
+                await _fileService.InitializeAsync();
+                FileGroups.Add(new FileCollection("Synced", _fileService.RoamedFiles));
+                FileGroups.Add(new FileCollection("Local", _fileService.LocalFiles));
+            }
         }
 
         public void Deactivate(object parameter)

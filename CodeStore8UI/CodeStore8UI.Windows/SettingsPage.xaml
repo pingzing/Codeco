@@ -8,22 +8,26 @@
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     x:Class="CodeStore8UI.SettingsPage"
     mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     DataContext="{Binding Source={StaticResource Locator}, Path=Settings}">
     <d:DataContext>
         <Binding Path="Settings" Source="{StaticResource Locator}"/>
     </d:DataContext>
 
     <common:BindablePage.Resources>
-        <CollectionViewSource x:Key="FileViewSource" Source="{Binding FileGroups}" IsSourceGrouped="True" ItemsPath="Files"/>
+        <CollectionViewSource x:Key="FileViewSource" Source="{Binding FileGroups}" IsSourceGrouped="True" ItemsPath="Files" />
     </common:BindablePage.Resources>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Margin="12,12,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0"  Text="Settings" Style="{StaticResource HeaderTextBlockStyle}" Margin="12,12,0,12"/>
+        <StackPanel Orientation="Horizontal">
+            <Button IsEnabled="{Binding AllowGoingBack}" Style="{StaticResource NavigationBackButtonNormalStyle}" Command="{Binding GoBackCommand}"/>
+            <TextBlock Grid.Row="0"  Text="Settings" Style="{StaticResource HeaderTextBlockStyle}" Margin="12,0,0,0"/>
+        </StackPanel>
 
         <ListView Grid.Row="1" ItemsSource="{Binding Source={StaticResource FileViewSource}}" 
                   SelectionMode="Single"
@@ -36,7 +40,7 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <CheckBox Grid.Column="0" 
-                                  IsChecked="{Binding IsRoamed}"/>
+                                  IsChecked="{Binding IsRoamed}" IsEnabled="False"/>
                         <StackPanel Grid.Column="1">
                             <TextBlock Text="{Binding Name}" Style="{StaticResource SubtitleTextBlockStyle}"/>
                             <TextBlock Text="{Binding CreateDate}" Style="{StaticResource BaseTextBlockStyle}"/>
@@ -47,7 +51,7 @@
             </ListView.ItemTemplate>
 
             <ListView.GroupStyle>
-                <GroupStyle>
+                <GroupStyle HidesIfEmpty="True">
                     <GroupStyle.HeaderTemplate>
                         <DataTemplate>
                             <StackPanel>

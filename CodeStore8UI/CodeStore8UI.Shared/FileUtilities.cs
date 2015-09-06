@@ -57,8 +57,7 @@ namespace CodeStore8UI
             StorageFile file = await _localFolder.GetFileAsync(fileName);
             string encryptedContents = EncryptionManager.Encrypt(contents, password);
             await FileIO.AppendTextAsync(file, encryptedContents);
-        }
-
+        }        
 
         //TODO: Consider directly returning a List<string>?
         /// <summary>
@@ -76,7 +75,17 @@ namespace CodeStore8UI
             }
             string contents = EncryptionManager.Decrypt(encryptedContents, password);
             return contents;
-        }     
+        }
+
+        public static async Task MoveFileToRoamingAsync(StorageFile backingFile)
+        {
+            await backingFile.MoveAsync(_roamingFolder, backingFile.Name, NameCollisionOption.GenerateUniqueName);
+        }
+
+        public static async Task MoveFileToLocalAsync(StorageFile backingFile)
+        {
+            await backingFile.MoveAsync(_localFolder, backingFile.Name, NameCollisionOption.GenerateUniqueName);
+        }
 
         /// <summary>
         /// Overwrites the contents of the given file.

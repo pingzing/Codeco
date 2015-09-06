@@ -337,10 +337,13 @@ namespace CodeStore8UI.ViewModel
         }
 
         public async void Activate(object parameter, NavigationMode navigationMode)
-        {
-            await _fileService.InitializeAsync();
-            FileGroups.Add(new FileCollection("Local", _fileService.LocalFiles));
-            FileGroups.Add(new FileCollection("Synced", _fileService.RoamedFiles));
+        {            
+            if (navigationMode == NavigationMode.New)
+            {
+                await _fileService.InitializeAsync();
+                FileGroups.Add(new FileCollection("Local", _fileService.LocalFiles));
+                FileGroups.Add(new FileCollection("Synced", _fileService.RoamedFiles));
+            }
         }
 
         public void Deactivate(object parameter)

@@ -76,18 +76,26 @@ namespace CodeStore8UI
             }
         }
 
-        internal void StopRoamingFile(BindableStorageFile file)
+        internal async Task StopRoamingFile(BindableStorageFile file)
         {            
+            //UI
             LocalFiles.Add(file);
             file.IsRoamed = false;
-            RoamedFiles.Remove(file);            
+            RoamedFiles.Remove(file);
+
+            //Backing values
+            await FileUtilities.MoveFileToRoamingAsync(file.BackingFile);
         }
 
-        internal void RoamFile(BindableStorageFile file)
+        internal async Task RoamFile(BindableStorageFile file)
         {            
+            //UI
             RoamedFiles.Add(file);
             file.IsRoamed = true;
             LocalFiles.Remove(file);
+
+            //Backing values
+            await FileUtilities.MoveFileToLocalAsync(file.BackingFile);
         }
 
         protected async override Task CreateAsync()
