@@ -18,7 +18,7 @@ namespace CodeStore8UI
         public MainPage()
         {
             this.InitializeComponent();
-            this.NavigationCacheMode = NavigationCacheMode.Required;
+            this.NavigationCacheMode = NavigationCacheMode.Required;                    
         }      
 
         private void Border_Tapped(object sender, TappedRoutedEventArgs e)

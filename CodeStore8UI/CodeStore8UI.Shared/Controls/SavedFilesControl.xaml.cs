@@ -23,10 +23,10 @@ namespace CodeStore8UI.Controls
 
         public event EventHandler<SelectionChangedEventArgs> FileListSelectionChanged;        
 
-        public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register("ItemsSource", typeof(IEnumerable<object>), typeof(SavedFilesControl), new PropertyMetadata(null));
-        public IEnumerable<object> ItemsSource
+        public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register("ItemsSource", typeof(object), typeof(SavedFilesControl), new PropertyMetadata(null));
+        public object ItemsSource
         {
-            get { return (IEnumerable<object>)GetValue(ItemsSourceProperty); }
+            get { return (object)GetValue(ItemsSourceProperty); }
             set { SetValue(ItemsSourceProperty, value); }
         }
 
@@ -56,19 +56,19 @@ namespace CodeStore8UI.Controls
         {
             get { return (RelayCommand)GetValue(RenameCommandProperty); }
             set { SetValue(RenameCommandProperty, value); }
-        }
-               
+        }       
+
         public SavedFilesControl()
         {
             this.InitializeComponent();
             ((FrameworkElement)this.Content).DataContext = this;
-            SavedFiledListView.SelectionMode = ListViewSelectionMode.Single;
+            SavedFilesListView.SelectionMode = ListViewSelectionMode.Single;            
         }
 
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var handler = FileListSelectionChanged;
             handler?.Invoke(sender, e);
-        }        
+        }                           
     }
 }

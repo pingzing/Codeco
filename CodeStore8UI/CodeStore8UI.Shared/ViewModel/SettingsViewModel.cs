@@ -43,20 +43,20 @@ namespace CodeStore8UI.ViewModel
             }
         }
 
-        private ObservableCollection<BindableStorageFile> _syncingFiles = new ObservableCollection<BindableStorageFile>();
-        public ObservableCollection<BindableStorageFile> SyncingFiles
+        private ObservableCollection<FileCollection> _fileGroups = new ObservableCollection<FileCollection>();
+        public ObservableCollection<FileCollection> FileGroups
         {
-            get { return _syncingFiles; }
+            get { return _fileGroups; }
             set
             {
-                if(value == _syncingFiles)
+                if (_fileGroups == value)
                 {
                     return;
                 }
-                _syncingFiles = value;
+                _fileGroups = value;
                 RaisePropertyChanged();
             }
-        }        
+        }
 
         public SettingsViewModel(IService fileService)
         {
@@ -65,27 +65,19 @@ namespace CodeStore8UI.ViewModel
 
         private void SyncFile(BindableStorageFile file)
         {
-            //_fileService.RoamFile(file);
+            _fileService.RoamFile(file);
         }
 
         private void RemoveFileFromSync(BindableStorageFile file)
         {
-            //_fileService.StopRoamingFile(file);
+            _fileService.StopRoamingFile(file);
         }
 
         public async void Activate(object parameter, NavigationMode navigationMode)
         {
             await _fileService.InitializeAsync();
-            SyncingFiles.Clear();
-            foreach(var file in _fileService.LoadedFiles)
-            {
-                if(file.IsRoamed)
-                {
-                    SyncingFiles.Add(file);
-                }
-            }            
-
-
+            FileGroups.Add(new FileCollection("Synced", _fileService.RoamedFiles));
+            FileGroups.Add(new FileCollection("Local", _fileService.LocalFiles));            
         }
 
         public void Deactivate(object parameter)

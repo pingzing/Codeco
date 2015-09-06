@@ -1,4 +1,6 @@
 ﻿using CodeStore8UI.Common;
+using CodeStore8UI.Model;
+using CodeStore8UI.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,6 +28,29 @@ namespace CodeStore8UI
         public SettingsPage()
         {
             this.InitializeComponent();
+        }        
+
+        private void FileList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(e.AddedItems.Count == 0)
+            {
+                return;
+            }
+            var selectedFile = e.AddedItems[0] as BindableStorageFile;
+            if(selectedFile == null)
+            {
+                return;
+            }
+
+            var context = (DataContext as SettingsViewModel);
+            if (selectedFile.IsRoamed)
+            {                
+                context?.RemoveFileFromSyncCommand.Execute(selectedFile);
+            }
+            else
+            {
+                context?.SyncFileCommand.Execute(selectedFile);
+            }
         }
     }
 }

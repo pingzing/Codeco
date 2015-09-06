@@ -15,11 +15,22 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Text="Saved Files" Style="{StaticResource HeaderTextBlockStyle}" Margin="12,0,0,0" LineHeight="56" Visibility="{Binding HeaderVisibility, Mode=TwoWay}"/>
-        <ListView x:Name="SavedFiledListView"  
+        <ListView x:Name="SavedFilesListView"
                   Grid.Row="1" 
                   ItemsSource="{Binding ItemsSource, Mode=TwoWay}"                   
-                  ItemTemplate="{Binding ItemTemplate, Mode=TwoWay}"
+                  ItemTemplate="{Binding ItemTemplate, Mode=TwoWay}"                  
                   Margin="0,12,0,0"                  
-                  SelectionChanged="ListView_SelectionChanged"/>
+                  SelectionChanged="ListView_SelectionChanged">
+            <ListView.GroupStyle>
+                <GroupStyle x:Name="FileListGroupStyleHeaderTemplate" HidesIfEmpty="True">
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}"/>
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                </GroupStyle>
+            </ListView.GroupStyle>
+        </ListView>
+
     </Grid>
 </UserControl>

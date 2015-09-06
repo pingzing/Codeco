@@ -24,6 +24,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)FileUtilities.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model\AddFileDialogOutput.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model\BindableStorageFile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\FileCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model\SavedFiles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\FileService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IService.cs" />
@@ -45,5 +46,13 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Assets\test.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)ViewModel\DesignViewModels\" />
   </ItemGroup>
 </Project>

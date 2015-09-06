@@ -17,13 +17,15 @@ using System.Collections.ObjectModel;
 using CodeStore8UI.Model;
 using Windows.UI.Popups;
 using CodeStore8UI.Services;
+using GalaSoft.MvvmLight.Views;
 
 namespace CodeStore8UI.ViewModel
 {    
     public class MainViewModel : ViewModelBase, INavigable
     {        
         private Dictionary<string, string> _codeDictionary = new Dictionary<string, string>();
-        private FileService _fileService;       
+        private FileService _fileService;
+        private NavigationService _navigationService;
 
         private RelayCommand _addFileCommand;
         public RelayCommand AddFileCommand => _addFileCommand ?? (_addFileCommand = new RelayCommand(AddFile));
@@ -45,6 +47,9 @@ namespace CodeStore8UI.ViewModel
         private RelayCommand<BindableStorageFile> _renameFileCommand;
         public RelayCommand<BindableStorageFile> RenameFileCommand => _renameFileCommand 
             ?? (_renameFileCommand = new RelayCommand<BindableStorageFile>(RenameFile));
+
+        private RelayCommand _goToSettingsCommand;
+        public RelayCommand GoToSettingsCommand => _goToSettingsCommand ?? (_goToSettingsCommand = new RelayCommand(GoToSettings));        
 
         private int _longestCode = 1;        
         #region LongestCode Property
@@ -98,20 +103,20 @@ namespace CodeStore8UI.ViewModel
         }
         #endregion
 
-        private ObservableCollection<BindableStorageFile> _savedFiles = new ObservableCollection<BindableStorageFile>();
-        public ObservableCollection<BindableStorageFile> SavedFiles
+        private ObservableCollection<FileCollection> _fileGroups = new ObservableCollection<FileCollection>();
+        public ObservableCollection<FileCollection> FileGroups
         {
-            get { return _savedFiles; }
+            get { return _fileGroups; }
             set
             {
-                if (_savedFiles == value)
+                if(_fileGroups == value)
                 {
                     return;
                 }
-                _savedFiles = value;
-                RaisePropertyChanged(nameof(SavedFiles));
+                _fileGroups = value;
+                RaisePropertyChanged();
             }
-        }
+        }             
 
         private StorageFile _activeFile;
         public StorageFile ActiveFile
@@ -129,7 +134,7 @@ namespace CodeStore8UI.ViewModel
             }
         }
 
-        private string _openFileText = "";
+        private string _openFileText = "";        
         public string OpenFileText
         {
             get { return _openFileText; }
@@ -146,9 +151,10 @@ namespace CodeStore8UI.ViewModel
 
         public bool AllowGoingBack { get; set; }
 
-        public MainViewModel(IService fileService)
+        public MainViewModel(IService fileService, INavigationService navService)
         {
             _fileService = (fileService as FileService);
+            _navigationService = navService as NavigationService;
         }
 
         private async void AddFile()
@@ -325,10 +331,16 @@ namespace CodeStore8UI.ViewModel
             throw new NotImplementedException();
         }
 
+        private void GoToSettings()
+        {
+            _navigationService.NavigateTo(nameof(SettingsPage));
+        }
+
         public async void Activate(object parameter, NavigationMode navigationMode)
         {
             await _fileService.InitializeAsync();
-            SavedFiles = _fileService.LoadedFiles;
+            FileGroups.Add(new FileCollection("Local", _fileService.LocalFiles));
+            FileGroups.Add(new FileCollection("Synced", _fileService.RoamedFiles));
         }
 
         public void Deactivate(object parameter)

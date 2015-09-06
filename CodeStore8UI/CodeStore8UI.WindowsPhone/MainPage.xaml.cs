@@ -16,7 +16,7 @@ namespace CodeStore8UI
     {       
         public MainPage()
         {
-            this.InitializeComponent();                    
+            this.InitializeComponent();            
         }                       
 
         public async void ContinueFileOpenPicker(FileOpenPickerContinuationEventArgs args)
@@ -33,9 +33,10 @@ namespace CodeStore8UI
             }
         }
 
+        //Binding doesn't seem to work, so code-behind it is.
         private void BindablePage_Loaded(object sender, RoutedEventArgs e)
         {
-            SavedFiles.ItemsSource = (this.DataContext as MainViewModel).SavedFiles;
+            SavedFiles.ItemsSource = (this.DataContext as MainViewModel).FileGroups;
         }
 
         private void SavedFile_RightTapped(object sender, RightTappedRoutedEventArgs e)

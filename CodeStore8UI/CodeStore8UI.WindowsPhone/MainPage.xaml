@@ -19,6 +19,7 @@
             <MenuFlyoutItem Text="delete" Command="{Binding DeleteFileCommand}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem Text="rename" Command="{Binding RenameFileCommand}" CommandParameter="{Binding}"/>
         </MenuFlyout>
+        <CollectionViewSource x:Key="FileViewSource" Source="{Binding FileGroups}" IsSourceGrouped="True" ItemsPath="Files" />
     </Page.Resources>
 
     <Page.BottomAppBar>
@@ -72,7 +73,7 @@
             <!--ItemsSource is declared in codebehind. Binding fails at runtime for some reason.-->
             <controls:SavedFilesControl x:Name="SavedFiles" 
                                         HeaderVisibility="Collapsed" 
-                                        ItemsSource="{Binding SavedFiles}" 
+                                        ItemsSource="{Binding Source={StaticResource FileViewSource}}" 
                                         FileListSelectionChanged="SavedFilesControl_SelectionChanged">
                 <controls:SavedFilesControl.ItemTemplate>
                     <DataTemplate>

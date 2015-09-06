@@ -9,6 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
+    d:DataContext="{Binding Source={StaticResource Locator},Path=Main}"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
@@ -16,6 +17,7 @@
             <MenuFlyoutItem Text="Delete" Command="{Binding Main.DeleteFileCommand, Mode=OneWay, Source={StaticResource Locator}}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem Text="Rename" Command="{Binding Main.RenameFileCommand, Mode=OneWay, Source={StaticResource Locator}}" CommandParameter="{Binding}"/>
         </MenuFlyout>
+        <CollectionViewSource x:Key="FileViewSource" Source="{Binding FileGroups}" IsSourceGrouped="True" ItemsPath="Files" />        
     </Page.Resources>
 
     <Grid>
@@ -59,12 +61,14 @@
                  Text="{Binding InputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
 
-        <controls:SavedFilesControl Grid.Row="0" 
+        <controls:SavedFilesControl x:Name="SavedFilesControl"
+                                    Grid.Row="0" 
                                     Grid.RowSpan="2" 
                                     Grid.Column="1" 
-                                    ItemsSource="{Binding SavedFiles}" 
+                                    ItemsSource="{Binding Source={StaticResource FileViewSource}}"                                    
                                     Margin="0,12,12,0" 
                                     FileListSelectionChanged="SavedFilesControl_SelectionChanged">
+
             <controls:SavedFilesControl.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Margin="12,0,0,4" RightTapped="SavedFile_RightTapped" FlyoutBase.AttachedFlyout="{StaticResource SavedFileFlyout}">
@@ -74,7 +78,7 @@
                     </StackPanel>
                 </DataTemplate>
             </controls:SavedFilesControl.ItemTemplate>
-            
+
         </controls:SavedFilesControl>
         
         <Border Grid.Row="2" 
@@ -96,6 +100,7 @@
                 <AppBarButton Label="Delete Active File" Icon="Delete" Command="{Binding DeleteCodesCommand}"/>
                 <AppBarButton Label ="DEBUG: Delete ALL FILES" Icon="Delete" Click="AppBarButton_Click"/>
             </CommandBar.SecondaryCommands>
+            <AppBarButton Label="Settings" Icon="Setting" Command="{Binding GoToSettingsCommand}"/>
             <AppBarButton Label="Re-enter Password" Icon="Permissions" Command="{Binding ChangePasswordCommand}"/>
             <AppBarButton Label="Add File" Icon="Add" Command="{Binding AddFileCommand}"/>
         </CommandBar>

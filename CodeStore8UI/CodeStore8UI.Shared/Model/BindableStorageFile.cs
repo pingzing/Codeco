@@ -29,15 +29,26 @@ namespace CodeStore8UI.Model
         
         public string Name { get { return _backingFile.Name; }}
         public DateTime CreateDate { get { return _backingFile.DateCreated.DateTime; } }
-        public bool IsRoamed { get; set; }
+
+        private bool _isRoamed = false;
+        public bool IsRoamed
+        {
+            get { return _isRoamed; }
+            set
+            {
+                if(_isRoamed == value)
+                {
+                    return;
+                }
+                _isRoamed = value;
+                RaisePropertyChanged();
+            }
+        }
 
         private StorageFile _backingFile;
         public StorageFile BackingFile
         {
-            get
-            {
-                return _backingFile;
-            }
+            get { return _backingFile; }
             set
             {
                 if(value == _backingFile)
@@ -53,10 +64,7 @@ namespace CodeStore8UI.Model
         private string _fileSize = "0 b";
         public string FileSize
         {
-            get
-            {
-                return _fileSize;
-            }            
+            get { return _fileSize; }            
             private set
             {
                 if(value == _fileSize)

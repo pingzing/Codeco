@@ -14,24 +14,25 @@ namespace CodeStore8UI
 {
     public class FileService : ServiceBase
     {
-        private ObservableCollection<BindableStorageFile> _loadedFiles;        
+        private bool _initialized = false;
 
-        public ObservableCollection<BindableStorageFile> LoadedFiles
+        private ObservableCollection<BindableStorageFile> _localFiles;        
+        public ObservableCollection<BindableStorageFile> LocalFiles
         {
             get
             {
                 if (_initialized)
                 {
-                    return _loadedFiles;
+                    return _localFiles;
                 }
                 else
                 {
                     throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
                 }
             }
-            set
+            private set
             {
-                if(_loadedFiles == value)
+                if(_localFiles == value)
                 {
                     return;
                 }
@@ -40,11 +41,54 @@ namespace CodeStore8UI
                     throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
                 }
 
-                _loadedFiles = value;
+                _localFiles = value;
                 RaisePropertyChanged();
             }
         }
-        private bool _initialized = false;
+
+        private ObservableCollection<BindableStorageFile> _roamedFiles;
+        public ObservableCollection<BindableStorageFile> RoamedFiles
+        {
+            get
+            {
+                if(_initialized)
+                {
+                    return _roamedFiles;
+                }
+                else
+                {
+                    throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
+                }                
+            }
+            private set
+            {
+                if(_roamedFiles == value)
+                {
+                    return;
+                }
+                if(!_initialized)
+                {
+                    throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
+                }
+
+                _roamedFiles = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        internal void StopRoamingFile(BindableStorageFile file)
+        {            
+            LocalFiles.Add(file);
+            file.IsRoamed = false;
+            RoamedFiles.Remove(file);            
+        }
+
+        internal void RoamFile(BindableStorageFile file)
+        {            
+            RoamedFiles.Add(file);
+            file.IsRoamed = true;
+            LocalFiles.Remove(file);
+        }
 
         protected async override Task CreateAsync()
         {
@@ -55,21 +99,25 @@ namespace CodeStore8UI
             ApplicationData.Current.DataChanged += OnRoamingDataChanged;
 
             var files = await FileUtilities.GetFilesAsync();            
-            List<BindableStorageFile> allFiles = new List<BindableStorageFile>();
+            List<BindableStorageFile> localFiles = new List<BindableStorageFile>();
             foreach(var file in files.LocalFiles)
             {
                 BindableStorageFile localFile = await BindableStorageFile.Create(file);
-                allFiles.Add(localFile);
+                localFiles.Add(localFile);
             }
+
+            List<BindableStorageFile> roamedFiles = new List<BindableStorageFile>();
             foreach (var file in files.RoamingFiles)
             {
                 BindableStorageFile localFile = await BindableStorageFile.Create(file);
                 localFile.IsRoamed = true;
-                allFiles.Add(localFile);
+                roamedFiles.Add(localFile);
             }
             
-            _loadedFiles = new ObservableCollection<BindableStorageFile>(allFiles);
-            RaisePropertyChanged(nameof(LoadedFiles));
+            _localFiles = new ObservableCollection<BindableStorageFile>(localFiles);
+            RaisePropertyChanged(nameof(LocalFiles));
+            _roamedFiles = new ObservableCollection<BindableStorageFile>(roamedFiles);
+            RaisePropertyChanged(nameof(RoamedFiles));
             _initialized = true;
         }        
 
@@ -89,7 +137,7 @@ namespace CodeStore8UI
             string savedFileName = await FileUtilities.SaveAndEncryptFileAsync(contents, fileName, password);
             StorageFile savedFile = await FileUtilities.GetEncryptedFileAsync(savedFileName);
             BindableStorageFile bsf = await BindableStorageFile.Create(savedFile);
-            LoadedFiles.Add(bsf);
+            LocalFiles.Add(bsf);
             return savedFile;
         }
 
@@ -99,7 +147,7 @@ namespace CodeStore8UI
             {
                 throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
             }
-            return LoadedFiles.Where(x => x.Name == savedFileName).Single();
+            return LocalFiles.Where(x => x.Name == savedFileName).Single();
         }
 
         internal async Task<string> RetrieveFileContentsAsync(string name, string password)
@@ -108,7 +156,7 @@ namespace CodeStore8UI
             {
                 throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
             }
-            string encryptedContents = await FileIO.ReadTextAsync(LoadedFiles.Single(x => x.Name == name).BackingFile);
+            string encryptedContents = await FileIO.ReadTextAsync(LocalFiles.Single(x => x.Name == name).BackingFile);
             if(String.IsNullOrWhiteSpace(encryptedContents))
             {
                 return null;
@@ -122,7 +170,7 @@ namespace CodeStore8UI
             {
                 throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
             }
-            var file = LoadedFiles.Single(x => x.Name == name);
+            var file = LocalFiles.Single(x => x.Name == name);
             await FileIO.WriteTextAsync(file.BackingFile, string.Empty);
         }
 
@@ -132,17 +180,17 @@ namespace CodeStore8UI
             {
                 throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
             }
-            LoadedFiles.Remove(LoadedFiles.Single(x => x.BackingFile == backingFile));
+            LocalFiles.Remove(LocalFiles.Single(x => x.BackingFile == backingFile));
             await FileUtilities.DeleteFileAsync(backingFile);
         }
 
         private async void OnRoamingDataChanged(ApplicationData sender, object args)
         {
-            foreach(var file in LoadedFiles)
+            foreach(var file in LocalFiles)
             {
                 if(file.IsRoamed)
                 {
-                    LoadedFiles.Remove(file);
+                    LocalFiles.Remove(file);
                 }
             }
 
@@ -150,7 +198,7 @@ namespace CodeStore8UI
             foreach(var file in roamingFiles)
             {
                 BindableStorageFile bsf = await BindableStorageFile.Create(file);                
-                LoadedFiles.Add(bsf);
+                LocalFiles.Add(bsf);
             }
         }
     }

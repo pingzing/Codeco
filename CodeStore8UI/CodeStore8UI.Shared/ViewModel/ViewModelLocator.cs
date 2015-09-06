@@ -29,25 +29,31 @@ namespace CodeStore8UI.ViewModel
             {
                 // Create design time view services and models
                 //SimpleIoc.Default.Register<IDataService, DesignDataService>();
+                //SimpleIoc.Default.Register<IService, FileService>();                
             }
             else
             {
                 // Create run time view services and models
                 //SimpleIoc.Default.Register<IDataService, DataService>();                
-                SimpleIoc.Default.Register<IService, FileService>();                                                
-            }
+                NavigationService navService = InitializeNavigationService();
+                SimpleIoc.Default.Register<INavigationService>(() => navService);
 
-            SimpleIoc.Default.Register<MainViewModel>();
-            SimpleIoc.Default.Register<SettingsViewModel>();
-        }        
+                SimpleIoc.Default.Register<IService, FileService>();                
 
-        public MainViewModel Main
-        {
-            get
-            {
-                return ServiceLocator.Current.GetInstance<MainViewModel>();
-            }
+                SimpleIoc.Default.Register<MainViewModel>();
+                SimpleIoc.Default.Register<SettingsViewModel>();
+            }            
         }
+
+        private NavigationService InitializeNavigationService()
+        {
+            NavigationService navService = new NavigationService();
+            navService.Configure(nameof(MainPage), typeof(MainPage));
+            navService.Configure(nameof(SettingsPage), typeof(SettingsPage));
+            return navService;
+        }
+
+        public MainViewModel Main => ServiceLocator.Current.GetInstance<MainViewModel>();
 
         public SettingsViewModel Settings
         {
