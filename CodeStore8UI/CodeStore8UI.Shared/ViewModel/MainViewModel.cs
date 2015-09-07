@@ -25,6 +25,7 @@ namespace CodeStore8UI.ViewModel
     {
         private Dictionary<string, string> _codeDictionary = new Dictionary<string, string>();
         private FileService _fileService;
+        public FileService FileService => _fileService;
         private NavigationService _navigationService;
 
         private RelayCommand _addFileCommand;

@@ -40,7 +40,7 @@ namespace CodeStore8UI.ViewModel
                 SimpleIoc.Default.Register<INavigationService>(() => navService);
 
                 IService fileService = InitializeFileService().Result;
-                SimpleIoc.Default.Register(() => fileService);                
+                SimpleIoc.Default.Register(() => fileService);
 
                 SimpleIoc.Default.Register<MainViewModel>();
                 SimpleIoc.Default.Register<SettingsViewModel>();

@@ -194,8 +194,25 @@ namespace CodeStore8UI
                 throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
             }
             var collectionToSearch = location == FileLocation.Local ? LocalFiles : RoamedFiles;
-            collectionToSearch.Single(x => x.BackingFile == backingFile);
+            collectionToSearch.Remove(collectionToSearch.Single(x => x.BackingFile == backingFile)); 
             await FileUtilities.DeleteFileAsync(backingFile);
+        }
+
+        public async Task NukeFiles()
+        {
+            if(!_initialized)
+            {
+                throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
+            }
+            for(int i = LocalFiles.Count - 1; i >= 0; i--)
+            {
+                await DeleteFileAsync(LocalFiles[i].BackingFile, FileLocation.Local);
+            }
+            for (int i = LocalFiles.Count - 1; i >= 0; i--)
+            {
+                await DeleteFileAsync(RoamedFiles[i].BackingFile, FileLocation.Roamed);
+            }
+
         }
 
         private async void OnRoamingDataChanged(ApplicationData sender, object args)
@@ -215,6 +232,7 @@ namespace CodeStore8UI
                 LocalFiles.Add(bsf);
             }
         }
+        
 
         internal FileLocation GetFileLocation(BindableStorageFile file)
         {            

@@ -1,6 +1,8 @@
 ﻿using CodeStore8UI.Common;
 using CodeStore8UI.Model;
+using CodeStore8UI.Services;
 using CodeStore8UI.ViewModel;
+using Microsoft.Practices.ServiceLocation;
 using System;
 using Windows.Storage;
 using Windows.UI.Xaml;
@@ -51,7 +53,8 @@ namespace CodeStore8UI
 
         private async void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
-            await ApplicationData.Current.ClearAsync();
+            await (DataContext as MainViewModel).FileService.NukeFiles();
+
         }        
     }
 }
