@@ -4,6 +4,11 @@
              xmlns:local="using:CodeStore8UI" 
              xmlns:vm="using:CodeStore8UI.ViewModel">
     <Application.Resources>
-        <vm:ViewModelLocator x:Key="Locator" xmlns:vm="using:CodeStore8UI.ViewModel" />
+        <ResourceDictionary>
+            <vm:ViewModelLocator x:Key="Locator" xmlns:vm="using:CodeStore8UI.ViewModel" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Theme/AppBarHint.xaml"></ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

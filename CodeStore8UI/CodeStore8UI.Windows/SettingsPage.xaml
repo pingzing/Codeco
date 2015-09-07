@@ -5,7 +5,8 @@
     xmlns:local="using:CodeStore8UI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" 
+    xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     x:Class="CodeStore8UI.SettingsPage"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
@@ -21,6 +22,7 @@
     <Grid Margin="12,12,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
@@ -29,34 +31,46 @@
             <TextBlock Grid.Row="0"  Text="Settings" Style="{StaticResource HeaderTextBlockStyle}" Margin="24,0,0,0"/>
         </StackPanel>
 
-        <ListView Grid.Row="1" 
-                  x:Name="FileListView"
+        <TextBlock Grid.Row="1">
+            <Run Text="Synced Files Space:"/>
+            <Run Text="{Binding RoamingSpaceUsed}"/>
+            <Run Text="kB / 100 kB"/>
+        </TextBlock>
+
+        <ListView Grid.Row="2" 
+                  x:Name="FileListView"                  
                   ItemsSource="{Binding Source={StaticResource FileViewSource}}" 
                   SelectionMode="None">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                </Style>
+            </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Grid Tapped="Grid_FileTapped" Tag="{Binding}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <CheckBox Grid.Column="0" 
-                                  IsChecked="{Binding IsRoamed}"/>
-                        <StackPanel Grid.Column="1">
-                            <TextBlock Text="{Binding Name}" Style="{StaticResource SubtitleTextBlockStyle}"/>
-                            <TextBlock Text="{Binding CreateDate}" Style="{StaticResource BaseTextBlockStyle}"/>
-                            <TextBlock Text="{Binding FileSize}" Style="{StaticResource BaseTextBlockStyle}"/>
-                        </StackPanel>
-                    </Grid>
+                    <ToggleSwitch OnContent="Syncing" 
+                                  OffContent="Not Syncing" 
+                                  Margin="0,-12,0,-12"
+                                  Tag="{Binding}" 
+                                  Toggled="ToggleSwitch_Toggled" 
+                                  IsOn="{Binding IsRoamed, Mode=TwoWay}">
+                        <ToggleSwitch.Header>
+                            <StackPanel>
+                                <TextBlock Text="{Binding Name}" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                                <TextBlock Text="{Binding CreateDate}" Style="{StaticResource BaseTextBlockStyle}"/>
+                                <TextBlock Text="{Binding FileSize}" Style="{StaticResource BaseTextBlockStyle}"/>
+                            </StackPanel>
+                        </ToggleSwitch.Header>
+                    </ToggleSwitch>
                 </DataTemplate>
             </ListView.ItemTemplate>
 
             <ListView.GroupStyle>
-                <GroupStyle>
+                <GroupStyle HidesIfEmpty="True">
                     <GroupStyle.HeaderTemplate>
                         <DataTemplate>
                             <StackPanel>
-                                <TextBlock Text="{Binding}"/>
+                                <TextBlock Text="{Binding}" FontSize="30"/>                                
                             </StackPanel>
                         </DataTemplate>
                     </GroupStyle.HeaderTemplate>

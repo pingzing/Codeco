@@ -1,7 +1,7 @@
 ﻿<common:BindablePage
     x:Class="CodeStore8UI.MainPage"
     xmlns:common="using:CodeStore8UI.Common"
-    xmlns:controls="using:CodeStore8UI.Controls"
+    xmlns:controls="using:CodeStore8UI.Controls" 
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:CodeStore8UI"
@@ -84,17 +84,8 @@
 
         </controls:SavedFilesControl>
         
-        <Border Grid.Row="2" 
-                Grid.ColumnSpan="2" 
-                VerticalAlignment="Bottom" 
-                Background="Goldenrod" 
-                HorizontalAlignment="Stretch" 
-                Tapped="Border_Tapped">
-            <TextBlock Text="..." 
-                       FontSize="30" 
-                       HorizontalAlignment="Right" 
-                       Margin="0,-5,12,0"/>
-        </Border>
+        <controls:AppBarHint Grid.Row="2" HorizontalAlignment="Stretch" Background="Goldenrod" Grid.ColumnSpan="2"/>
+        
     </Grid>
 
     <Page.BottomAppBar>

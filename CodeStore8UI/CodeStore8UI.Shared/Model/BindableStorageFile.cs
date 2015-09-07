@@ -74,12 +74,18 @@ namespace CodeStore8UI.Model
                 _fileSize = value;
                 RaisePropertyChanged();
             }
-        }
+        }        
 
         private async void UpdateBoundSize(StorageFile _backingFile)
         {
             var props = await _backingFile.GetBasicPropertiesAsync();
             FileSize = GetHumanReadableSize(props.Size);
+        }
+
+        public async Task<ulong> GetFileSizeInBytes()
+        {
+            var props = await _backingFile.GetBasicPropertiesAsync();
+            return props.Size;
         }
 
         private static string GetHumanReadableSize(ulong size)

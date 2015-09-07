@@ -38,24 +38,30 @@ namespace CodeStore8UI
             //FileListView.SelectedItem = null;
             _pageLoaded = true;
         }
-
-        private void Grid_FileTapped(object sender, TappedRoutedEventArgs e)
+        private void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
         {
-            var tappedItem = (sender as Grid)?.Tag as BindableStorageFile;
+            if(!_pageLoaded)
+            {
+                return;
+            }
+            var tappedItem = (sender as ToggleSwitch)?.Tag as BindableStorageFile;
             if (tappedItem == null)
             {
                 return;
             }
-
+            
             var context = (DataContext as SettingsViewModel);
-            if (tappedItem.IsRoamed)
+            if (!tappedItem.IsRoamed && !context.FileGroups.First(x => x.Title == "This Device Only").Files.Contains(tappedItem))
             {
                 context?.RemoveFileFromSyncCommand.Execute(tappedItem);
             }
-            else
+
+            if(tappedItem.IsRoamed && !context.FileGroups.First(x => x.Title == "Synced").Files.Contains(tappedItem))
             {
                 context?.SyncFileCommand.Execute(tappedItem);
             }
+            (sender as ToggleSwitch).InvalidateArrange();
+            (sender as ToggleSwitch).InvalidateMeasure();
         }
     }
 }

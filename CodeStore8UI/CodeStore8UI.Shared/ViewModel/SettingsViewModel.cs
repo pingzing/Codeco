@@ -33,8 +33,8 @@ namespace CodeStore8UI.ViewModel
         private RelayCommand _goBackCommand;
         public RelayCommand GoBackCommand => _goBackCommand ?? (_goBackCommand = new RelayCommand(GoBack));        
 
-        private ulong _roamingSpaceUsed = 0;
-        public ulong RoamingSpaceUsed
+        private double _roamingSpaceUsed = 0;
+        public double RoamingSpaceUsed
         {
             get { return _roamingSpaceUsed; }
             set
@@ -44,9 +44,9 @@ namespace CodeStore8UI.ViewModel
                     return;
                 }
                 _roamingSpaceUsed = value;
-                RaisePropertyChanged();
+                RaisePropertyChanged();                
             }
-        }
+        }                
 
         private ObservableCollection<FileCollection> _fileGroups = new ObservableCollection<FileCollection>();
         public ObservableCollection<FileCollection> FileGroups
@@ -72,16 +72,28 @@ namespace CodeStore8UI.ViewModel
         private async void SyncFile(BindableStorageFile file)
         {
             await _fileService.RoamFile(file);
+            ulong space = 0;
+            foreach(var f in  FileGroups.First(x => x.Title == "Synced").Files)
+            {
+                space += await f.GetFileSizeInBytes();
+            }
+            RoamingSpaceUsed = (double)space / 1024;
         }
 
         private async void RemoveFileFromSync(BindableStorageFile file)
         {
             await _fileService.StopRoamingFile(file);
+            ulong space = 0;
+            foreach (var f in FileGroups.First(x => x.Title == "Synced").Files)
+            {
+                space += await f.GetFileSizeInBytes();
+            }
+            RoamingSpaceUsed = (double)space / 1024;
         }
 
         private void GoBack()
         {
-            _navigationService.GoBack();
+            _navigationService.GoBack();            
         }
 
         public void Activate(object parameter, NavigationMode navigationMode)
@@ -89,7 +101,7 @@ namespace CodeStore8UI.ViewModel
             if (navigationMode == NavigationMode.New && FileGroups.Count == 0)
             {                
                 FileGroups.Add(new FileCollection("Synced", _fileService.RoamedFiles));
-                FileGroups.Add(new FileCollection("Local", _fileService.LocalFiles));
+                FileGroups.Add(new FileCollection("This Device Only", _fileService.LocalFiles));
             }
         }
 
