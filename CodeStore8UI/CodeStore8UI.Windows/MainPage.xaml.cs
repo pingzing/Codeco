@@ -26,14 +26,18 @@ namespace CodeStore8UI
             AppBar.IsOpen = true;
         }
 
-        private void SavedFilesControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void SavedFile_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            if (e.AddedItems.Count > 0)
+            var tappedFile = (sender as StackPanel)?.Tag as BindableStorageFile;
+            if (tappedFile == null)
             {
-                StorageFile file = (e.AddedItems[0] as BindableStorageFile).BackingFile;
-                (this.DataContext as MainViewModel).ChangeActiveFileCommand.Execute(file);
+                return;
             }
+
+            var context = (DataContext as MainViewModel);
+            context?.ChangeActiveFileCommand.Execute(tappedFile);
         }
+
 
         private void SavedFile_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
@@ -48,6 +52,6 @@ namespace CodeStore8UI
         private async void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
             await ApplicationData.Current.ClearAsync();
-        }
+        }        
     }
 }

@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using CodeStore8UI.Common;
 using Windows.UI.ViewManagement;
+using System.Diagnostics;
 
 // The Universal Hub Application project template is documented at http://go.microsoft.com/fwlink/?LinkID=391955
 
@@ -38,7 +39,13 @@ namespace CodeStore8UI
         public App()
         {
             this.InitializeComponent();
-            this.Suspending += this.OnSuspending;                        
+            this.Suspending += this.OnSuspending;
+            this.UnhandledException += App_UnhandledException;                     
+        }
+
+        private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            Debugger.Break();
         }
 
         /// <summary>

@@ -16,6 +16,8 @@ namespace CodeStore8UI
     {
         private bool _initialized = false;
 
+        public enum FileLocation { Local, Roamed };
+
         private ObservableCollection<BindableStorageFile> _localFiles;        
         public ObservableCollection<BindableStorageFile> LocalFiles
         {
@@ -77,14 +79,14 @@ namespace CodeStore8UI
         }
 
         public async Task StopRoamingFile(BindableStorageFile file)
-        {            
+        {           
             //UI
             LocalFiles.Add(file);
             file.IsRoamed = false;
             RoamedFiles.Remove(file);
 
             //Backing values
-            await FileUtilities.MoveFileToRoamingAsync(file.BackingFile);
+            await FileUtilities.MoveFileToRoamingAsync(file.BackingFile);            
         }
 
         public async Task RoamFile(BindableStorageFile file)
@@ -95,7 +97,7 @@ namespace CodeStore8UI
             LocalFiles.Remove(file);
 
             //Backing values
-            await FileUtilities.MoveFileToLocalAsync(file.BackingFile);
+            await FileUtilities.MoveFileToLocalAsync(file.BackingFile);            
         }
 
         protected async override Task CreateAsync()
@@ -136,7 +138,7 @@ namespace CodeStore8UI
         /// <param name="fileName">The filename with which to save the file.</param>
         /// <param name="password">The password that will be used to generate the encryption key.</param>
         /// <returns>If successful, returns the created StorageFile.</returns>
-        public async Task<StorageFile> SaveAndEncryptFileAsync(string contents, string fileName, string password)
+        public async Task<BindableStorageFile> SaveAndEncryptFileAsync(string contents, string fileName, string password)
         {
             if(!_initialized)
             {
@@ -146,7 +148,7 @@ namespace CodeStore8UI
             StorageFile savedFile = await FileUtilities.GetEncryptedFileAsync(savedFileName);
             BindableStorageFile bsf = await BindableStorageFile.Create(savedFile);
             LocalFiles.Add(bsf);
-            return savedFile;
+            return bsf;
         }
 
         public BindableStorageFile GetLoadedFile(string savedFileName)
@@ -158,13 +160,15 @@ namespace CodeStore8UI
             return LocalFiles.Where(x => x.Name == savedFileName).Single();
         }
 
-        internal async Task<string> RetrieveFileContentsAsync(string name, string password)
+        internal async Task<string> RetrieveFileContentsAsync(string name, string password, FileLocation location)
         {
             if (!_initialized)
             {
                 throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
             }
-            string encryptedContents = await FileIO.ReadTextAsync(LocalFiles.Concat(RoamedFiles).Single(x => x.Name == name).BackingFile);
+
+            var collectionToSearch = location == FileLocation.Local ? LocalFiles : RoamedFiles;
+            string encryptedContents = await FileIO.ReadTextAsync(collectionToSearch.Single(x => x.Name == name).BackingFile);
             if(String.IsNullOrWhiteSpace(encryptedContents))
             {
                 return null;
@@ -172,23 +176,25 @@ namespace CodeStore8UI
             return EncryptionManager.Decrypt(encryptedContents, password);
         }
 
-        internal async Task ClearFileAsync(string name)
+        internal async Task ClearFileAsync(string name, FileLocation location)
         {
             if (!_initialized)
             {
                 throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
             }
-            var file = LocalFiles.Concat(RoamedFiles).Single(x => x.Name == name);
+            var collectionToSearch = location == FileLocation.Local ? LocalFiles : RoamedFiles;
+            var file = collectionToSearch.Single(x => x.Name == name);
             await FileIO.WriteTextAsync(file.BackingFile, string.Empty);
         }
 
-        internal async Task DeleteFileAsync(StorageFile backingFile)
+        internal async Task DeleteFileAsync(StorageFile backingFile, FileLocation location)
         {
             if (!_initialized)
             {
                 throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
             }
-            LocalFiles.Remove(LocalFiles.Concat(RoamedFiles).Single(x => x.BackingFile == backingFile));
+            var collectionToSearch = location == FileLocation.Local ? LocalFiles : RoamedFiles;
+            collectionToSearch.Single(x => x.BackingFile == backingFile);
             await FileUtilities.DeleteFileAsync(backingFile);
         }
 
@@ -208,6 +214,11 @@ namespace CodeStore8UI
                 BindableStorageFile bsf = await BindableStorageFile.Create(file);                
                 LocalFiles.Add(bsf);
             }
+        }
+
+        internal FileLocation GetFileLocation(BindableStorageFile file)
+        {            
+            return file.IsRoamed ? FileLocation.Roamed : FileLocation.Local;
         }
     }
 }

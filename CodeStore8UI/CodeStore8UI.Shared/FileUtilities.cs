@@ -80,6 +80,7 @@ namespace CodeStore8UI
         public static async Task MoveFileToRoamingAsync(StorageFile backingFile)
         {
             await backingFile.MoveAsync(_roamingFolder, backingFile.Name, NameCollisionOption.GenerateUniqueName);
+            
         }
 
         public static async Task MoveFileToLocalAsync(StorageFile backingFile)

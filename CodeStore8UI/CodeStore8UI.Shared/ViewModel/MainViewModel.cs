@@ -20,9 +20,9 @@ using CodeStore8UI.Services;
 using GalaSoft.MvvmLight.Views;
 
 namespace CodeStore8UI.ViewModel
-{    
+{
     public class MainViewModel : ViewModelBase, INavigable
-    {        
+    {
         private Dictionary<string, string> _codeDictionary = new Dictionary<string, string>();
         private FileService _fileService;
         private NavigationService _navigationService;
@@ -36,22 +36,22 @@ namespace CodeStore8UI.ViewModel
         private RelayCommand _deleteCodesCommand;
         public RelayCommand DeleteCodesCommand => _deleteCodesCommand ?? (_deleteCodesCommand = new RelayCommand(DeleteCodes));
 
-        private RelayCommand<StorageFile> _changeActiveFileCommand;
-        public RelayCommand<StorageFile> ChangeActiveFileCommand => _changeActiveFileCommand 
-            ?? (_changeActiveFileCommand = new RelayCommand<StorageFile>(ChangeActiveFile));
+        private RelayCommand<BindableStorageFile> _changeActiveFileCommand;
+        public RelayCommand<BindableStorageFile> ChangeActiveFileCommand => _changeActiveFileCommand
+            ?? (_changeActiveFileCommand = new RelayCommand<BindableStorageFile>(ChangeActiveFile));
 
         private RelayCommand<BindableStorageFile> _deleteFileCommand;
-        public RelayCommand<BindableStorageFile> DeleteFileCommand => _deleteFileCommand 
+        public RelayCommand<BindableStorageFile> DeleteFileCommand => _deleteFileCommand
             ?? (_deleteFileCommand = new RelayCommand<BindableStorageFile>(DeleteFile));
 
         private RelayCommand<BindableStorageFile> _renameFileCommand;
-        public RelayCommand<BindableStorageFile> RenameFileCommand => _renameFileCommand 
+        public RelayCommand<BindableStorageFile> RenameFileCommand => _renameFileCommand
             ?? (_renameFileCommand = new RelayCommand<BindableStorageFile>(RenameFile));
 
         private RelayCommand _goToSettingsCommand;
-        public RelayCommand GoToSettingsCommand => _goToSettingsCommand ?? (_goToSettingsCommand = new RelayCommand(GoToSettings));        
+        public RelayCommand GoToSettingsCommand => _goToSettingsCommand ?? (_goToSettingsCommand = new RelayCommand(GoToSettings));
 
-        private int _longestCode = 1;        
+        private int _longestCode = 1;
         #region LongestCode Property
         public int LongestCode
         {
@@ -61,8 +61,8 @@ namespace CodeStore8UI.ViewModel
                 if (_longestCode == value)
                 {
                     return;
-                }                
-                _longestCode = value;               
+                }
+                _longestCode = value;
                 RaisePropertyChanged(nameof(LongestCode));
             }
         }
@@ -78,8 +78,8 @@ namespace CodeStore8UI.ViewModel
                 if (_codeText == value)
                 {
                     return;
-                }                
-                _codeText = value;                
+                }
+                _codeText = value;
                 RaisePropertyChanged(nameof(CodeText));
             }
         }
@@ -92,7 +92,7 @@ namespace CodeStore8UI.ViewModel
             get { return _inputText; }
             set
             {
-                if(value == _inputText)
+                if (value == _inputText)
                 {
                     return;
                 }
@@ -109,22 +109,22 @@ namespace CodeStore8UI.ViewModel
             get { return _fileGroups; }
             set
             {
-                if(_fileGroups == value)
+                if (_fileGroups == value)
                 {
                     return;
                 }
                 _fileGroups = value;
                 RaisePropertyChanged();
             }
-        }             
+        }
 
-        private StorageFile _activeFile;
-        public StorageFile ActiveFile
+        private BindableStorageFile _activeFile;
+        public BindableStorageFile ActiveFile
         {
             get { return _activeFile; }
             set
             {
-                if(_activeFile == value)
+                if (_activeFile == value)
                 {
                     return;
                 }
@@ -134,13 +134,13 @@ namespace CodeStore8UI.ViewModel
             }
         }
 
-        private string _openFileText = "";        
+        private string _openFileText = "";
         public string OpenFileText
         {
             get { return _openFileText; }
             set
-            {                
-                if(_openFileText == value)
+            {
+                if (_openFileText == value)
                 {
                     return;
                 }
@@ -183,9 +183,9 @@ namespace CodeStore8UI.ViewModel
         private async Task OpenFile(StorageFile file)
         {
             bool isValid = await FileUtilities.ValidateFileAsync(file);
-            if(!isValid)
+            if (!isValid)
             {
-                MessageDialog dialog = new MessageDialog("The file you tried to open was not formatted correctly. Are you sure it's a two-column comma-delimited file?", "Unable to read file");                
+                MessageDialog dialog = new MessageDialog("The file you tried to open was not formatted correctly. Are you sure it's a two-column comma-delimited file?", "Unable to read file");
                 await dialog.ShowAsync();
                 return;
             }
@@ -195,7 +195,7 @@ namespace CodeStore8UI.ViewModel
                 return;
             }
             string contents = await FileIO.ReadTextAsync(file);
-            ActiveFile = await _fileService.SaveAndEncryptFileAsync(contents, output.FileName, output.Password);            
+            ActiveFile = await _fileService.SaveAndEncryptFileAsync(contents, output.FileName, output.Password);
             _codeDictionary = await GetCodes(output.Password);
         }
 
@@ -223,7 +223,7 @@ namespace CodeStore8UI.ViewModel
             }
 #else
             AddFileDialog dialog = new AddFileDialog();
-            dialog.FileName = fileName;      
+            dialog.FileName = fileName;
             dialog.IsOpen = true;
             if ((await dialog.WhenClosed()).DialogResult == AddFileDialog.Result.Ok)
             {
@@ -243,7 +243,8 @@ namespace CodeStore8UI.ViewModel
         private async Task<Dictionary<string, string>> GetCodes(string password)
         {
             Dictionary<string, string> codeDict = new Dictionary<string, string>();
-            string fileContents = await _fileService.RetrieveFileContentsAsync(ActiveFile.Name, password);
+            FileService.FileLocation location = _fileService.GetFileLocation(ActiveFile);
+            string fileContents = await _fileService.RetrieveFileContentsAsync(ActiveFile.Name, password, location);
 
             if (fileContents == null)
             {
@@ -267,13 +268,14 @@ namespace CodeStore8UI.ViewModel
 
         private async void DeleteCodes()
         {
-            await _fileService.ClearFileAsync(_activeFile.Name);
+            FileService.FileLocation location = _fileService.GetFileLocation(ActiveFile);
+            await _fileService.ClearFileAsync(ActiveFile.Name, location);
             _codeDictionary = new Dictionary<string, string>();
         }
 
         private void LookupCode(string newText)
         {
-            string foundValue = "";                        
+            string foundValue = "";
             if (_codeDictionary.TryGetValue(newText, out foundValue))
             {
                 CodeText = foundValue;
@@ -284,8 +286,8 @@ namespace CodeStore8UI.ViewModel
             }
         }
 
-        private async void ChangeActiveFile(StorageFile arg)
-        {            
+        private async void ChangeActiveFile(BindableStorageFile arg)
+        {
             string password = await GetPassword();
             if (password != null)
             {
@@ -310,7 +312,7 @@ namespace CodeStore8UI.ViewModel
 #else
             PasswordDialog dialog = new PasswordDialog();
             dialog.IsOpen = true;
-            if((await dialog.WhenClosed()).DialogResult == PasswordDialog.Result.Ok)
+            if ((await dialog.WhenClosed()).DialogResult == PasswordDialog.Result.Ok)
             {
                 return dialog.Password;
             }
@@ -322,8 +324,9 @@ namespace CodeStore8UI.ViewModel
         }
 
         private async void DeleteFile(BindableStorageFile item)
-        {            
-            await _fileService.DeleteFileAsync(item.BackingFile);
+        {
+            FileService.FileLocation location = _fileService.GetFileLocation(item);
+            await _fileService.DeleteFileAsync(item.BackingFile, location);
         }
 
         private void RenameFile(BindableStorageFile item)
@@ -337,17 +340,14 @@ namespace CodeStore8UI.ViewModel
         }
 
         public void Activate(object parameter, NavigationMode navigationMode)
-        {            
-            if (navigationMode == NavigationMode.New)
-            {                
-                FileGroups.Add(new FileCollection("Local", _fileService.LocalFiles));
-                FileGroups.Add(new FileCollection("Synced", _fileService.RoamedFiles));
-            }
+        {
+            FileGroups.Add(new FileCollection("Local", _fileService.LocalFiles));
+            FileGroups.Add(new FileCollection("Synced", _fileService.RoamedFiles));
         }
 
         public void Deactivate(object parameter)
         {
-            //
+            FileGroups.Clear();
         }
     }
 }

@@ -62,7 +62,7 @@ namespace CodeStore8UI.Controls
         {
             this.InitializeComponent();
             ((FrameworkElement)this.Content).DataContext = this;
-            SavedFilesListView.SelectionMode = ListViewSelectionMode.Single;            
+            SavedFilesListView.SelectionMode = ListViewSelectionMode.None;            
         }
 
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)

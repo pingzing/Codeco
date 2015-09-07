@@ -66,12 +66,15 @@
                                     Grid.RowSpan="2" 
                                     Grid.Column="1" 
                                     ItemsSource="{Binding Source={StaticResource FileViewSource}}"                                    
-                                    Margin="0,12,12,0" 
-                                    FileListSelectionChanged="SavedFilesControl_SelectionChanged">
+                                    Margin="0,12,12,0">
 
             <controls:SavedFilesControl.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Margin="12,0,0,4" RightTapped="SavedFile_RightTapped" FlyoutBase.AttachedFlyout="{StaticResource SavedFileFlyout}">
+                    <StackPanel Margin="12,0,0,4" 
+                                Tag="{Binding}"
+                                Tapped="SavedFile_Tapped" 
+                                RightTapped="SavedFile_RightTapped" 
+                                FlyoutBase.AttachedFlyout="{StaticResource SavedFileFlyout}">
                         <TextBlock Text="{Binding Name}" Style="{StaticResource SubtitleTextBlockStyle}"/>
                         <TextBlock Text="{Binding CreateDate}" Style="{StaticResource BaseTextBlockStyle}"/>
                         <TextBlock Text="{Binding FileSize}" Style="{StaticResource BaseTextBlockStyle}"/>

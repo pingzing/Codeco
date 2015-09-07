@@ -35,35 +35,27 @@ namespace CodeStore8UI
 
         private void SettingsPage_Loaded(object sender, RoutedEventArgs e)
         {
-            FileListView.SelectedItem = null;
+            //FileListView.SelectedItem = null;
             _pageLoaded = true;
         }
 
-        private void FileList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {      
-            if(!_pageLoaded)
-            {
-                return;
-            }
-            if(e.AddedItems.Count == 0)
-            {
-                return;
-            }
-            var selectedFile = e.AddedItems[0] as BindableStorageFile;
-            if(selectedFile == null)
+        private void Grid_FileTapped(object sender, TappedRoutedEventArgs e)
+        {
+            var tappedItem = (sender as Grid)?.Tag as BindableStorageFile;
+            if (tappedItem == null)
             {
                 return;
             }
 
             var context = (DataContext as SettingsViewModel);
-            if (selectedFile.IsRoamed)
-            {                
-                context?.RemoveFileFromSyncCommand.Execute(selectedFile);
+            if (tappedItem.IsRoamed)
+            {
+                context?.RemoveFileFromSyncCommand.Execute(tappedItem);
             }
             else
             {
-                context?.SyncFileCommand.Execute(selectedFile);
+                context?.SyncFileCommand.Execute(tappedItem);
             }
-        }        
+        }
     }
 }
