@@ -3,6 +3,7 @@ using CodeStore8UI.Model;
 using CodeStore8UI.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -25,13 +26,25 @@ namespace CodeStore8UI
     /// </summary>
     public sealed partial class SettingsPage : BindablePage
     {
+        private bool _pageLoaded = false;
         public SettingsPage()
         {
             this.InitializeComponent();
-        }        
+            Loaded += SettingsPage_Loaded;
+        }
+
+        private void SettingsPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            FileListView.SelectedItem = null;
+            _pageLoaded = true;
+        }
 
         private void FileList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
+        {      
+            if(!_pageLoaded)
+            {
+                return;
+            }
             if(e.AddedItems.Count == 0)
             {
                 return;
@@ -51,6 +64,6 @@ namespace CodeStore8UI
             {
                 context?.SyncFileCommand.Execute(selectedFile);
             }
-        }
+        }        
     }
 }

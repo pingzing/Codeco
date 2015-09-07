@@ -76,7 +76,7 @@ namespace CodeStore8UI
             }
         }
 
-        internal async Task StopRoamingFile(BindableStorageFile file)
+        public async Task StopRoamingFile(BindableStorageFile file)
         {            
             //UI
             LocalFiles.Add(file);
@@ -87,7 +87,7 @@ namespace CodeStore8UI
             await FileUtilities.MoveFileToRoamingAsync(file.BackingFile);
         }
 
-        internal async Task RoamFile(BindableStorageFile file)
+        public async Task RoamFile(BindableStorageFile file)
         {            
             //UI
             RoamedFiles.Add(file);
@@ -164,7 +164,7 @@ namespace CodeStore8UI
             {
                 throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
             }
-            string encryptedContents = await FileIO.ReadTextAsync(LocalFiles.Single(x => x.Name == name).BackingFile);
+            string encryptedContents = await FileIO.ReadTextAsync(LocalFiles.Concat(RoamedFiles).Single(x => x.Name == name).BackingFile);
             if(String.IsNullOrWhiteSpace(encryptedContents))
             {
                 return null;
@@ -178,7 +178,7 @@ namespace CodeStore8UI
             {
                 throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
             }
-            var file = LocalFiles.Single(x => x.Name == name);
+            var file = LocalFiles.Concat(RoamedFiles).Single(x => x.Name == name);
             await FileIO.WriteTextAsync(file.BackingFile, string.Empty);
         }
 
@@ -188,7 +188,7 @@ namespace CodeStore8UI
             {
                 throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
             }
-            LocalFiles.Remove(LocalFiles.Single(x => x.BackingFile == backingFile));
+            LocalFiles.Remove(LocalFiles.Concat(RoamedFiles).Single(x => x.BackingFile == backingFile));
             await FileUtilities.DeleteFileAsync(backingFile);
         }
 

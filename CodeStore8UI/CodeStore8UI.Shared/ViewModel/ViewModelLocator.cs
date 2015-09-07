@@ -9,6 +9,7 @@ using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Views;
 using Microsoft.Practices.ServiceLocation;
 using CodeStore8UI.Services;
+using System.Threading.Tasks;
 
 namespace CodeStore8UI.ViewModel
 {
@@ -38,11 +39,18 @@ namespace CodeStore8UI.ViewModel
                 NavigationService navService = InitializeNavigationService();
                 SimpleIoc.Default.Register<INavigationService>(() => navService);
 
-                SimpleIoc.Default.Register<IService, FileService>();                
+                IService fileService = InitializeFileService().Result;
+                SimpleIoc.Default.Register(() => fileService);                
 
                 SimpleIoc.Default.Register<MainViewModel>();
                 SimpleIoc.Default.Register<SettingsViewModel>();
             }            
+        }
+
+        private async Task<IService> InitializeFileService()
+        {
+            FileService service = new FileService();
+            return await service.InitializeAsync();
         }
 
         private NavigationService InitializeNavigationService()

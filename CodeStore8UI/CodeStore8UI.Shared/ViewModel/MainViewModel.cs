@@ -336,11 +336,10 @@ namespace CodeStore8UI.ViewModel
             _navigationService.NavigateTo(nameof(SettingsPage));
         }
 
-        public async void Activate(object parameter, NavigationMode navigationMode)
+        public void Activate(object parameter, NavigationMode navigationMode)
         {            
             if (navigationMode == NavigationMode.New)
-            {
-                await _fileService.InitializeAsync();
+            {                
                 FileGroups.Add(new FileCollection("Local", _fileService.LocalFiles));
                 FileGroups.Add(new FileCollection("Synced", _fileService.RoamedFiles));
             }

@@ -15,7 +15,7 @@
     </d:DataContext>
 
     <common:BindablePage.Resources>
-        <CollectionViewSource x:Key="FileViewSource" Source="{Binding FileGroups}" IsSourceGrouped="True" ItemsPath="Files" />
+        <CollectionViewSource x:Key="FileViewSource" Source="{Binding FileGroups}" IsSourceGrouped="True" ItemsPath="Files"/>
     </common:BindablePage.Resources>
 
     <Grid Margin="12,12,0,0">
@@ -26,10 +26,12 @@
 
         <StackPanel Orientation="Horizontal">
             <Button IsEnabled="{Binding AllowGoingBack}" Style="{StaticResource NavigationBackButtonNormalStyle}" Command="{Binding GoBackCommand}"/>
-            <TextBlock Grid.Row="0"  Text="Settings" Style="{StaticResource HeaderTextBlockStyle}" Margin="12,0,0,0"/>
+            <TextBlock Grid.Row="0"  Text="Settings" Style="{StaticResource HeaderTextBlockStyle}" Margin="24,0,0,0"/>
         </StackPanel>
 
-        <ListView Grid.Row="1" ItemsSource="{Binding Source={StaticResource FileViewSource}}" 
+        <ListView Grid.Row="1" 
+                  x:Name="FileListView"
+                  ItemsSource="{Binding Source={StaticResource FileViewSource}}" 
                   SelectionMode="Single"
                   SelectionChanged="FileList_SelectionChanged">
             <ListView.ItemTemplate>
@@ -40,7 +42,7 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <CheckBox Grid.Column="0" 
-                                  IsChecked="{Binding IsRoamed}" IsEnabled="False"/>
+                                  IsChecked="{Binding IsRoamed}"/>
                         <StackPanel Grid.Column="1">
                             <TextBlock Text="{Binding Name}" Style="{StaticResource SubtitleTextBlockStyle}"/>
                             <TextBlock Text="{Binding CreateDate}" Style="{StaticResource BaseTextBlockStyle}"/>
@@ -51,7 +53,7 @@
             </ListView.ItemTemplate>
 
             <ListView.GroupStyle>
-                <GroupStyle HidesIfEmpty="True">
+                <GroupStyle>
                     <GroupStyle.HeaderTemplate>
                         <DataTemplate>
                             <StackPanel>

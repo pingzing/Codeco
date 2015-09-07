@@ -69,14 +69,14 @@ namespace CodeStore8UI.ViewModel
             _navigationService = navService as NavigationService;
         }
 
-        private void SyncFile(BindableStorageFile file)
+        private async void SyncFile(BindableStorageFile file)
         {
-            _fileService.RoamFile(file);
+            await _fileService.RoamFile(file);
         }
 
-        private void RemoveFileFromSync(BindableStorageFile file)
+        private async void RemoveFileFromSync(BindableStorageFile file)
         {
-            _fileService.StopRoamingFile(file);
+            await _fileService.StopRoamingFile(file);
         }
 
         private void GoBack()
@@ -84,11 +84,10 @@ namespace CodeStore8UI.ViewModel
             _navigationService.GoBack();
         }
 
-        public async void Activate(object parameter, NavigationMode navigationMode)
-        {
-            if (navigationMode == NavigationMode.New)
-            {
-                await _fileService.InitializeAsync();
+        public void Activate(object parameter, NavigationMode navigationMode)
+        {            
+            if (navigationMode == NavigationMode.New && FileGroups.Count == 0)
+            {                
                 FileGroups.Add(new FileCollection("Synced", _fileService.RoamedFiles));
                 FileGroups.Add(new FileCollection("Local", _fileService.LocalFiles));
             }
