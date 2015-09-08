@@ -8,7 +8,7 @@ using Windows.Storage;
 
 namespace CodeStore8UI.Model
 {
-    public class BindableStorageFile : INotifyPropertyChanged
+    public class BindableStorageFile : INotifyPropertyChanged, IBindableStorageFile
     {
         private const uint BYTES_PER_KB = 1024;
         private const uint BYTES_PER_MB = BYTES_PER_KB * 1024;
@@ -16,7 +16,7 @@ namespace CodeStore8UI.Model
 
         private BindableStorageFile() { }
 
-        public static async Task<BindableStorageFile> Create(StorageFile file)
+        public static async Task<BindableStorageFile> Create(IStorageFile file)
         {
             BindableStorageFile bsf = new BindableStorageFile();
             bsf._backingFile = file;
@@ -45,8 +45,8 @@ namespace CodeStore8UI.Model
             }
         }
 
-        private StorageFile _backingFile;
-        public StorageFile BackingFile
+        private IStorageFile _backingFile;
+        public IStorageFile BackingFile
         {
             get { return _backingFile; }
             set
@@ -76,7 +76,7 @@ namespace CodeStore8UI.Model
             }
         }        
 
-        private async void UpdateBoundSize(StorageFile _backingFile)
+        private async void UpdateBoundSize(IStorageFile _backingFile)
         {
             var props = await _backingFile.GetBasicPropertiesAsync();
             FileSize = GetHumanReadableSize(props.Size);

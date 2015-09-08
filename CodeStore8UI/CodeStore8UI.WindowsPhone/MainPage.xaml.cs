@@ -24,24 +24,15 @@ namespace CodeStore8UI
         public async void ContinueFileOpenPicker(FileOpenPickerContinuationEventArgs args)
         {
             await (DataContext as MainViewModel).AddFile_PhoneContinued(args);
-        }
-
-        private void SavedFilesControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if(e.AddedItems.Count > 0)
-            {                               
-                StorageFile file = ((BindableStorageFile)e.AddedItems[0]).BackingFile;
-                (this.DataContext as MainViewModel).ChangeActiveFileCommand.Execute(file);                
-            }
-        }
+        }       
 
         //Binding doesn't seem to work, so code-behind it is.
         private void BindablePage_Loaded(object sender, RoutedEventArgs e)
         {
-            Binding savedFilesBinding = new Binding();
-            savedFilesBinding.Source = FileViewSource;
-            savedFilesBinding.Mode = BindingMode.OneWay;
-            SavedFilesList.SetBinding(SavedFilesControl.ItemsSourceProperty, savedFilesBinding);
+            //Binding savedFilesBinding = new Binding();
+            //savedFilesBinding.Source = FileViewSource;
+            //savedFilesBinding.Mode = BindingMode.OneWay;
+            //SavedFilesList.SetBinding(SavedFilesControl.ItemsSourceProperty, savedFilesBinding);
         }
 
         private void SavedFile_RightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -51,6 +42,18 @@ namespace CodeStore8UI
             {
                 FlyoutBase.ShowAttachedFlyout(item);
             }
+        }
+
+        private void SavedFile_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var tappedFile = (sender as StackPanel)?.Tag as BindableStorageFile;
+            if (tappedFile == null)
+            {
+                return;
+            }
+
+            var context = (DataContext as MainViewModel);
+            context?.ChangeActiveFileCommand.Execute(tappedFile);
         }
     }
 }

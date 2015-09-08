@@ -18,8 +18,8 @@ namespace CodeStore8UI
 
         public enum FileLocation { Local, Roamed };
 
-        private ObservableCollection<BindableStorageFile> _localFiles;        
-        public ObservableCollection<BindableStorageFile> LocalFiles
+        private ObservableCollection<IBindableStorageFile> _localFiles;        
+        public ObservableCollection<IBindableStorageFile> LocalFiles
         {
             get
             {
@@ -48,8 +48,8 @@ namespace CodeStore8UI
             }
         }
 
-        private ObservableCollection<BindableStorageFile> _roamedFiles;
-        public ObservableCollection<BindableStorageFile> RoamedFiles
+        private ObservableCollection<IBindableStorageFile> _roamedFiles;
+        public ObservableCollection<IBindableStorageFile> RoamedFiles
         {
             get
             {
@@ -86,7 +86,7 @@ namespace CodeStore8UI
             RoamedFiles.Remove(file);
 
             //Backing values
-            await FileUtilities.MoveFileToRoamingAsync(file.BackingFile);            
+            await FileUtilities.MoveFileToRoamingAsync((StorageFile)file.BackingFile);            
         }
 
         public async Task RoamFile(BindableStorageFile file)
@@ -97,7 +97,7 @@ namespace CodeStore8UI
             LocalFiles.Remove(file);
 
             //Backing values
-            await FileUtilities.MoveFileToLocalAsync(file.BackingFile);            
+            await FileUtilities.MoveFileToLocalAsync((StorageFile)file.BackingFile);            
         }
 
         protected async override Task CreateAsync()
@@ -124,9 +124,9 @@ namespace CodeStore8UI
                 roamedFiles.Add(localFile);
             }
             
-            _localFiles = new ObservableCollection<BindableStorageFile>(localFiles);
+            _localFiles = new ObservableCollection<IBindableStorageFile>(localFiles);
             RaisePropertyChanged(nameof(LocalFiles));
-            _roamedFiles = new ObservableCollection<BindableStorageFile>(roamedFiles);
+            _roamedFiles = new ObservableCollection<IBindableStorageFile>(roamedFiles);
             RaisePropertyChanged(nameof(RoamedFiles));
             _initialized = true;
         }        
@@ -151,7 +151,7 @@ namespace CodeStore8UI
             return bsf;
         }
 
-        public BindableStorageFile GetLoadedFile(string savedFileName)
+        public IBindableStorageFile GetLoadedFile(string savedFileName)
         {
             if (!_initialized)
             {
@@ -206,11 +206,11 @@ namespace CodeStore8UI
             }
             for(int i = LocalFiles.Count - 1; i >= 0; i--)
             {
-                await DeleteFileAsync(LocalFiles[i].BackingFile, FileLocation.Local);
+                await DeleteFileAsync((StorageFile)LocalFiles[i].BackingFile, FileLocation.Local);
             }
             for (int i = LocalFiles.Count - 1; i >= 0; i--)
             {
-                await DeleteFileAsync(RoamedFiles[i].BackingFile, FileLocation.Roamed);
+                await DeleteFileAsync((StorageFile)RoamedFiles[i].BackingFile, FileLocation.Roamed);
             }
 
         }

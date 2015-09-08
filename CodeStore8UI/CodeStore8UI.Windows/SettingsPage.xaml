@@ -10,10 +10,8 @@
     x:Class="CodeStore8UI.SettingsPage"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-    DataContext="{Binding Source={StaticResource Locator}, Path=Settings}">
-    <d:DataContext>
-        <Binding Path="Settings" Source="{StaticResource Locator}"/>
-    </d:DataContext>
+    DataContext="{Binding Source={StaticResource Locator}, Path=Settings}"
+    d:DataContext="{Binding Source={StaticResource Locator}, Path=Settings}">
 
     <common:BindablePage.Resources>
         <CollectionViewSource x:Key="FileViewSource" Source="{Binding FileGroups}" IsSourceGrouped="True" ItemsPath="Files"/>

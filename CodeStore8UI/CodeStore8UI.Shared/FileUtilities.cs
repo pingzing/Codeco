@@ -9,7 +9,7 @@ using CodeStore8UI.Model;
 
 namespace CodeStore8UI
 {
-    //TODO: Add an async lock on these two methods. Otherwise race cases yaaaay
+    //TODO: Add an async lock on these methods. Otherwise race cases yaaaay
     public static class FileUtilities
     {      
         private static readonly StorageFolder _localFolder = ApplicationData.Current.LocalFolder;

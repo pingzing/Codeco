@@ -319,7 +319,7 @@ namespace CodeStore8UI.ViewModel
         private async void DeleteFile(BindableStorageFile item)
         {
             FileService.FileLocation location = _fileService.GetFileLocation(item);
-            await _fileService.DeleteFileAsync(item.BackingFile, location);
+            await _fileService.DeleteFileAsync((StorageFile)item.BackingFile, location);
         }
 
         private void RenameFile(BindableStorageFile item)

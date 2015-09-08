@@ -34,8 +34,7 @@ namespace CodeStore8UI
         }
 
         private void SettingsPage_Loaded(object sender, RoutedEventArgs e)
-        {
-            //FileListView.SelectedItem = null;
+        {            
             _pageLoaded = true;
         }
         private void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
@@ -59,9 +58,7 @@ namespace CodeStore8UI
             if(tappedItem.IsRoamed && !context.FileGroups.First(x => x.Title == "Synced").Files.Contains(tappedItem))
             {
                 context?.SyncFileCommand.Execute(tappedItem);
-            }
-            (sender as ToggleSwitch).InvalidateArrange();
-            (sender as ToggleSwitch).InvalidateMeasure();
+            }            
         }
     }
 }

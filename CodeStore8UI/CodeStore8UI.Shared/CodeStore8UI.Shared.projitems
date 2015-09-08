@@ -27,11 +27,17 @@
     <Compile Include="$(MSBuildThisFileDirectory)Model\AddFileDialogOutput.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model\BindableStorageFile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model\FileCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\IBindableStorageFile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\Mocks\MockBindableStorageFile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\Mocks\MockStorageFile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model\SavedFiles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\FileService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Mocks\MockFileService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ServiceBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ServiceNotInitializedException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\DesignViewModels\MainViewModelDesign.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\DesignViewModels\SettingsViewModelDesign.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\MainViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\SettingsViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ViewModelLocator.cs" />
@@ -52,13 +58,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Theme\PhoneStyles.xaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Assets\test.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)ViewModel\DesignViewModels\" />
   </ItemGroup>
 </Project>

@@ -10,7 +10,11 @@ using GalaSoft.MvvmLight.Views;
 using Microsoft.Practices.ServiceLocation;
 using CodeStore8UI.Services;
 using System.Threading.Tasks;
+using CodeStore8UI.ViewModel.DesignViewModels;
+using CodeStore8UI.Services.Mocks;
+#if WINDOWS_PHONE_APP
 using Windows.Phone.UI.Input;
+#endif
 
 namespace CodeStore8UI.ViewModel
 {
@@ -31,7 +35,11 @@ namespace CodeStore8UI.ViewModel
             {
                 // Create design time view services and models
                 //SimpleIoc.Default.Register<IDataService, DesignDataService>();
-                //SimpleIoc.Default.Register<IService, FileService>();                
+                //SimpleIoc.Default.Register<IService, FileService>();                                 
+                SimpleIoc.Default.Register<IService, MockFileService>();
+                SimpleIoc.Default.Register<INavigationService, NavigationService>();
+                SimpleIoc.Default.Register<SettingsViewModelDesign>();
+                SimpleIoc.Default.Register<MainViewModelDesign>();
             }
             else
             {
@@ -61,22 +69,22 @@ namespace CodeStore8UI.ViewModel
             navService.Configure(nameof(SettingsPage), typeof(SettingsPage));
 #if WINDOWS_PHONE_APP
             HardwareButtons.BackPressed += (s, e) =>
-            {
+            {                
+                //TODO: Extend the navService so it has access to the back stack so we can be smarter here
                 navService.GoBack();
+                e.Handled = true;
             };
 #endif
             return navService;
         }
 
-        public MainViewModel Main => ServiceLocator.Current.GetInstance<MainViewModel>();
+        public MainViewModel Main => ViewModelBase.IsInDesignModeStatic
+            ? ServiceLocator.Current.GetInstance<MainViewModelDesign>()
+            : ServiceLocator.Current.GetInstance<MainViewModel>();
 
-        public SettingsViewModel Settings
-        {
-            get
-            {
-                return ServiceLocator.Current.GetInstance<SettingsViewModel>();
-            }
-        }
+        public SettingsViewModel Settings => ViewModelBase.IsInDesignModeStatic 
+            ? ServiceLocator.Current.GetInstance<SettingsViewModelDesign>() 
+            : ServiceLocator.Current.GetInstance<SettingsViewModel>();
         
         public static void Cleanup()
         {

@@ -11,31 +11,27 @@
     DataContext="{Binding Source={StaticResource Locator}, Path=Settings}">
 
     <common:BindablePage.Resources>
-        <CollectionViewSource x:Key="FileViewSource" Source="{Binding FileGroups}" IsSourceGrouped="True" ItemsPath="Files"/>
+        <CollectionViewSource x:Key="FileViewSource" Source="{Binding FileGroups}" IsSourceGrouped="True" ItemsPath="Files"/>       
     </common:BindablePage.Resources>
 
-    <Grid Margin="12,12,0,0">
+    <Grid Margin="12,12,12,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        
+
         <TextBlock Grid.Row="0" Text="settings" Style="{ThemeResource HeaderTextBlockStyle}"/>
 
         <ListView Grid.Row="1"
-                  ItemsSource="{Binding Source={StaticResource FileViewSource}}"
-                  SelectionMode="None">
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                </Style>
-            </ListView.ItemContainerStyle>
+                  ItemsSource="{Binding Source={StaticResource FileViewSource}}"                  
+                  SelectionMode="None" ItemContainerStyle="{StaticResource ListViewItemNoTiltStretchStyle}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <ToggleSwitch OnContent="Syncing"
+                    <ToggleSwitch OnContent="Syncing"                                     
                                   OffContent="Not Syncing"
                                   Tag="{Binding}"
                                   Toggled="ToggleSwitch_Toggled"
+                                  Style="{StaticResource ToggleSwitchLongHeaderStyle}"
                                   IsOn="{Binding IsRoamed, Mode=TwoWay}">
                         <ToggleSwitch.Header>
                             <StackPanel>
@@ -53,13 +49,17 @@
                     <GroupStyle.HeaderTemplate>
                         <DataTemplate>
                             <StackPanel>
-                                <TextBlock Text="{Binding}" FontSize="20"/>
+                                <TextBlock Text="{Binding}" 
+                                           Margin="0,24,0,0" 
+                                           Style="{StaticResource TitleTextBlockStyle}" 
+                                           FontSize="30" 
+                                           Foreground="{StaticResource PhoneAccentBrush}" 
+                                           IsHitTestVisible="False"/>
                             </StackPanel>
                         </DataTemplate>
                     </GroupStyle.HeaderTemplate>
                 </GroupStyle>
             </ListView.GroupStyle>
         </ListView>
-
     </Grid>
 </common:BindablePage>

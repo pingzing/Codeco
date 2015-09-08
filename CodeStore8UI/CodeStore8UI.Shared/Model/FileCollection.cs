@@ -8,15 +8,15 @@ namespace CodeStore8UI.Model
     public class FileCollection
     {
         public string Title { get; set; }
-        public ObservableCollection<BindableStorageFile> Files {get; set;}
+        public ObservableCollection<IBindableStorageFile> Files {get; set;}
 
         public FileCollection(string title)
         {
             Title = title;
-            Files = new ObservableCollection<BindableStorageFile>();
+            Files = new ObservableCollection<IBindableStorageFile>();
         }
 
-        public FileCollection(string title, ObservableCollection<BindableStorageFile> files)
+        public FileCollection(string title, ObservableCollection<IBindableStorageFile> files)
         {
             Title = title;
             Files = files;
