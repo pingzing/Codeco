@@ -29,10 +29,7 @@ namespace CodeStore8UI.ViewModel
         private NavigationService _navigationService;
 
         private RelayCommand _addFileCommand;
-        public RelayCommand AddFileCommand => _addFileCommand ?? (_addFileCommand = new RelayCommand(AddFile));
-
-        private RelayCommand _changePasswordCommand;
-        public RelayCommand ChangePasswordCommand => _changePasswordCommand ?? (_changePasswordCommand = new RelayCommand(ChangePassword));
+        public RelayCommand AddFileCommand => _addFileCommand ?? (_addFileCommand = new RelayCommand(AddFile));        
 
         private RelayCommand _deleteCodesCommand;
         public RelayCommand DeleteCodesCommand => _deleteCodesCommand ?? (_deleteCodesCommand = new RelayCommand(DeleteCodes));
@@ -198,12 +195,7 @@ namespace CodeStore8UI.ViewModel
             string contents = await FileIO.ReadTextAsync(file);
             ActiveFile = await _fileService.SaveAndEncryptFileAsync(contents, output.FileName, output.Password);
             _codeDictionary = await GetCodes(output.Password);
-        }
-
-        private async void ChangePassword()
-        {
-            //todo: show change password dialog (request old pass & new pass)
-        }
+        }        
 
         private async Task<AddFileDialogOutput> ShowAddFileDialog(string fileName)
         {
@@ -342,8 +334,8 @@ namespace CodeStore8UI.ViewModel
 
         public void Activate(object parameter, NavigationMode navigationMode)
         {
-            FileGroups.Add(new FileCollection("This Device Only", _fileService.LocalFiles));
-            FileGroups.Add(new FileCollection("Synced", _fileService.RoamedFiles));
+            FileGroups.Add(new FileCollection(Constants.LOCAL_FILES_TITLE, _fileService.LocalFiles));
+            FileGroups.Add(new FileCollection(Constants.ROAMED_FILES_TITLE, _fileService.RoamedFiles));
         }
 
         public void Deactivate(object parameter)

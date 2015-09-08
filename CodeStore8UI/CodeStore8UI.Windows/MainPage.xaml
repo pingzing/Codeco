@@ -94,8 +94,7 @@
                 <AppBarButton Label="Delete Active File" Icon="Delete" Command="{Binding DeleteCodesCommand}"/>
                 <AppBarButton Label ="DEBUG: Delete ALL FILES" Icon="Delete" Click="AppBarButton_Click"/>
             </CommandBar.SecondaryCommands>
-            <AppBarButton Label="Settings" Icon="Setting" Command="{Binding GoToSettingsCommand}"/>
-            <AppBarButton Label="Re-enter Password" Icon="Permissions" Command="{Binding ChangePasswordCommand}"/>
+            <AppBarButton Label="Settings" Icon="Setting" Command="{Binding GoToSettingsCommand}"/>            
             <AppBarButton Label="Add File" Icon="Add" Command="{Binding AddFileCommand}"/>
         </CommandBar>
     </Page.BottomAppBar>

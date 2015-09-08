@@ -19,18 +19,8 @@
             <MenuFlyoutItem Text="delete" Command="{Binding DeleteFileCommand}" CommandParameter="{Binding}"/>
             <MenuFlyoutItem Text="rename" Command="{Binding RenameFileCommand}" CommandParameter="{Binding}"/>
         </MenuFlyout>
-        <CollectionViewSource x:Key="FileViewSource" Source="{Binding FileGroups}" IsSourceGrouped="True" ItemsPath="Files" />
+        <CollectionViewSource x:Key="FileViewSource" x:Name="FileViewSource" ItemsPath="Files" Source="{Binding FileGroups}" IsSourceGrouped="True"/>
     </Page.Resources>
-
-    <Page.BottomAppBar>
-        <CommandBar>
-            <AppBarButton Icon="Add" Label="add file" Command="{Binding AddFileCommand}"/>
-            <AppBarButton Icon="Permissions" Label="password" Command="{Binding ChangePasswordCommand}"/>
-            <CommandBar.SecondaryCommands>
-                <AppBarButton Label="delete active file" Command="{Binding DeleteCodesCommand}"/>
-            </CommandBar.SecondaryCommands>
-        </CommandBar>
-    </Page.BottomAppBar>
 
     <Pivot x:Name="MainPivot" Title="CODECO" DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
         <PivotItem x:Name="ActivePivotItem" Header="active">
@@ -71,13 +61,12 @@
 
         <PivotItem x:Name="SavedPivotItem" Header="saved files">
             <!--ItemsSource is declared in codebehind. Binding fails at runtime for some reason.-->
-            <controls:SavedFilesControl x:Name="SavedFiles" 
-                                        HeaderVisibility="Collapsed" 
-                                        ItemsSource="{Binding Source={StaticResource FileViewSource}}" 
+            <controls:SavedFilesControl x:Name="SavedFilesList" 
+                                        HeaderVisibility="Collapsed"                                         
                                         FileListSelectionChanged="SavedFilesControl_SelectionChanged">
                 <controls:SavedFilesControl.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel RightTapped="SavedFile_RightTapped" FlyoutBase.AttachedFlyout="{StaticResource SavedFilesFlyout}">
+                        <StackPanel RightTapped="SavedFile_RightTapped" Tag="{Binding}" FlyoutBase.AttachedFlyout="{StaticResource SavedFilesFlyout}">
                             <TextBlock Text="{Binding Name}" Style="{StaticResource ListViewItemTextBlockStyle}"/>
                             <TextBlock Text="{Binding CreateDate}" Style="{StaticResource ListViewItemSubheaderTextBlockStyle}"/>
                             <TextBlock Text="{Binding FileSize}" Style="{StaticResource ListViewItemSubheaderTextBlockStyle}"/>
@@ -87,5 +76,15 @@
             </controls:SavedFilesControl>
         </PivotItem>
     </Pivot>
+
+    <Page.BottomAppBar>
+        <CommandBar Background="{ThemeResource PhoneAccentBrush}">
+            <AppBarButton Icon="Add" Label="add file" Command="{Binding AddFileCommand}"/>
+            <AppBarButton Icon="Setting" Label="settings" Command="{Binding GoToSettingsCommand}"/>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Label="delete active file" Command="{Binding DeleteCodesCommand}"/>
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
 
 </common:BindablePage>

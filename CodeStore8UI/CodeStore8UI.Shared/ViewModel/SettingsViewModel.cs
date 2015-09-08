@@ -100,8 +100,8 @@ namespace CodeStore8UI.ViewModel
         {            
             if (navigationMode == NavigationMode.New && FileGroups.Count == 0)
             {                
-                FileGroups.Add(new FileCollection("Synced", _fileService.RoamedFiles));
-                FileGroups.Add(new FileCollection("This Device Only", _fileService.LocalFiles));
+                FileGroups.Add(new FileCollection(Constants.ROAMED_FILES_TITLE, _fileService.RoamedFiles));
+                FileGroups.Add(new FileCollection(Constants.LOCAL_FILES_TITLE, _fileService.LocalFiles));
             }
         }
 

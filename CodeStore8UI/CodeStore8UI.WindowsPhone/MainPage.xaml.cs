@@ -1,4 +1,5 @@
 ﻿using CodeStore8UI.Common;
+using CodeStore8UI.Controls;
 using CodeStore8UI.Model;
 using CodeStore8UI.ViewModel;
 using Windows.ApplicationModel.Activation;
@@ -6,6 +7,7 @@ using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
@@ -36,7 +38,10 @@ namespace CodeStore8UI
         //Binding doesn't seem to work, so code-behind it is.
         private void BindablePage_Loaded(object sender, RoutedEventArgs e)
         {
-            SavedFiles.ItemsSource = (this.DataContext as MainViewModel).FileGroups;
+            Binding savedFilesBinding = new Binding();
+            savedFilesBinding.Source = FileViewSource;
+            savedFilesBinding.Mode = BindingMode.OneWay;
+            SavedFilesList.SetBinding(SavedFilesControl.ItemsSourceProperty, savedFilesBinding);
         }
 
         private void SavedFile_RightTapped(object sender, RightTappedRoutedEventArgs e)

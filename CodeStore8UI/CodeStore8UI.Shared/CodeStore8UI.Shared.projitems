@@ -16,7 +16,9 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Common\BindablePage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\INavigable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\AppBarHint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\SavedFilesControl.xaml.cs">
       <DependentUpon>SavedFilesControl.xaml</DependentUpon>
     </Compile>
@@ -43,6 +45,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)Controls\SavedFilesControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Theme\AppBarHint.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

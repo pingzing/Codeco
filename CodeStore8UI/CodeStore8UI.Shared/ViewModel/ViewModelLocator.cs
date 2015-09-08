@@ -10,6 +10,7 @@ using GalaSoft.MvvmLight.Views;
 using Microsoft.Practices.ServiceLocation;
 using CodeStore8UI.Services;
 using System.Threading.Tasks;
+using Windows.Phone.UI.Input;
 
 namespace CodeStore8UI.ViewModel
 {
@@ -58,6 +59,12 @@ namespace CodeStore8UI.ViewModel
             NavigationService navService = new NavigationService();
             navService.Configure(nameof(MainPage), typeof(MainPage));
             navService.Configure(nameof(SettingsPage), typeof(SettingsPage));
+#if WINDOWS_PHONE_APP
+            HardwareButtons.BackPressed += (s, e) =>
+            {
+                navService.GoBack();
+            };
+#endif
             return navService;
         }
 
