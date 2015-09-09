@@ -108,6 +108,11 @@ namespace CodeStore8UI.Model
             }
         }        
 
+        public void NameChanged()
+        {
+            RaisePropertyChanged(nameof(Name));
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         private void RaisePropertyChanged([CallerMemberName]string property = "")
         {

@@ -114,6 +114,35 @@ namespace CodeStore8UI.Controls
                 SubmitEnabled = false;
             }
         }
+
+        private void PasswordBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            PasswordBox.Focus(FocusState.Programmatic);
+        }
+
+        private void PasswordBox_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if(e.Key == Windows.System.VirtualKey.Enter)
+            {
+                HandleEnter(sender, e);
+            }
+        }
+
+        private void FileNameBox_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                HandleEnter(sender, e);
+            }
+        }
+
+        private void HandleEnter(object sender, KeyRoutedEventArgs e)
+        {
+            if(SubmitEnabled)
+            {
+                SubmitButton_Click(sender, e);
+            }
+        }
     }
 
     public class AddFileDialogClosedEventArgs

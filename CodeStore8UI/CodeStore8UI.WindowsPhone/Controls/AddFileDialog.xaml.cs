@@ -12,21 +12,6 @@ namespace CodeStore8UI.Controls
 {
     public sealed partial class AddFileDialog : ContentDialog, INotifyPropertyChanged
     {
-        private bool _submitEnabled = false;
-        public bool SubmitEnabled
-        {
-            get { return _submitEnabled; }
-            set
-            {
-                if(_submitEnabled == value)
-                {
-                    return;
-                }
-                _submitEnabled = value;
-                RaisePropertyChanged();
-            }
-        }
-
         public static readonly DependencyProperty PasswordProperty = DependencyProperty.Register("Password", typeof(string), typeof(AddFileDialog), new PropertyMetadata(""));
         public string Password
         {
@@ -40,12 +25,14 @@ namespace CodeStore8UI.Controls
             get { return (string)GetValue(FileNameProperty); }
             set { SetValue(FileNameProperty, value); }
         }
-        
+
         public AddFileDialog()
         {
             this.InitializeComponent();
-            ((FrameworkElement)this.Content).DataContext = this;
+            ((FrameworkElement)this.Content).DataContext = this;            
         }
+
+
 
         private void ContentDialog_PrimaryButtonClick(object sender, ContentDialogButtonClickEventArgs args) { }
         private void ContentDialog_SecondaryButtonClick(object sender, ContentDialogButtonClickEventArgs args) { }
@@ -82,14 +69,19 @@ namespace CodeStore8UI.Controls
 
         private void UpdatedSubmitEnabled()
         {
-            if(!String.IsNullOrEmpty(FileNameBox.Text) && !String.IsNullOrEmpty(PasswordBox.Password))
+            if (!String.IsNullOrEmpty(FileNameBox.Text) && !String.IsNullOrEmpty(PasswordBox.Password))
             {
-                SubmitEnabled = true;
+                this.IsPrimaryButtonEnabled = true;
             }
             else
             {
-                SubmitEnabled = false;
+                this.IsPrimaryButtonEnabled = false;
             }
+        }
+
+        private void PasswordBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.PasswordBox.Focus(FocusState.Programmatic);
         }
     }
 }

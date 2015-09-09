@@ -158,5 +158,10 @@ namespace CodeStore8UI
             };
             return allFiles;
         }
+
+        public static async Task RenameFileAsync(StorageFile backingFile, string newName)
+        {
+            await backingFile.RenameAsync(newName, NameCollisionOption.GenerateUniqueName);
+        }
     }
 }

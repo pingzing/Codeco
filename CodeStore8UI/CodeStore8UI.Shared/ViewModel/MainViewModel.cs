@@ -173,8 +173,11 @@ namespace CodeStore8UI.ViewModel
 #if WINDOWS_PHONE_APP
         public async Task AddFile_PhoneContinued(FileOpenPickerContinuationEventArgs args)
         {
-            StorageFile file = args.Files[0];
-            await OpenFile(file);
+            if (args.Files.Count > 0)
+            {
+                StorageFile file = args.Files[0];
+                await OpenFile(file);
+            }
         }
 #endif
 
@@ -322,9 +325,40 @@ namespace CodeStore8UI.ViewModel
             await _fileService.DeleteFileAsync((StorageFile)item.BackingFile, location);
         }
 
-        private void RenameFile(BindableStorageFile item)
+        private async void RenameFile(BindableStorageFile item)
         {
-            throw new NotImplementedException();
+            string newName = await GetNewName();
+            if (newName != null)
+            {
+                await _fileService.RenameFileAsync(item, newName);
+            }
+        }
+
+        private async Task<string> GetNewName()
+        {
+#if WINDOWS_PHONE_APP
+            RenameDialog dialog = new RenameDialog();
+            var result = await dialog.ShowAsync();
+            if(result == ContentDialogResult.Primary)
+            {
+                return dialog.NewName;
+            }
+            else
+            {
+                return null;
+            }
+#else
+            RenameDialog dialog = new RenameDialog();
+            dialog.IsOpen = true;
+            if((await dialog.WhenClosed()).DialogResult == RenameDialog.Result.Ok)
+            {
+                return dialog.NewName;
+            }
+            else
+            {
+                return null;
+            }
+#endif
         }
 
         private void GoToSettings()

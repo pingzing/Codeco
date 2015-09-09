@@ -1,19 +1,18 @@
 ﻿<ContentDialog
-    x:Class="CodeStore8UI.Controls.PasswordDialog"
+    x:Class="CodeStore8UI.Controls.RenameDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:CodeStore8UI"
+    xmlns:local="using:CodeStore8UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Title="Enter password"
-    PrimaryButtonText="submit"  
+    Title="Enter new name"
+    PrimaryButtonText="submit"
     SecondaryButtonText="cancel"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick"
     IsPrimaryButtonEnabled="False">
 
-    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-        <PasswordBox x:Name="PasswordEntryBox" Header="Password" Password="{Binding Password, Mode=TwoWay}" PasswordChanged="PasswordBox_PasswordChanged" Loaded="PasswordEntryBox_Loaded"/>        
-    </StackPanel>
+    <TextBox x:Name="NewNameBox" Header="File name" Text="{Binding NewName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="NewNameBox_TextChanged" Loaded="NewNameBox_Loaded"/>
+    
 </ContentDialog>

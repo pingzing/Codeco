@@ -14,6 +14,7 @@ namespace CodeStore8UI.Model
         IStorageFile BackingFile { get; set; }
         string FileSize { get; }
 
-        Task<ulong> GetFileSizeInBytes();        
+        Task<ulong> GetFileSizeInBytes();
+        void NameChanged();  
     }
 }

@@ -31,11 +31,11 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
-        <TextBlock Style="{StaticResource HeaderTextBlockStyle}" Margin="12,12,0,0" LineHeight="56">
-            <Run Text="Active File"/>
-            <Run Text="{Binding OpenFileText}" FontSize="40"/>
-        </TextBlock>
-        
+        <StackPanel Margin="12,12,0,0">
+            <TextBlock Text="Active File" Style="{StaticResource HeaderTextBlockStyle}" LineHeight="56"/>
+            <TextBlock Text="{Binding OpenFileText}" Style="{StaticResource HeaderTextBlockStyle}" LineHeight="56" FontSize="40"/>
+        </StackPanel>
+
         <Grid Grid.Row="1" Margin="12,0,12,0" VerticalAlignment="Center">
 
             <Grid.RowDefinitions>
@@ -53,12 +53,13 @@
                    Style="{ThemeResource SubheaderTextBlockStyle}" 
                    Text="{Binding CodeText}" 
                    HorizontalAlignment="Center"/>
-            <TextBox Grid.Row="2"  
-                 Header="Input"
-                 HorizontalAlignment="Center"
-                 InputScope="Number" 
-                 MaxLength="{Binding LongestCode}" 
-                 Text="{Binding InputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Grid.Row="2"                       
+                     Header="Input"
+                     FontSize="20"
+                     HorizontalAlignment="Center"
+                     InputScope="Number" 
+                     MaxLength="{Binding LongestCode}" 
+                     Text="{Binding InputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
 
         <controls:SavedFilesControl x:Name="SavedFilesControl"
@@ -70,7 +71,7 @@
 
             <controls:SavedFilesControl.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Margin="12,0,0,4" 
+                    <StackPanel Margin="0,0,0,4" 
                                 Tag="{Binding}"
                                 Tapped="SavedFile_Tapped" 
                                 RightTapped="SavedFile_RightTapped" 

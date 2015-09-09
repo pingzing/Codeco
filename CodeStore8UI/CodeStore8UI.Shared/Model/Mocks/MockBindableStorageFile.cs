@@ -56,5 +56,10 @@ namespace CodeStore8UI.Model.Mocks
         {
             return Task.Run(() => (ulong)(50 * 1024));
         }
+
+        public void NameChanged()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

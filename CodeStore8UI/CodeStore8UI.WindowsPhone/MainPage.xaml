@@ -16,8 +16,8 @@
 
     <Page.Resources>
         <MenuFlyout x:Key="SavedFilesFlyout">
-            <MenuFlyoutItem Text="delete" Command="{Binding DeleteFileCommand}" CommandParameter="{Binding}"/>
-            <MenuFlyoutItem Text="rename" Command="{Binding RenameFileCommand}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem Text="delete" Command="{Binding Main.DeleteFileCommand, Mode=OneWay, Source={StaticResource Locator}}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem Text="rename" Command="{Binding Main.RenameFileCommand, Mode=OneWay, Source={StaticResource Locator}}" CommandParameter="{Binding}"/>
         </MenuFlyout>
         <CollectionViewSource x:Key="FileViewSource" x:Name="FileViewSource" ItemsPath="Files" Source="{Binding FileGroups}" IsSourceGrouped="True"/>
     </Page.Resources>
@@ -46,13 +46,13 @@
                                HorizontalAlignment="Center"/>
                     <TextBlock x:Name="KeyBlock"
                                Grid.Row="1" 
-                               Style="{ThemeResource ListViewItemTextBlockStyle}" 
+                               Style="{ThemeResource ListViewItemTextBlockStyle}"
                                HorizontalAlignment="Center"
                                Text="{Binding CodeText}"/>
                     <TextBox x:Name="InputBox"
                              Grid.Row="2"
-                             Header="Input" 
-                             InputScope="Number"          
+                             Header="Input"
+                             InputScope="Number"
                              MaxLength="{Binding LongestCode}"
                              Text="{Binding InputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
@@ -82,8 +82,8 @@
 
     <Page.BottomAppBar>
         <CommandBar Background="{ThemeResource PhoneAccentBrush}">
-            <AppBarButton Icon="Add" Label="add file" Command="{Binding AddFileCommand}"/>
             <AppBarButton Icon="Setting" Label="settings" Command="{Binding GoToSettingsCommand}"/>
+            <AppBarButton Icon="Add" Label="add file" Command="{Binding AddFileCommand}"/>            
             <CommandBar.SecondaryCommands>
                 <AppBarButton Label="delete active file" Command="{Binding DeleteCodesCommand}"/>
             </CommandBar.SecondaryCommands>

@@ -11,10 +11,10 @@
     SecondaryButtonText="cancel"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick"
-    IsPrimaryButtonEnabled="{Binding SubmitEnabled}">
+    IsPrimaryButtonEnabled="False">
 
     <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <TextBox x:Name="FileNameBox" Header="File name" Text="{Binding FileName, Mode=TwoWay}" TextChanged="FileNameBox_TextChanged"/>
-        <PasswordBox x:Name="PasswordBox" Header="Password" Password="{Binding Password, Mode=TwoWay}" PasswordChanged="PasswordBox_PasswordChanged"/>        
+        <PasswordBox x:Name="PasswordBox" Header="Password" Password="{Binding Password, Mode=TwoWay}" PasswordChanged="PasswordBox_PasswordChanged" Loaded="PasswordBox_Loaded"/>        
     </StackPanel>
 </ContentDialog>

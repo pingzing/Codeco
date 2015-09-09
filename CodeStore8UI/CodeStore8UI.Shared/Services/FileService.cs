@@ -198,6 +198,16 @@ namespace CodeStore8UI
             await FileUtilities.DeleteFileAsync(backingFile);
         }
 
+        internal async Task RenameFileAsync(IBindableStorageFile file, string newName)
+        {
+            if(!_initialized)
+            {
+                throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
+            }                  
+            await FileUtilities.RenameFileAsync((StorageFile)file.BackingFile, newName);
+            file.NameChanged();
+        }
+
         public async Task NukeFiles()
         {
             if(!_initialized)

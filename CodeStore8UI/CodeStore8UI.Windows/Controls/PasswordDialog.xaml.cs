@@ -24,7 +24,7 @@ namespace CodeStore8UI.Controls
     public sealed partial class PasswordDialog : CustomDialog, INotifyPropertyChanged
     {
         public enum Result { Ok, Cancel };
-        public event EventHandler<PasswordDialogClosedEventArgs> PasswordDialogClosed;        
+        public event EventHandler<PasswordDialogClosedEventArgs> PasswordDialogClosed;
 
         public static readonly DependencyProperty PasswordProperty = DependencyProperty.Register("Password", typeof(string), typeof(PasswordDialog), new PropertyMetadata(""));
         public string Password
@@ -39,7 +39,7 @@ namespace CodeStore8UI.Controls
             get { return _submitEnabled; }
             set
             {
-                if(_submitEnabled == value)
+                if (_submitEnabled == value)
                 {
                     return;
                 }
@@ -47,15 +47,15 @@ namespace CodeStore8UI.Controls
                 RaisePropertyChanged();
             }
         }
-        
+
         public PasswordDialog()
         {
-            this.InitializeComponent();            
-            ((FrameworkElement)this.Content).DataContext = this;                                                         
+            this.InitializeComponent();
+            ((FrameworkElement)this.Content).DataContext = this;
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
-        {                        
+        {
             this.PasswordDialogClosed(this, new PasswordDialogClosedEventArgs(Result.Cancel));
             this.IsOpen = false;
         }
@@ -80,7 +80,7 @@ namespace CodeStore8UI.Controls
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        private void RaisePropertyChanged([CallerMemberName]string property="")
+        private void RaisePropertyChanged([CallerMemberName]string property = "")
         {
             var handler = PropertyChanged;
             handler?.Invoke(this, new PropertyChangedEventArgs(property));
@@ -98,7 +98,7 @@ namespace CodeStore8UI.Controls
 
         private void UpdateSubmitEnabled()
         {
-            if(!String.IsNullOrEmpty(PasswordBox.Password))
+            if (!String.IsNullOrEmpty(PasswordBox.Password))
             {
                 SubmitEnabled = true;
             }
@@ -106,16 +106,13 @@ namespace CodeStore8UI.Controls
             {
                 SubmitEnabled = false;
             }
-        }        
+        }
 
         private void PasswordBox_KeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if (e.Key == Windows.System.VirtualKey.Enter)
+            if (e.Key == Windows.System.VirtualKey.Enter && SubmitEnabled)
             {
-                if (SubmitEnabled)
-                {
-                    SubmitButton_Click(sender, null);
-                }
+                SubmitButton_Click(sender, null);                
             }
         }
 
@@ -127,7 +124,7 @@ namespace CodeStore8UI.Controls
     }
 
     public class PasswordDialogClosedEventArgs
-    {        
+    {
         public PasswordDialog.Result DialogResult { get; set; }
 
         public PasswordDialogClosedEventArgs(PasswordDialog.Result dialogResult)

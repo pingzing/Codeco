@@ -12,32 +12,17 @@ namespace CodeStore8UI.Controls
 {
     public sealed partial class PasswordDialog : ContentDialog, INotifyPropertyChanged
     {
-        private bool _submitEnabled = false;
-        public bool SubmitEnabled
-        {
-            get { return _submitEnabled; }
-            set
-            {
-                if(_submitEnabled == value)
-                {
-                    return;
-                }
-                _submitEnabled = value;
-                RaisePropertyChanged();
-            }
-        }
-
         public static readonly DependencyProperty PasswordProperty = DependencyProperty.Register("Password", typeof(string), typeof(PasswordDialog), new PropertyMetadata(""));
         public string Password
         {
             get { return (string)GetValue(PasswordProperty); }
             set { SetValue(PasswordProperty, value); }
-        }        
-        
+        }
+
         public PasswordDialog()
         {
             this.InitializeComponent();
-            ((FrameworkElement)this.Content).DataContext = this;            
+            ((FrameworkElement)this.Content).DataContext = this;
         }
 
         private void ContentDialog_PrimaryButtonClick(object sender, ContentDialogButtonClickEventArgs args) { }
@@ -66,23 +51,18 @@ namespace CodeStore8UI.Controls
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
             UpdatedSubmitEnabled();
-        }        
+        }
 
         private void UpdatedSubmitEnabled()
         {
-            if(!String.IsNullOrEmpty(PasswordEntryBox.Password))
+            if (!String.IsNullOrEmpty(PasswordEntryBox.Password))
             {
-                SubmitEnabled = true;
+                this.IsPrimaryButtonEnabled = true;
             }
             else
             {
-                SubmitEnabled = false;
+                this.IsPrimaryButtonEnabled = false;
             }
-        }
-
-        private void ContentDialog_Loaded(object sender, RoutedEventArgs e)
-        {
-            
         }
 
         private void PasswordEntryBox_Loaded(object sender, RoutedEventArgs e)
