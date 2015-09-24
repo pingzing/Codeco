@@ -12,6 +12,7 @@ using CodeStore8UI.Services;
 using CodeStore8UI.Model;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
+using System.Threading.Tasks;
 
 namespace CodeStore8UI.ViewModel
 {
@@ -72,22 +73,23 @@ namespace CodeStore8UI.ViewModel
         private async void SyncFile(BindableStorageFile file)
         {
             await _fileService.RoamFile(file);
-            ulong space = 0;
-            foreach(var f in  FileGroups.First(x => x.Title == "Synced").Files)
-            {
-                space += await f.GetFileSizeInBytes();
-            }
-            RoamingSpaceUsed = (double)space / 1024;
+            await UpdateRoamingSpaceUsed();
         }
 
         private async void RemoveFileFromSync(BindableStorageFile file)
         {
             await _fileService.StopRoamingFile(file);
+            await UpdateRoamingSpaceUsed();
+        }
+
+        private async Task UpdateRoamingSpaceUsed()
+        {            
             ulong space = 0;
             foreach (var f in FileGroups.First(x => x.Title == "Synced").Files)
             {
                 space += await f.GetFileSizeInBytes();
             }
+            space += await FileUtilities.GetSaltFileSize();
             RoamingSpaceUsed = (double)space / 1024;
         }
 
@@ -96,13 +98,14 @@ namespace CodeStore8UI.ViewModel
             _navigationService.GoBack();            
         }
 
-        public void Activate(object parameter, NavigationMode navigationMode)
+        public async void Activate(object parameter, NavigationMode navigationMode)
         {            
             if (navigationMode == NavigationMode.New && FileGroups.Count == 0)
             {                
                 FileGroups.Add(new FileCollection(Constants.ROAMED_FILES_TITLE, _fileService.RoamedFiles));
                 FileGroups.Add(new FileCollection(Constants.LOCAL_FILES_TITLE, _fileService.LocalFiles));
             }
+            await UpdateRoamingSpaceUsed();
         }
 
         public void Deactivate(object parameter)

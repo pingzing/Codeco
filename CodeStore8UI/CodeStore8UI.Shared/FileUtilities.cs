@@ -180,5 +180,12 @@ namespace CodeStore8UI
             var saltFile = await ApplicationData.Current.RoamingFolder.CreateFileAsync(Constants.SALT_FILE_NAME, CreationCollisionOption.OpenIfExists);
             await FileIO.WriteTextAsync(saltFile, json);
         }
+
+        public static async Task<ulong> GetSaltFileSize()
+        {
+            StorageFile file = await ApplicationData.Current.RoamingFolder.GetFileAsync(Constants.SALT_FILE_NAME);
+            var props = await file.GetBasicPropertiesAsync();
+            return props.Size;
+        }
     }
 }

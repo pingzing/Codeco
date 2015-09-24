@@ -29,9 +29,9 @@
             <TextBlock Grid.Row="0"  Text="Settings" Style="{StaticResource HeaderTextBlockStyle}" Margin="24,0,0,0"/>
         </StackPanel>
 
-        <TextBlock Grid.Row="1">
+        <TextBlock Grid.Row="1" Style="{StaticResource SubheaderTextBlockStyle}" FontSize="20" Margin="0,12,0,24">
             <Run Text="Synced Files Space:"/>
-            <Run Text="{Binding RoamingSpaceUsed}"/>
+            <Run Text="{Binding RoamingSpaceUsed, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0.###}'}"/>
             <Run Text="kB / 100 kB"/>
         </TextBlock>
 

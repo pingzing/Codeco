@@ -11,7 +11,7 @@
     DataContext="{Binding Source={StaticResource Locator}, Path=Settings}">
 
     <common:BindablePage.Resources>
-        <CollectionViewSource x:Key="FileViewSource" Source="{Binding FileGroups}" IsSourceGrouped="True" ItemsPath="Files"/>       
+        <CollectionViewSource x:Key="FileViewSource" Source="{Binding FileGroups}" IsSourceGrouped="True" ItemsPath="Files"/>               
     </common:BindablePage.Resources>
 
     <Grid Margin="12,12,12,0">
@@ -20,7 +20,14 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Text="settings" Style="{ThemeResource HeaderTextBlockStyle}"/>
+        <StackPanel Grid.Row="0">
+            <TextBlock Text="settings" Style="{ThemeResource HeaderTextBlockStyle}"/>
+            <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" FontSize="20" Margin="0,12,0,24">
+                <Run Text="synced files space:"/>
+                <Run Text="{Binding RoamingSpaceUsed, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0.###}'}"/>
+                <Run Text="kB / 100 kB"/>
+            </TextBlock>
+        </StackPanel>
 
         <ListView Grid.Row="1"
                   ItemsSource="{Binding Source={StaticResource FileViewSource}}"                  

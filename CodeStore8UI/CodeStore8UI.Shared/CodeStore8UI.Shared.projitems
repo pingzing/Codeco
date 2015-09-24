@@ -18,6 +18,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Common\BindablePage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\INavigable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\StringFormatConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\AppBarHint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\SavedFilesControl.xaml.cs">
       <DependentUpon>SavedFilesControl.xaml</DependentUpon>

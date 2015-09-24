@@ -123,9 +123,10 @@ namespace CodeStore8UI
             List<BindableStorageFile> roamedFiles = new List<BindableStorageFile>();
             foreach (var file in files.RoamingFiles)
             {
-                BindableStorageFile localFile = await BindableStorageFile.Create(file);
-                localFile.IsRoamed = true;
-                roamedFiles.Add(localFile);
+                if (file.Name == Constants.SALT_FILE_NAME) continue;
+                BindableStorageFile roamedFile = await BindableStorageFile.Create(file);
+                roamedFile.IsRoamed = true;
+                roamedFiles.Add(roamedFile);
             }
             
             _localFiles = new ObservableCollection<IBindableStorageFile>(localFiles);
@@ -149,24 +150,18 @@ namespace CodeStore8UI
                 throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
             }
 
-            SaltStorage salts = new SaltStorage();
-            await salts.LoadFromStorage();
-            string salt;
-            if(salts.FileNameSaltDict.ContainsKey(fileName))
-            {
-                salt = salts.FileNameSaltDict[fileName];
-            }
-            else
-            {
-                salt = Guid.NewGuid().ToString("N");
-                salts.FileNameSaltDict.Add(fileName, salt);
-                await salts.SaveToStorage();
-            }                        
+            string salt = Guid.NewGuid().ToString("N");
 
             string savedFileName = await FileUtilities.SaveAndEncryptFileAsync(contents, fileName, password, salt);
             StorageFile savedFile = await FileUtilities.GetEncryptedFileAsync(savedFileName);
             BindableStorageFile bsf = await BindableStorageFile.Create(savedFile);
             LocalFiles.Add(bsf);
+
+            SaltStorage salts = new SaltStorage();
+            await salts.LoadFromStorage();            
+            salts.FileNameSaltDict.Add(bsf.BackingFile.Name, salt);
+            await salts.SaveToStorage();
+
             return bsf;
         }
 

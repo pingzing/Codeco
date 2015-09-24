@@ -1,4 +1,5 @@
 <Application x:Class="CodeStore8UI.App" 
+             xmlns:common="using:CodeStore8UI.Common"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:CodeStore8UI" 
@@ -6,6 +7,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <vm:ViewModelLocator x:Key="Locator" xmlns:vm="using:CodeStore8UI.ViewModel" />           
+            <common:StringFormatConverter x:Key="StringFormatConverter"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Theme/AppBarHint.xaml"/>
                 <ResourceDictionary Source="Theme/PhoneStyles.xaml"/>

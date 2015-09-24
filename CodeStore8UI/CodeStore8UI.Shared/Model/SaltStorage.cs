@@ -7,18 +7,17 @@ namespace CodeStore8UI.Model
 {
     public class SaltStorage
     {
-        public Dictionary<string, string> FileNameSaltDict { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, string> FileNameSaltDict { get; set; }
 
-        public SaltStorage() { }
-
-        public SaltStorage(Dictionary<string, string> newDict)
+        public SaltStorage()
         {
-            FileNameSaltDict = newDict;
-        }        
+            FileNameSaltDict = new Dictionary<string, string>();
+        }      
 
         public async Task LoadFromStorage()
         {
-            FileNameSaltDict = await FileUtilities.GetSaltFile();
+            var salts = await FileUtilities.GetSaltFile();
+            FileNameSaltDict = salts ?? FileNameSaltDict;
         }
 
         public async Task SaveToStorage()
