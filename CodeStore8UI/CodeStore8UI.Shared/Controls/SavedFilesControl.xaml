@@ -25,7 +25,7 @@
                 <GroupStyle x:Name="FileListGroupStyleHeaderTemplate" HidesIfEmpty="True">
                     <GroupStyle.HeaderTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding}" Style="{StaticResource SubheaderTextBlockStyle}"/>
+                            <TextBlock Text="{Binding}" Style="{StaticResource DynamicFileHeaderPhoneStyle}"/>
                         </DataTemplate>
                     </GroupStyle.HeaderTemplate>
                 </GroupStyle>

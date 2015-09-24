@@ -11,8 +11,7 @@
     mc:Ignorable="d"
     NavigationCacheMode="Required"        
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-    DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
-    Loaded="BindablePage_Loaded">
+    DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
 
     <Page.Resources>
         <MenuFlyout x:Key="SavedFilesFlyout">

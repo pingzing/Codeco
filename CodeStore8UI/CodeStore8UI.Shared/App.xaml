@@ -8,7 +8,12 @@
         <ResourceDictionary>
             <vm:ViewModelLocator x:Key="Locator" xmlns:vm="using:CodeStore8UI.ViewModel" />           
             <common:StringFormatConverter x:Key="StringFormatConverter"/>
-            <ResourceDictionary.MergedDictionaries>
+
+            <!--This style gets filled at runtime. We're using it to work around the lack of 
+            runtime discrimination between platforms in XAML.-->
+            <Style x:Key="DynamicFileHeaderPhoneStyle" TargetType="TextBlock" BasedOn="{StaticResource SubheaderTextBlockStyle}"/>
+
+                <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Theme/AppBarHint.xaml"/>
                 <ResourceDictionary Source="Theme/PhoneStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>

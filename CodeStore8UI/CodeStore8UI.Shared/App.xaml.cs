@@ -40,7 +40,7 @@ namespace CodeStore8UI
         {
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
-            this.UnhandledException += App_UnhandledException;                     
+            this.UnhandledException += App_UnhandledException;                         
         }
 
         private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -99,6 +99,17 @@ namespace CodeStore8UI
             if (rootFrame.Content == null)
             {
 #if WINDOWS_PHONE_APP
+
+                // Fill the style to be later used in the Files lists header
+                Style style = (Style)Current.Resources["SubheaderTextBlockStyle"];
+                SolidColorBrush accentBrush = (SolidColorBrush)Current.Resources["PhoneAccentBrush"];
+                FontFamily normalFont = (FontFamily)Current.Resources["PhoneFontFamilyNormal"];
+                style.Setters.Add(new Setter(TextBlock.FontSizeProperty, 30d));
+                style.Setters.Add(new Setter(TextBlock.ForegroundProperty, accentBrush));
+                style.Setters.Add(new Setter(TextBlock.FontWeightProperty, "SemiBold"));
+                style.Setters.Add(new Setter(TextBlock.FontFamilyProperty, normalFont));
+                Current.Resources["DynamicFileHeaderPhoneStyle"] = style;
+
                 // Removes the turnstile navigation for startup.
                 if (rootFrame.ContentTransitions != null)
                 {

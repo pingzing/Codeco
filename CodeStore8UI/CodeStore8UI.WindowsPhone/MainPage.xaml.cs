@@ -26,14 +26,6 @@ namespace CodeStore8UI
             await (DataContext as MainViewModel).AddFile_PhoneContinued(args);
         }       
 
-        //Binding doesn't seem to work, so code-behind it is.
-        private void BindablePage_Loaded(object sender, RoutedEventArgs e)
-        {
-            //Binding savedFilesBinding = new Binding();
-            //savedFilesBinding.Source = FileViewSource;
-            //savedFilesBinding.Mode = BindingMode.OneWay;
-            //SavedFilesList.SetBinding(SavedFilesControl.ItemsSourceProperty, savedFilesBinding);
-        }
 
         private void SavedFile_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {

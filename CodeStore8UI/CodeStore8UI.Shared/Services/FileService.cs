@@ -11,6 +11,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.Storage.Streams;
 
@@ -266,15 +267,17 @@ namespace CodeStore8UI
             {
                 if(file.IsRoamed)
                 {
-                    LocalFiles.Remove(file);
+                    await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, 
+                        () => LocalFiles.Remove(file));
                 }
             }
 
             var roamingFiles = await sender.RoamingFolder.GetFilesAsync();
             foreach(var file in roamingFiles.Where(f => f.Name != Constants.SALT_FILE_NAME))
             {
-                BindableStorageFile bsf = await BindableStorageFile.Create(file);                
-                LocalFiles.Add(bsf);
+                BindableStorageFile bsf = await BindableStorageFile.Create(file);
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                    () => LocalFiles.Add(bsf));
             }
         }                
 
