@@ -166,7 +166,10 @@ namespace CodeStore8UI.ViewModel
             picker.PickSingleFileAndContinue();
 #else
             StorageFile file = await picker.PickSingleFileAsync();
-            await OpenFile(file);
+            if (file != null)
+            {
+                await OpenFile(file);
+            }
 #endif
         }
 

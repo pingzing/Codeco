@@ -1,14 +1,18 @@
-﻿using CodeStore8UI.Model;
+﻿using CodeStore8UI.Common;
+using CodeStore8UI.Model;
 using CodeStore8UI.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using Windows.Storage;
+using Windows.Storage.Streams;
 
 namespace CodeStore8UI
 {
@@ -144,7 +148,22 @@ namespace CodeStore8UI
             {
                 throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
             }
-            string savedFileName = await FileUtilities.SaveAndEncryptFileAsync(contents, fileName, password);
+
+            SaltStorage salts = new SaltStorage();
+            await salts.LoadFromStorage();
+            string salt;
+            if(salts.FileNameSaltDict.ContainsKey(fileName))
+            {
+                salt = salts.FileNameSaltDict[fileName];
+            }
+            else
+            {
+                salt = Guid.NewGuid().ToString("N");
+                salts.FileNameSaltDict.Add(fileName, salt);
+                await salts.SaveToStorage();
+            }                        
+
+            string savedFileName = await FileUtilities.SaveAndEncryptFileAsync(contents, fileName, password, salt);
             StorageFile savedFile = await FileUtilities.GetEncryptedFileAsync(savedFileName);
             BindableStorageFile bsf = await BindableStorageFile.Create(savedFile);
             LocalFiles.Add(bsf);
@@ -160,7 +179,7 @@ namespace CodeStore8UI
             return LocalFiles.Where(x => x.Name == savedFileName).Single();
         }
 
-        internal async Task<string> RetrieveFileContentsAsync(string name, string password, FileLocation location)
+        internal async Task<string> RetrieveFileContentsAsync(string fileName, string password, FileLocation location)
         {
             if (!_initialized)
             {
@@ -168,12 +187,15 @@ namespace CodeStore8UI
             }
 
             var collectionToSearch = location == FileLocation.Local ? LocalFiles : RoamedFiles;
-            string encryptedContents = await FileIO.ReadTextAsync(collectionToSearch.Single(x => x.Name == name).BackingFile);
+            string encryptedContents = await FileIO.ReadTextAsync(collectionToSearch.Single(x => x.Name == fileName).BackingFile);
             if(String.IsNullOrWhiteSpace(encryptedContents))
             {
                 return null;
             }
-            return EncryptionManager.Decrypt(encryptedContents, password);
+            SaltStorage salts = new SaltStorage();
+            await salts.LoadFromStorage();
+            string salt = salts.FileNameSaltDict[fileName];            
+            return EncryptionManager.Decrypt(encryptedContents, password, salt);
         }
 
         internal async Task ClearFileAsync(string name, FileLocation location)
@@ -193,9 +215,15 @@ namespace CodeStore8UI
             {
                 throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
             }
+            string fileName = backingFile.Name;
             var collectionToSearch = location == FileLocation.Local ? LocalFiles : RoamedFiles;
             collectionToSearch.Remove(collectionToSearch.Single(x => x.BackingFile == backingFile)); 
             await FileUtilities.DeleteFileAsync(backingFile);
+
+            SaltStorage salts = new SaltStorage();
+            await salts.LoadFromStorage();
+            salts.FileNameSaltDict.Remove(fileName);
+            await salts.SaveToStorage();
         }
 
         internal async Task RenameFileAsync(IBindableStorageFile file, string newName)
@@ -203,9 +231,17 @@ namespace CodeStore8UI
             if(!_initialized)
             {
                 throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
-            }                  
+            }
+            string oldName = file.BackingFile.Name;
             await FileUtilities.RenameFileAsync((StorageFile)file.BackingFile, newName);
             file.NameChanged();
+
+            SaltStorage salts = new SaltStorage();
+            await salts.LoadFromStorage();
+            string salt = salts.FileNameSaltDict[oldName];
+            salts.FileNameSaltDict.Remove(oldName);
+            salts.FileNameSaltDict.Add(newName, salt);
+            await salts.SaveToStorage();
         }
 
         public async Task NukeFiles()
@@ -223,6 +259,10 @@ namespace CodeStore8UI
                 await DeleteFileAsync((StorageFile)RoamedFiles[i].BackingFile, FileLocation.Roamed);
             }
 
+            SaltStorage salts = new SaltStorage();
+            await salts.LoadFromStorage();
+            salts.FileNameSaltDict.Clear();
+            await salts.SaveToStorage();
         }
 
         private async void OnRoamingDataChanged(ApplicationData sender, object args)
@@ -236,13 +276,12 @@ namespace CodeStore8UI
             }
 
             var roamingFiles = await sender.RoamingFolder.GetFilesAsync();
-            foreach(var file in roamingFiles)
+            foreach(var file in roamingFiles.Where(f => f.Name != Constants.SALT_FILE_NAME))
             {
                 BindableStorageFile bsf = await BindableStorageFile.Create(file);                
                 LocalFiles.Add(bsf);
             }
-        }
-        
+        }                
 
         internal FileLocation GetFileLocation(BindableStorageFile file)
         {            

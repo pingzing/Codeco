@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using System.Linq;
 using CodeStore8UI.Model;
+using CodeStore8UI.Common;
+using System.Xml.Serialization;
+using System.IO;
 
 namespace CodeStore8UI
 {
@@ -22,11 +25,11 @@ namespace CodeStore8UI
         /// <param name="fileName"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public static async Task<string> SaveAndEncryptFileAsync(string contents, string fileName, string password)
+        public static async Task<string> SaveAndEncryptFileAsync(string contents, string fileName, string password, string salt)
         {
             if (contents.Length > 0)
             {
-                string encryptedContents = EncryptionManager.Encrypt(contents, password);
+                string encryptedContents = EncryptionManager.Encrypt(contents, password, salt);
                 var result = await _localFolder.CreateFileAsync(fileName, CreationCollisionOption.GenerateUniqueName);
                 await FileIO.WriteTextAsync(result, encryptedContents);
                 return result.Name;
@@ -52,10 +55,10 @@ namespace CodeStore8UI
         /// </summary>
         /// <param name="encryptedContents"></param>
         /// <returns></returns>
-        public static async Task AppendToEncryptedFileAsync(string fileName, string contents, string password)
+        public static async Task AppendToEncryptedFileAsync(string fileName, string contents, string password, string salt)
         {
             StorageFile file = await _localFolder.GetFileAsync(fileName);
-            string encryptedContents = EncryptionManager.Encrypt(contents, password);
+            string encryptedContents = EncryptionManager.Encrypt(contents, password, salt);
             await FileIO.AppendTextAsync(file, encryptedContents);
         }        
 
@@ -65,7 +68,7 @@ namespace CodeStore8UI
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns>A string of the files contents.</returns>
-        public static async Task<string> RetrieveFileContentsAsync(string fileName, string password)
+        public static async Task<string> RetrieveFileContentsAsync(string fileName, string password, string salt)
         {
             StorageFile file = await _localFolder.GetFileAsync(fileName);
             string encryptedContents = await FileIO.ReadTextAsync(file);
@@ -73,7 +76,7 @@ namespace CodeStore8UI
             {
                 return null;
             }
-            string contents = EncryptionManager.Decrypt(encryptedContents, password);
+            string contents = EncryptionManager.Decrypt(encryptedContents, password, salt);
             return contents;
         }
 
@@ -162,6 +165,20 @@ namespace CodeStore8UI
         public static async Task RenameFileAsync(StorageFile backingFile, string newName)
         {
             await backingFile.RenameAsync(newName, NameCollisionOption.GenerateUniqueName);
+        }
+
+        public static async Task<Dictionary<string, string>> GetSaltFile()
+        {
+            var saltFile = await ApplicationData.Current.RoamingFolder.CreateFileAsync(Constants.SALT_FILE_NAME, CreationCollisionOption.OpenIfExists);
+            string json = await FileIO.ReadTextAsync(saltFile);
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+        }
+
+        public static async Task SaveSaltFile(Dictionary<string, string> saltDict)
+        {
+            string json = Newtonsoft.Json.JsonConvert.SerializeObject(saltDict);
+            var saltFile = await ApplicationData.Current.RoamingFolder.CreateFileAsync(Constants.SALT_FILE_NAME, CreationCollisionOption.OpenIfExists);
+            await FileIO.WriteTextAsync(saltFile, json);
         }
     }
 }

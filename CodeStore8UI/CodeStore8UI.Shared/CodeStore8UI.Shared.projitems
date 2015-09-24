@@ -30,6 +30,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Model\IBindableStorageFile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model\Mocks\MockBindableStorageFile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model\Mocks\MockStorageFile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\SaltStorage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model\SavedFiles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\FileService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IService.cs" />
