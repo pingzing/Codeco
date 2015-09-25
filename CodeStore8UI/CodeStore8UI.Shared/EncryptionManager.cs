@@ -11,67 +11,60 @@ namespace CodeStore8UI
 {
     public static class EncryptionManager
     {
-         public static string Encrypt(string plainText, string pw, string salt)
+         public static string Encrypt(string plainText, string pw, string iv)
         {
             IBuffer pwBuffer = CryptographicBuffer.ConvertStringToBinary(pw, BinaryStringEncoding.Utf8);
-            IBuffer saltBuffer = CryptographicBuffer.ConvertStringToBinary(salt, BinaryStringEncoding.Utf16LE);
+            IBuffer ivBuffer = CryptographicBuffer.ConvertStringToBinary(iv, BinaryStringEncoding.Utf16LE);
             IBuffer plainBuffer = CryptographicBuffer.ConvertStringToBinary(plainText, BinaryStringEncoding.Utf16LE);
 
             // Derive key material for password size 32 bytes for AES256 algorithm
             KeyDerivationAlgorithmProvider keyDerivationProvider = Windows.Security.Cryptography.Core.KeyDerivationAlgorithmProvider.OpenAlgorithm("PBKDF2_SHA1");
-            // using salt and 1000 iterations
-            KeyDerivationParameters pbkdf2Parms = KeyDerivationParameters.BuildForPbkdf2(saltBuffer, 1000);
+            // using iv and 1000 iterations
+            KeyDerivationParameters pbkdf2Parms = KeyDerivationParameters.BuildForPbkdf2(ivBuffer, 1000);
 
             // create a key based on original key and derivation parmaters
             CryptographicKey keyOriginal = keyDerivationProvider.CreateKey(pwBuffer);
             IBuffer keyMaterial = CryptographicEngine.DeriveKeyMaterial(keyOriginal, pbkdf2Parms, 32);
             CryptographicKey derivedPwKey = keyDerivationProvider.CreateKey(pwBuffer);
 
-            // derive buffer to be used for encryption salt from derived password key
-            IBuffer saltMaterial = CryptographicEngine.DeriveKeyMaterial(derivedPwKey, pbkdf2Parms, 16);
-
-            // display the buffers – because KeyDerivationProvider always gets cleared after each use, they are very similar unforunately
-            //string keyMaterialString = CryptographicBuffer.EncodeToBase64String(keyMaterial);
-            //string saltMaterialString = CryptographicBuffer.EncodeToBase64String(saltMaterial);
+            // derive buffer to be used for encryption IV from derived password key
+            IBuffer ivMaterial = CryptographicEngine.DeriveKeyMaterial(derivedPwKey, pbkdf2Parms, 16);
+            
 
             SymmetricKeyAlgorithmProvider symProvider = SymmetricKeyAlgorithmProvider.OpenAlgorithm("AES_CBC_PKCS7");
             // create symmetric key from derived password key
             CryptographicKey symmKey = symProvider.CreateSymmetricKey(keyMaterial);
 
-            // encrypt data buffer using symmetric key and derived salt material
-            IBuffer resultBuffer = CryptographicEngine.Encrypt(symmKey, plainBuffer, saltMaterial);            
+            // encrypt data buffer using symmetric key and derived iv material
+            IBuffer resultBuffer = CryptographicEngine.Encrypt(symmKey, plainBuffer, ivMaterial);            
             return CryptographicBuffer.EncodeToBase64String(resultBuffer);
         }
 
-        public static string Decrypt(string encryptedData, string pw, string salt)
+        public static string Decrypt(string encryptedData, string pw, string iv)
         {
             IBuffer pwBuffer = CryptographicBuffer.ConvertStringToBinary(pw, BinaryStringEncoding.Utf8);
-            IBuffer saltBuffer = CryptographicBuffer.ConvertStringToBinary(salt, BinaryStringEncoding.Utf16LE);
+            IBuffer ivBuffer = CryptographicBuffer.ConvertStringToBinary(iv, BinaryStringEncoding.Utf16LE);
             IBuffer cipherBuffer = CryptographicBuffer.DecodeFromBase64String(encryptedData);
 
             // Derive key material for password size 32 bytes for AES256 algorithm
             KeyDerivationAlgorithmProvider keyDerivationProvider = Windows.Security.Cryptography.Core.KeyDerivationAlgorithmProvider.OpenAlgorithm("PBKDF2_SHA1");
-            // using salt and 1000 iterations
-            KeyDerivationParameters pbkdf2Parms = KeyDerivationParameters.BuildForPbkdf2(saltBuffer, 1000);
+            // using IV and 1000 iterations
+            KeyDerivationParameters pbkdf2Parms = KeyDerivationParameters.BuildForPbkdf2(ivBuffer, 1000);
 
             // create a key based on original key and derivation parmaters
             CryptographicKey keyOriginal = keyDerivationProvider.CreateKey(pwBuffer);
             IBuffer keyMaterial = CryptographicEngine.DeriveKeyMaterial(keyOriginal, pbkdf2Parms, 32);
             CryptographicKey derivedPwKey = keyDerivationProvider.CreateKey(pwBuffer);
 
-            // derive buffer to be used for encryption salt from derived password key
-            IBuffer saltMaterial = CryptographicEngine.DeriveKeyMaterial(derivedPwKey, pbkdf2Parms, 16);
-
-            // display the keys – because KeyDerivationProvider always gets cleared after each use, they are very similar unforunately
-            //string keyMaterialString = CryptographicBuffer.EncodeToBase64String(keyMaterial);
-            //string saltMaterialString = CryptographicBuffer.EncodeToBase64String(saltMaterial);
+            // derive buffer to be used for encryption iv from derived password key
+            IBuffer ivMaterial = CryptographicEngine.DeriveKeyMaterial(derivedPwKey, pbkdf2Parms, 16);            
 
             SymmetricKeyAlgorithmProvider symProvider = SymmetricKeyAlgorithmProvider.OpenAlgorithm("AES_CBC_PKCS7");
             // create symmetric key from derived password material
             CryptographicKey symmKey = symProvider.CreateSymmetricKey(keyMaterial);
 
-            // encrypt data buffer using symmetric key and derived salt material
-            IBuffer resultBuffer = CryptographicEngine.Decrypt(symmKey, cipherBuffer, saltMaterial);
+            // encrypt data buffer using symmetric key and derived IV material
+            IBuffer resultBuffer = CryptographicEngine.Decrypt(symmKey, cipherBuffer, ivMaterial);
             string result = CryptographicBuffer.ConvertBinaryToString(BinaryStringEncoding.Utf16LE, resultBuffer);
             return result;
         }        

@@ -124,7 +124,7 @@ namespace CodeStore8UI
             List<BindableStorageFile> roamedFiles = new List<BindableStorageFile>();
             foreach (var file in files.RoamingFiles)
             {
-                if (file.Name == Constants.SALT_FILE_NAME) continue;
+                if (file.Name == Constants.IV_FILE_NAME) continue;
                 BindableStorageFile roamedFile = await BindableStorageFile.Create(file);
                 roamedFile.IsRoamed = true;
                 roamedFiles.Add(roamedFile);
@@ -151,17 +151,17 @@ namespace CodeStore8UI
                 throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
             }
 
-            string salt = Guid.NewGuid().ToString("N");
+            string iv = Guid.NewGuid().ToString("N");
 
-            string savedFileName = await FileUtilities.SaveAndEncryptFileAsync(contents, fileName, password, salt);
+            string savedFileName = await FileUtilities.SaveAndEncryptFileAsync(contents, fileName, password, iv);
             StorageFile savedFile = await FileUtilities.GetEncryptedFileAsync(savedFileName);
             BindableStorageFile bsf = await BindableStorageFile.Create(savedFile);
             LocalFiles.Add(bsf);
 
-            SaltStorage salts = new SaltStorage();
-            await salts.LoadFromStorage();            
-            salts.FileNameSaltDict.Add(bsf.BackingFile.Name, salt);
-            await salts.SaveToStorage();
+            IVStorage ivs = new IVStorage();
+            await ivs.LoadFromStorage();            
+            ivs.FileNameIVDict.Add(bsf.BackingFile.Name, iv);
+            await ivs.SaveToStorage();
 
             return bsf;
         }
@@ -188,10 +188,10 @@ namespace CodeStore8UI
             {
                 return null;
             }
-            SaltStorage salts = new SaltStorage();
-            await salts.LoadFromStorage();
-            string salt = salts.FileNameSaltDict[fileName];            
-            return EncryptionManager.Decrypt(encryptedContents, password, salt);
+            IVStorage ivs = new IVStorage();
+            await ivs.LoadFromStorage();
+            string iv = ivs.FileNameIVDict[fileName];            
+            return EncryptionManager.Decrypt(encryptedContents, password, iv);
         }
 
         internal async Task ClearFileAsync(string name, FileLocation location)
@@ -216,10 +216,10 @@ namespace CodeStore8UI
             collectionToSearch.Remove(collectionToSearch.Single(x => x.BackingFile == backingFile)); 
             await FileUtilities.DeleteFileAsync(backingFile);
 
-            SaltStorage salts = new SaltStorage();
-            await salts.LoadFromStorage();
-            salts.FileNameSaltDict.Remove(fileName);
-            await salts.SaveToStorage();
+            IVStorage ivs = new IVStorage();
+            await ivs.LoadFromStorage();
+            ivs.FileNameIVDict.Remove(fileName);
+            await ivs.SaveToStorage();
         }
 
         internal async Task RenameFileAsync(IBindableStorageFile file, string newName)
@@ -232,12 +232,12 @@ namespace CodeStore8UI
             await FileUtilities.RenameFileAsync((StorageFile)file.BackingFile, newName);
             file.NameChanged();
 
-            SaltStorage salts = new SaltStorage();
-            await salts.LoadFromStorage();
-            string salt = salts.FileNameSaltDict[oldName];
-            salts.FileNameSaltDict.Remove(oldName);
-            salts.FileNameSaltDict.Add(newName, salt);
-            await salts.SaveToStorage();
+            IVStorage ivs = new IVStorage();
+            await ivs.LoadFromStorage();
+            string iv = ivs.FileNameIVDict[oldName];
+            ivs.FileNameIVDict.Remove(oldName);
+            ivs.FileNameIVDict.Add(newName, iv);
+            await ivs.SaveToStorage();
         }
 
         public async Task NukeFiles()
@@ -255,10 +255,10 @@ namespace CodeStore8UI
                 await DeleteFileAsync((StorageFile)RoamedFiles[i].BackingFile, FileLocation.Roamed);
             }
 
-            SaltStorage salts = new SaltStorage();
-            await salts.LoadFromStorage();
-            salts.FileNameSaltDict.Clear();
-            await salts.SaveToStorage();
+            IVStorage ivs = new IVStorage();
+            await ivs.LoadFromStorage();
+            ivs.FileNameIVDict.Clear();
+            await ivs.SaveToStorage();
         }
 
         private async void OnRoamingDataChanged(ApplicationData sender, object args)
@@ -273,7 +273,7 @@ namespace CodeStore8UI
             }
 
             var roamingFiles = await sender.RoamingFolder.GetFilesAsync();
-            foreach(var file in roamingFiles.Where(f => f.Name != Constants.SALT_FILE_NAME))
+            foreach(var file in roamingFiles.Where(f => f.Name != Constants.IV_FILE_NAME))
             {
                 BindableStorageFile bsf = await BindableStorageFile.Create(file);
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,

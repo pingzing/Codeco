@@ -89,7 +89,7 @@ namespace CodeStore8UI.ViewModel
             {
                 space += await f.GetFileSizeInBytes();
             }
-            space += await FileUtilities.GetSaltFileSize();
+            space += await FileUtilities.GetIVFileSize();
             RoamingSpaceUsed = (double)space / 1024;
         }
 

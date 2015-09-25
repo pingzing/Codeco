@@ -25,11 +25,11 @@ namespace CodeStore8UI
         /// <param name="fileName"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public static async Task<string> SaveAndEncryptFileAsync(string contents, string fileName, string password, string salt)
+        public static async Task<string> SaveAndEncryptFileAsync(string contents, string fileName, string password, string iv)
         {
             if (contents.Length > 0)
             {
-                string encryptedContents = EncryptionManager.Encrypt(contents, password, salt);
+                string encryptedContents = EncryptionManager.Encrypt(contents, password, iv);
                 var result = await _localFolder.CreateFileAsync(fileName, CreationCollisionOption.GenerateUniqueName);
                 await FileIO.WriteTextAsync(result, encryptedContents);
                 return result.Name;
@@ -52,23 +52,21 @@ namespace CodeStore8UI
 
         /// <summary>
         /// Encrypts, and adds the contents to the end of the file.
-        /// </summary>
-        /// <param name="encryptedContents"></param>
+        /// </summary>        
         /// <returns></returns>
-        public static async Task AppendToEncryptedFileAsync(string fileName, string contents, string password, string salt)
+        public static async Task AppendToEncryptedFileAsync(string fileName, string contents, string password, string iv)
         {
             StorageFile file = await _localFolder.GetFileAsync(fileName);
-            string encryptedContents = EncryptionManager.Encrypt(contents, password, salt);
+            string encryptedContents = EncryptionManager.Encrypt(contents, password, iv);
             await FileIO.AppendTextAsync(file, encryptedContents);
         }        
 
         //TODO: Consider directly returning a List<string>?
         /// <summary>
         /// Decrypts and returns the contents of the file. Returns null if the file is empty, or full only of whitespace.
-        /// </summary>
-        /// <param name="fileName"></param>
+        /// </summary>        
         /// <returns>A string of the files contents.</returns>
-        public static async Task<string> RetrieveFileContentsAsync(string fileName, string password, string salt)
+        public static async Task<string> RetrieveFileContentsAsync(string fileName, string password, string iv)
         {
             StorageFile file = await _localFolder.GetFileAsync(fileName);
             string encryptedContents = await FileIO.ReadTextAsync(file);
@@ -76,7 +74,7 @@ namespace CodeStore8UI
             {
                 return null;
             }
-            string contents = EncryptionManager.Decrypt(encryptedContents, password, salt);
+            string contents = EncryptionManager.Decrypt(encryptedContents, password, iv);
             return contents;
         }
 
@@ -167,23 +165,23 @@ namespace CodeStore8UI
             await backingFile.RenameAsync(newName, NameCollisionOption.GenerateUniqueName);
         }
 
-        public static async Task<Dictionary<string, string>> GetSaltFile()
+        public static async Task<Dictionary<string, string>> GetIVFile()
         {
-            var saltFile = await ApplicationData.Current.RoamingFolder.CreateFileAsync(Constants.SALT_FILE_NAME, CreationCollisionOption.OpenIfExists);
-            string json = await FileIO.ReadTextAsync(saltFile);
+            var ivFile = await ApplicationData.Current.RoamingFolder.CreateFileAsync(Constants.IV_FILE_NAME, CreationCollisionOption.OpenIfExists);
+            string json = await FileIO.ReadTextAsync(ivFile);
             return Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
         }
 
-        public static async Task SaveSaltFile(Dictionary<string, string> saltDict)
+        public static async Task SaveIVFile(Dictionary<string, string> saltDict)
         {
             string json = Newtonsoft.Json.JsonConvert.SerializeObject(saltDict);
-            var saltFile = await ApplicationData.Current.RoamingFolder.CreateFileAsync(Constants.SALT_FILE_NAME, CreationCollisionOption.OpenIfExists);
+            var saltFile = await ApplicationData.Current.RoamingFolder.CreateFileAsync(Constants.IV_FILE_NAME, CreationCollisionOption.OpenIfExists);
             await FileIO.WriteTextAsync(saltFile, json);
         }
 
-        public static async Task<ulong> GetSaltFileSize()
+        public static async Task<ulong> GetIVFileSize()
         {
-            StorageFile file = await ApplicationData.Current.RoamingFolder.GetFileAsync(Constants.SALT_FILE_NAME);
+            StorageFile file = await ApplicationData.Current.RoamingFolder.GetFileAsync(Constants.IV_FILE_NAME);
             var props = await file.GetBasicPropertiesAsync();
             return props.Size;
         }
