@@ -22,6 +22,7 @@ namespace CodeStore8UI.ViewModel
         private NavigationService _navigationService;
 
         public bool AllowGoingBack { get; set; } = true;
+        private static AsyncLock s_lock = new AsyncLock();
 
         private RelayCommand<BindableStorageFile> _syncFileCommand;
         public RelayCommand<BindableStorageFile> SyncFileCommand => 
@@ -72,29 +73,40 @@ namespace CodeStore8UI.ViewModel
 
         private async void SyncFile(BindableStorageFile file)
         {
-            await _fileService.RoamFile(file);
+            FileGroups.First(x => x.Location == FileService.FileLocation.Local).Files.Remove(file);
+            FileGroups.First(x => x.Location == FileService.FileLocation.Roamed).Files.Add(file);            
             await UpdateRoamingSpaceUsed();
         }
 
         private async void RemoveFileFromSync(BindableStorageFile file)
         {
-            await _fileService.StopRoamingFile(file);
+            FileGroups.First(x => x.Location == FileService.FileLocation.Roamed).Files.Remove(file);
+            FileGroups.First(x => x.Location == FileService.FileLocation.Local).Files.Add(file);               
             await UpdateRoamingSpaceUsed();
         }
 
         private async Task UpdateRoamingSpaceUsed()
-        {            
-            ulong space = 0;
-            foreach (var f in FileGroups.First(x => x.Title == "Synced").Files)
+        {
+            using (await s_lock.Acquire())
             {
-                space += await f.GetFileSizeInBytes();
-            }
-            space += await FileUtilities.GetSaltFileSize();
-            RoamingSpaceUsed = (double)space / 1024;
+                ulong space = 0;
+                if (!FileGroups.Any(x => x.Location == FileService.FileLocation.Roamed))
+                {
+                    return;
+                }
+                var syncedFiles = FileGroups.First(x => x.Location == FileService.FileLocation.Roamed).Files;
+                for (int i = syncedFiles.Count - 1; i >= 0; i--)
+                {
+                    space += await syncedFiles[i].GetFileSizeInBytes();
+                    await Task.Delay(250);
+                }
+                space += await FileUtilities.GetSaltFileSize();
+                RoamingSpaceUsed = (double)space / 1024;
+            }            
         }
 
         private void GoBack()
-        {
+        {             
             _navigationService.GoBack();            
         }
 
@@ -102,13 +114,28 @@ namespace CodeStore8UI.ViewModel
         {            
             if (navigationMode == NavigationMode.New && FileGroups.Count == 0)
             {                
-                FileGroups.Add(new FileCollection(Constants.ROAMED_FILES_TITLE, _fileService.RoamedFiles));
-                FileGroups.Add(new FileCollection(Constants.LOCAL_FILES_TITLE, _fileService.LocalFiles));
+                FileGroups.Add(new FileCollection(Constants.ROAMED_FILES_TITLE, 
+                    new ObservableCollection<IBindableStorageFile>(_fileService.GetRoamedFiles()), FileService.FileLocation.Roamed));
+                FileGroups.Add(new FileCollection(Constants.LOCAL_FILES_TITLE, 
+                    new ObservableCollection<IBindableStorageFile>(_fileService.GetLocalFiles()), FileService.FileLocation.Local));
             }
             await UpdateRoamingSpaceUsed();
         }
 
-        public void Deactivate(object parameter)
+        public async void Deactivating(object parameter)
+        {
+            //This needs to happen _before_ Deactivate(), because MainPage's Activate() fires BEFORE Deactivate() does.
+            foreach (var local in FileGroups.First(x => x.Location == FileService.FileLocation.Local).Files)
+            {
+                await _fileService.StopRoamingFile(local);
+            }
+            foreach (var roamed in FileGroups.First(x => x.Location == FileService.FileLocation.Roamed).Files)
+            {
+                await _fileService.RoamFile(roamed);
+            }
+        }
+
+        public void Deactivated(object parameter)
         {
             
         }

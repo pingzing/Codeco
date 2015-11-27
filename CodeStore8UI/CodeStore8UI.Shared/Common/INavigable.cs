@@ -8,7 +8,8 @@ namespace CodeStore8UI.Common
     public interface INavigable
     {
         void Activate(object parameter, NavigationMode navigationMode);
-        void Deactivate(object parameter);
+        void Deactivating(object parameter);
+        void Deactivated(object parameter);
         bool AllowGoingBack { get; set; }
     }
 }

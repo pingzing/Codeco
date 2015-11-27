@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CodeStore8UI.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -12,7 +13,9 @@ namespace CodeStore8UI.Model
     {
         private const uint BYTES_PER_KB = 1024;
         private const uint BYTES_PER_MB = BYTES_PER_KB * 1024;
-        private const uint BYTES_PER_GB = BYTES_PER_MB * 1024;        
+        private const uint BYTES_PER_GB = BYTES_PER_MB * 1024;
+        private ulong? _fileSizeInBytes = null;
+        private static AsyncLock bsf_lock = new AsyncLock();       
 
         private BindableStorageFile() { }
 
@@ -84,8 +87,15 @@ namespace CodeStore8UI.Model
 
         public async Task<ulong> GetFileSizeInBytes()
         {
-            var props = await _backingFile.GetBasicPropertiesAsync();
-            return props.Size;
+            if (_fileSizeInBytes == null)
+            {
+                using (await bsf_lock.Acquire())
+                {
+                    var props = await _backingFile.GetBasicPropertiesAsync();
+                    _fileSizeInBytes = props.Size;
+                }
+            }
+            return _fileSizeInBytes.Value;
         }
 
         private static string GetHumanReadableSize(ulong size)

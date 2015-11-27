@@ -22,21 +22,25 @@ namespace CodeStore8UI.Common
             base.OnNavigatedFrom(e);
 
             var navigableViewModel = this.DataContext as INavigable;
-            navigableViewModel?.Deactivate(e.Parameter);
+            navigableViewModel?.Deactivated(e.Parameter);
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
+            base.OnNavigatingFrom(e);
+
             var navigable = this.DataContext as INavigable;
             if(navigable == null)
             {
                 return;
             }
 
-            if(e.NavigationMode != NavigationMode.Back || navigable.AllowGoingBack)
+            navigable.Deactivating(e.Parameter);
+
+            if (e.NavigationMode != NavigationMode.Back || navigable.AllowGoingBack)
             {
                 return;
-            }
+            }            
             e.Cancel = true;
             Application.Current.Exit();
         }

@@ -31,25 +31,25 @@ namespace CodeStore8UI
         }
 
         private void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
-        {
-            var tappedItem = (sender as ToggleSwitch)?.Tag as BindableStorageFile;
+        {            
+            var tappedItem = (sender as ToggleSwitch)?.Tag as BindableStorageFile;            
             if (tappedItem == null)
             {
                 return;
             }
 
             var context = (DataContext as SettingsViewModel);
-            if (!tappedItem.IsRoamed && !context.FileGroups.First(x => x.Title == "This Device Only").Files.Contains(tappedItem))
+            if (!tappedItem.IsRoamed && !context.FileGroups.First(x => x.Location == FileService.FileLocation.Local).Files.Contains(tappedItem))
             {
                 context?.RemoveFileFromSyncCommand.Execute(tappedItem);
             }
 
-            if (tappedItem.IsRoamed && !context.FileGroups.First(x => x.Title == "Synced").Files.Contains(tappedItem))
+            if (tappedItem.IsRoamed && !context.FileGroups.First(x => x.Location == FileService.FileLocation.Roamed).Files.Contains(tappedItem))
             {
                 context?.SyncFileCommand.Execute(tappedItem);
             }
-            (sender as ToggleSwitch).InvalidateArrange();
-            (sender as ToggleSwitch).InvalidateMeasure();
+            //(sender as ToggleSwitch).InvalidateArrange();
+            //(sender as ToggleSwitch).InvalidateMeasure();
         }
     }
 }
