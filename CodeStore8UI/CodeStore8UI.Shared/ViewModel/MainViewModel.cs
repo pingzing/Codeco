@@ -371,11 +371,18 @@ namespace CodeStore8UI.ViewModel
 
         public void Activate(object parameter, NavigationMode navigationMode)
         {
-            FileGroups.Add(new FileCollection(Constants.LOCAL_FILES_TITLE, _fileService.LocalFiles));
-            FileGroups.Add(new FileCollection(Constants.ROAMED_FILES_TITLE, _fileService.RoamedFiles));
+            FileGroups.Add(new FileCollection(Constants.LOCAL_FILES_TITLE, 
+                new ObservableCollection<IBindableStorageFile>(_fileService.GetLocalFiles()), FileService.FileLocation.Local));
+            FileGroups.Add(new FileCollection(Constants.ROAMED_FILES_TITLE, 
+                new ObservableCollection<IBindableStorageFile>(_fileService.GetRoamedFiles()), FileService.FileLocation.Roamed));
         }
 
-        public void Deactivate(object parameter)
+        public void Deactivating(object parameter)
+        {
+
+        }
+
+        public void Deactivated(object parameter)
         {
             FileGroups.Clear();
         }

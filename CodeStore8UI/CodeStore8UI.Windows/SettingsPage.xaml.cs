@@ -50,12 +50,12 @@ namespace CodeStore8UI
             }
             
             var context = (DataContext as SettingsViewModel);
-            if (!tappedItem.IsRoamed && !context.FileGroups.First(x => x.Title == "This Device Only").Files.Contains(tappedItem))
+            if (!tappedItem.IsRoamed && !context.FileGroups.First(x => x.Location == FileService.FileLocation.Local).Files.Contains(tappedItem))
             {
                 context?.RemoveFileFromSyncCommand.Execute(tappedItem);
             }
 
-            if(tappedItem.IsRoamed && !context.FileGroups.First(x => x.Title == "Synced").Files.Contains(tappedItem))
+            if(tappedItem.IsRoamed && !context.FileGroups.First(x => x.Location == FileService.FileLocation.Roamed).Files.Contains(tappedItem))
             {
                 context?.SyncFileCommand.Execute(tappedItem);
             }            
