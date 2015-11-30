@@ -8,7 +8,7 @@ namespace CodeStore8UI.ViewModel.DesignViewModels
 {
     public class MainViewModelDesign : MainViewModel
     {
-        public MainViewModelDesign(IService fileService, INavigationService navService) : base(fileService, navService)
+        public MainViewModelDesign(IService fileService, INavigationServiceEx navService) : base(fileService, navService)
         {
         }
     }

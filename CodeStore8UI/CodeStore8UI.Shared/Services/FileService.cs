@@ -25,15 +25,16 @@ namespace CodeStore8UI
             using (await f_lock.Acquire())
             {
                 if (!_localFiles.Contains(file))
-                {
-                    //UI                
-                    file.IsRoamed = false;                    
-
+                {                                      
                     //Backing values
                     await FileUtilities.MoveFileToRoamingAsync((StorageFile)file.BackingFile);
 
                     _roamedFiles.Remove(file);
-                    _localFiles.Add(file);
+
+                    //UI                
+                    file.IsRoamed = false;
+
+                    _localFiles.Add(file);                    
                 }
             }
         }
@@ -43,15 +44,16 @@ namespace CodeStore8UI
             using (await f_lock.Acquire())
             {
                 if (!_roamedFiles.Contains(file))
-                {
-                    //UI
-                    file.IsRoamed = true;
-
+                {                    
                     //Backing values
                     await FileUtilities.MoveFileToLocalAsync((StorageFile)file.BackingFile);
 
                     _localFiles.Remove(file);
-                    _roamedFiles.Add(file);
+
+                    //UI
+                    file.IsRoamed = true;
+
+                    _roamedFiles.Add(file);                    
                 }
             }
         }
@@ -77,6 +79,7 @@ namespace CodeStore8UI
 
                 if (roamed.Name == Constants.IV_FILE_NAME) continue;
                 var bsf = await BindableStorageFile.Create(roamed);
+                bsf.IsRoamed = true;                          
                 _roamedFiles.Add(bsf);
             }
                         
@@ -114,6 +117,7 @@ namespace CodeStore8UI
                 string savedFileName = await FileUtilities.SaveAndEncryptFileAsync(contents, fileName, password, iv);
                 StorageFile savedFile = await FileUtilities.GetEncryptedFileAsync(savedFileName);
                 BindableStorageFile bsf = await BindableStorageFile.Create(savedFile);                
+                _localFiles.Add(bsf);
 
                 IVStorage ivs = new IVStorage();
                 await ivs.LoadFromStorage();

@@ -26,7 +26,7 @@ namespace CodeStore8UI.ViewModel
         private Dictionary<string, string> _codeDictionary = new Dictionary<string, string>();
         private FileService _fileService;
         public FileService FileService => _fileService;
-        private NavigationService _navigationService;
+        private NavigationServiceEx _navigationService;
 
         private RelayCommand _addFileCommand;
         public RelayCommand AddFileCommand => _addFileCommand ?? (_addFileCommand = new RelayCommand(AddFile));        
@@ -149,11 +149,11 @@ namespace CodeStore8UI.ViewModel
 
         public bool AllowGoingBack { get; set; }
 
-        public MainViewModel(IService fileService, INavigationService navService)
+        public MainViewModel(IService fileService, INavigationServiceEx navService)
         {
             _fileService = (fileService as FileService);
-            _navigationService = navService as NavigationService;
-        }
+            _navigationService = navService as NavigationServiceEx;            
+        }        
 
         private async void AddFile()
         {
@@ -200,6 +200,7 @@ namespace CodeStore8UI.ViewModel
             }
             string contents = await FileIO.ReadTextAsync(file);
             ActiveFile = await _fileService.SaveAndEncryptFileAsync(contents, output.FileName, output.Password);
+            FileGroups.Where(x => x.Location == FileService.FileLocation.Local).First().Files.Add(ActiveFile);
             _codeDictionary = await GetCodes(output.Password);
         }        
 
@@ -326,6 +327,10 @@ namespace CodeStore8UI.ViewModel
         {
             FileService.FileLocation location = _fileService.GetFileLocation(item);
             await _fileService.DeleteFileAsync((StorageFile)item.BackingFile, location);
+            FileGroups.Where(x => x.Location == location)
+                .First()
+                .Files
+                .Remove(item);
         }
 
         private async void RenameFile(BindableStorageFile item)
@@ -333,7 +338,7 @@ namespace CodeStore8UI.ViewModel
             string newName = await GetNewName();
             if (newName != null)
             {
-                await _fileService.RenameFileAsync(item, newName);
+                await _fileService.RenameFileAsync(item, newName);                
             }
         }
 
@@ -371,11 +376,21 @@ namespace CodeStore8UI.ViewModel
 
         public void Activate(object parameter, NavigationMode navigationMode)
         {
-            FileGroups.Add(new FileCollection(Constants.LOCAL_FILES_TITLE, 
-                new ObservableCollection<IBindableStorageFile>(_fileService.GetLocalFiles()), FileService.FileLocation.Local));
-            FileGroups.Add(new FileCollection(Constants.ROAMED_FILES_TITLE, 
+            _navigationService.BackButtonPressed += OnBackPressed;
+
+            FileGroups.Add(new FileCollection(Constants.ROAMED_FILES_TITLE,
                 new ObservableCollection<IBindableStorageFile>(_fileService.GetRoamedFiles()), FileService.FileLocation.Roamed));
+            FileGroups.Add(new FileCollection(Constants.LOCAL_FILES_TITLE, 
+                new ObservableCollection<IBindableStorageFile>(_fileService.GetLocalFiles()), FileService.FileLocation.Local));            
         }
+
+
+        private void OnBackPressed(object sender, UniversalBackPressedEventArgs args)
+        {
+            System.Diagnostics.Debug.WriteLine("MainPageVM BackPressed!");
+            _navigationService.GoBack();
+        }
+
 
         public void Deactivating(object parameter)
         {
@@ -384,6 +399,7 @@ namespace CodeStore8UI.ViewModel
 
         public void Deactivated(object parameter)
         {
+            _navigationService.BackButtonPressed -= OnBackPressed;
             FileGroups.Clear();
         }
     }

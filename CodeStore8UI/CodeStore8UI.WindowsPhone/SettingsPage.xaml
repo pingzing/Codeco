@@ -14,7 +14,7 @@
         <CollectionViewSource x:Key="FileViewSource" Source="{Binding FileGroups}" IsSourceGrouped="True" ItemsPath="Files"/>               
     </common:BindablePage.Resources>
 
-    <Grid Margin="12,12,12,0">
+    <Grid Margin="20,12,20,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
@@ -29,9 +29,12 @@
             </TextBlock>
         </StackPanel>
 
-        <ListView Grid.Row="1"
+        <ListView x:Name="SavedFilesList"
+                  Grid.Row="1"
                   ItemsSource="{Binding Source={StaticResource FileViewSource}}"                  
-                  SelectionMode="None" ItemContainerStyle="{StaticResource ListViewItemNoTiltStretchStyle}">
+                  SelectionMode="None" 
+                  ItemContainerStyle="{StaticResource ListViewItemNoTiltStretchStyle}"
+                  IsEnabled="{Binding IsListReady}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ToggleSwitch OnContent="Syncing"                                     
@@ -39,7 +42,8 @@
                                   Tag="{Binding}"
                                   Toggled="ToggleSwitch_Toggled"
                                   Style="{StaticResource ToggleSwitchLongHeaderStyle}"
-                                  IsOn="{Binding IsRoamed, Mode=TwoWay}">
+                                  IsOn="{Binding IsRoamed, Mode=TwoWay}"
+                                  >
                         <ToggleSwitch.Header>
                             <StackPanel>
                                 <TextBlock Text="{Binding Name}" Style="{StaticResource ListViewItemTextBlockStyle}"/>

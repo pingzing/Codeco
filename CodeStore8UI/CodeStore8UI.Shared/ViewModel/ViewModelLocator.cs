@@ -37,7 +37,7 @@ namespace CodeStore8UI.ViewModel
                 //SimpleIoc.Default.Register<IDataService, DesignDataService>();
                 //SimpleIoc.Default.Register<IService, FileService>();                                 
                 SimpleIoc.Default.Register<IService, MockFileService>();
-                SimpleIoc.Default.Register<INavigationService, NavigationService>();
+                SimpleIoc.Default.Register<INavigationServiceEx, NavigationServiceEx>();
                 SimpleIoc.Default.Register<SettingsViewModelDesign>();
                 SimpleIoc.Default.Register<MainViewModelDesign>();
             }
@@ -45,8 +45,8 @@ namespace CodeStore8UI.ViewModel
             {
                 // Create run time view services and models
                 //SimpleIoc.Default.Register<IDataService, DataService>();                
-                NavigationService navService = InitializeNavigationService();
-                SimpleIoc.Default.Register<INavigationService>(() => navService);
+                NavigationServiceEx navService = InitializeNavigationService();
+                SimpleIoc.Default.Register<INavigationServiceEx>(() => navService);
 
                 IService fileService = InitializeFileService().Result;
                 SimpleIoc.Default.Register(() => fileService);
@@ -62,16 +62,16 @@ namespace CodeStore8UI.ViewModel
             return await service.InitializeAsync();
         }
 
-        private NavigationService InitializeNavigationService()
+        private NavigationServiceEx InitializeNavigationService()
         {
-            NavigationService navService = new NavigationService();
+            NavigationServiceEx navService = new NavigationServiceEx();
             navService.Configure(nameof(MainPage), typeof(MainPage));
             navService.Configure(nameof(SettingsPage), typeof(SettingsPage));
 #if WINDOWS_PHONE_APP
             HardwareButtons.BackPressed += (s, e) =>
             {                
                 //TODO: Extend the navService so it has access to the back stack so we can be smarter here
-                navService.GoBack();
+                navService.OnBackButtonPressed(s, new Common.UniversalBackPressedEventArgs(e.Handled));                                
                 e.Handled = true;
             };
 #endif

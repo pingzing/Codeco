@@ -47,9 +47,7 @@ namespace CodeStore8UI
             if (tappedItem.IsRoamed && !context.FileGroups.First(x => x.Location == FileService.FileLocation.Roamed).Files.Contains(tappedItem))
             {
                 context?.SyncFileCommand.Execute(tappedItem);
-            }
-            //(sender as ToggleSwitch).InvalidateArrange();
-            //(sender as ToggleSwitch).InvalidateMeasure();
-        }
+            }            
+        }      
     }
 }

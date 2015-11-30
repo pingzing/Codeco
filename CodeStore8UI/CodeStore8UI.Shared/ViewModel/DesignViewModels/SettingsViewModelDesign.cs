@@ -12,7 +12,7 @@ namespace CodeStore8UI.ViewModel.DesignViewModels
 {
     public class SettingsViewModelDesign : SettingsViewModel
     {
-        public SettingsViewModelDesign(IService fileService, INavigationService navService) : base(fileService, navService)
+        public SettingsViewModelDesign(IService fileService, INavigationServiceEx navService) : base(fileService, navService)
         {
             ObservableCollection<IBindableStorageFile> localFiles = new ObservableCollection<IBindableStorageFile>
             {

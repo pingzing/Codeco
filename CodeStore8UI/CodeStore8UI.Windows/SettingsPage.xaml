@@ -38,6 +38,7 @@
         <ListView Grid.Row="2" 
                   x:Name="FileListView"                  
                   ItemsSource="{Binding Source={StaticResource FileViewSource}}" 
+                  Margin="-4 0 0 0"
                   SelectionMode="None">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">

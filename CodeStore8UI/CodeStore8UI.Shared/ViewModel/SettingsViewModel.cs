@@ -19,7 +19,7 @@ namespace CodeStore8UI.ViewModel
     public class SettingsViewModel : ViewModelBase, INavigable
     {
         private FileService _fileService;
-        private NavigationService _navigationService;
+        private NavigationServiceEx _navigationService;
 
         public bool AllowGoingBack { get; set; } = true;
         private static AsyncLock s_lock = new AsyncLock();
@@ -65,24 +65,54 @@ namespace CodeStore8UI.ViewModel
             }
         }
 
-        public SettingsViewModel(IService fileService, INavigationService navService)
+        //I hate this solution.
+        //For some reason, whenever two elements are modified simultaneously on the phone, the app crashes.
+        //No exception. No message. No clue whatsoever. It's got to be some kind of race case, but I don't even
+        //know where to begin. So you know what? No changing multiple elements simultaneously on the phone.
+        //This property controls the List's IsEnabled.
+        private bool _isListReady = true;
+        public bool IsListReady
+        {
+            get { return _isListReady;}
+            set
+            {
+                if (_isListReady == value)
+                {
+                    return;
+                }
+                _isListReady = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public SettingsViewModel(IService fileService, INavigationServiceEx navService)
         {
             _fileService = fileService as FileService;
-            _navigationService = navService as NavigationService;
-        }
+            _navigationService = navService as NavigationServiceEx;            
+        }        
 
         private async void SyncFile(BindableStorageFile file)
         {
+            IsListReady = false;
+
             FileGroups.First(x => x.Location == FileService.FileLocation.Local).Files.Remove(file);
             FileGroups.First(x => x.Location == FileService.FileLocation.Roamed).Files.Add(file);            
             await UpdateRoamingSpaceUsed();
+
+            await Task.Delay(250); //Hacky make-phone-not-crash.
+            IsListReady = true;
         }
 
         private async void RemoveFileFromSync(BindableStorageFile file)
         {
+            IsListReady = false;
+
             FileGroups.First(x => x.Location == FileService.FileLocation.Roamed).Files.Remove(file);
             FileGroups.First(x => x.Location == FileService.FileLocation.Local).Files.Add(file);               
             await UpdateRoamingSpaceUsed();
+
+            await Task.Delay(250); //Hacky make-phone-not-crash.
+            IsListReady = true;
         }
 
         private async Task UpdateRoamingSpaceUsed()
@@ -104,15 +134,38 @@ namespace CodeStore8UI.ViewModel
                 space += await FileUtilities.GetIVFileSize();
                 RoamingSpaceUsed = (double)space / 1024;
             }            
+        }        
+
+        //This is seperate from GoBack() because the MVVM Commanding model requires async void, and the
+        //event handler style here for the hardware back button requires async Task<T> or void. So we need both!
+        private void OnBackPressed(object sender, UniversalBackPressedEventArgs args)
+        {
+            System.Diagnostics.Debug.WriteLine("SettingsVM BackPressed!");
+            GoBack();
         }
 
-        private void GoBack()
-        {             
+        private async Task BeforeGoingBack()
+        {            
+            foreach (var local in FileGroups.First(x => x.Location == FileService.FileLocation.Local).Files)
+            {
+                await _fileService.StopRoamingFile(local);
+            }
+            foreach (var roamed in FileGroups.First(x => x.Location == FileService.FileLocation.Roamed).Files)
+            {
+                await _fileService.RoamFile(roamed);
+            }
+        }
+
+        private async void GoBack()
+        {
+            await BeforeGoingBack();       
             _navigationService.GoBack();            
         }
 
         public async void Activate(object parameter, NavigationMode navigationMode)
-        {            
+        {
+            _navigationService.BackButtonPressed += OnBackPressed;
+
             if (navigationMode == NavigationMode.New && FileGroups.Count == 0)
             {                
                 FileGroups.Add(new FileCollection(Constants.ROAMED_FILES_TITLE, 
@@ -125,20 +178,12 @@ namespace CodeStore8UI.ViewModel
 
         public async void Deactivating(object parameter)
         {
-            //This needs to happen _before_ Deactivate(), because MainPage's Activate() fires BEFORE Deactivate() does.
-            foreach (var local in FileGroups.First(x => x.Location == FileService.FileLocation.Local).Files)
-            {
-                await _fileService.StopRoamingFile(local);
-            }
-            foreach (var roamed in FileGroups.First(x => x.Location == FileService.FileLocation.Roamed).Files)
-            {
-                await _fileService.RoamFile(roamed);
-            }
+            
         }
 
         public void Deactivated(object parameter)
         {
-            
+            _navigationService.BackButtonPressed -= OnBackPressed;
         }
     }
 }
