@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CodeStore8UI.Services
+namespace Codeco.Services
 {    
    public class ServiceNotInitializedException : Exception
     {

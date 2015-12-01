@@ -6,7 +6,7 @@ using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
 
-namespace CodeStore8UI.Model.Mocks
+namespace Codeco.Model.Mocks
 {
     public class MockStorageFile : IStorageFile
     {

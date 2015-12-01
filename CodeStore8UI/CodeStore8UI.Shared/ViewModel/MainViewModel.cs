@@ -7,19 +7,19 @@ using Windows.Storage.Pickers;
 using Windows.Storage;
 using System.Text;
 using System.Threading.Tasks;
-using CodeStore8UI.Common;
+using Codeco.Common;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Controls;
-using CodeStore8UI.Controls;
+using Codeco.Controls;
 using System.Linq;
 using System.Diagnostics;
 using System.Collections.ObjectModel;
-using CodeStore8UI.Model;
+using Codeco.Model;
 using Windows.UI.Popups;
-using CodeStore8UI.Services;
+using Codeco.Services;
 using GalaSoft.MvvmLight.Views;
 
-namespace CodeStore8UI.ViewModel
+namespace Codeco.ViewModel
 {
     public class MainViewModel : ViewModelBase, INavigable
     {
@@ -132,7 +132,7 @@ namespace CodeStore8UI.ViewModel
             }
         }
 
-        private string _openFileText = "";
+        private string _openFileText = "none";
         public string OpenFileText
         {
             get { return _openFileText; }

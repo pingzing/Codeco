@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CodeStore8UI.Common
+namespace Codeco.Common
 {
     public static class Constants
     {

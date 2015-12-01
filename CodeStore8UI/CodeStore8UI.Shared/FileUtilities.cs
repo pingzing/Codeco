@@ -5,40 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using System.Linq;
-using CodeStore8UI.Model;
-using CodeStore8UI.Common;
+using Codeco.Model;
+using Codeco.Common;
 using System.Xml.Serialization;
 using System.IO;
 
-namespace CodeStore8UI
-{
-    //TODO: Add an async lock on these methods. Otherwise race cases yaaaay
+namespace Codeco
+{    
     public static class FileUtilities
     {      
         private static readonly StorageFolder _localFolder = ApplicationData.Current.LocalFolder;
-        private static readonly StorageFolder _roamingFolder = ApplicationData.Current.RoamingFolder;  
-
-        /// <summary>
-        /// Attempts to save the given contents with the given filename, and encrypt it with the given password.
-        /// </summary>
-        /// <param name="contents"></param>
-        /// <param name="fileName"></param>
-        /// <param name="password"></param>
-        /// <returns></returns>
-        public static async Task<string> SaveAndEncryptFileAsync(string contents, string fileName, string password, string iv)
-        {
-            if (contents.Length > 0)
-            {
-                string encryptedContents = EncryptionManager.Encrypt(contents, password, iv);
-                var result = await _localFolder.CreateFileAsync(fileName, CreationCollisionOption.GenerateUniqueName);
-                await FileIO.WriteTextAsync(result, encryptedContents);
-                return result.Name;
-            }
-            else
-            {
-                return null;
-            }
-        }
+        private static readonly StorageFolder _roamingFolder = ApplicationData.Current.RoamingFolder;          
 
         /// <summary>
         /// Returns the given encrypted StorageFile.
@@ -48,35 +25,7 @@ namespace CodeStore8UI
         public static async Task<StorageFile> GetEncryptedFileAsync(string fileName)
         {
             return await _localFolder.GetFileAsync(fileName);
-        }
-
-        /// <summary>
-        /// Encrypts, and adds the contents to the end of the file.
-        /// </summary>        
-        /// <returns></returns>
-        public static async Task AppendToEncryptedFileAsync(string fileName, string contents, string password, string iv)
-        {
-            StorageFile file = await _localFolder.GetFileAsync(fileName);
-            string encryptedContents = EncryptionManager.Encrypt(contents, password, iv);
-            await FileIO.AppendTextAsync(file, encryptedContents);
-        }        
-
-        //TODO: Consider directly returning a List<string>?
-        /// <summary>
-        /// Decrypts and returns the contents of the file. Returns null if the file is empty, or full only of whitespace.
-        /// </summary>        
-        /// <returns>A string of the files contents.</returns>
-        public static async Task<string> RetrieveFileContentsAsync(string fileName, string password, string iv)
-        {
-            StorageFile file = await _localFolder.GetFileAsync(fileName);
-            string encryptedContents = await FileIO.ReadTextAsync(file);
-            if(String.IsNullOrWhiteSpace(encryptedContents))
-            {
-                return null;
-            }
-            string contents = EncryptionManager.Decrypt(encryptedContents, password, iv);
-            return contents;
-        }
+        }         
 
         public static async Task MoveFileToRoamingAsync(StorageFile backingFile)
         {
@@ -87,18 +36,7 @@ namespace CodeStore8UI
         public static async Task MoveFileToLocalAsync(StorageFile backingFile)
         {
             await backingFile.MoveAsync(_localFolder, backingFile.Name, NameCollisionOption.GenerateUniqueName);
-        }
-
-        /// <summary>
-        /// Overwrites the contents of the given file.
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <returns></returns>
-        public static async Task ClearFileAsync(string fileName)
-        {
-            StorageFile file = await _localFolder.GetFileAsync(fileName);
-            await FileIO.WriteTextAsync(file, "");
-        }
+        }        
 
         public static async Task<bool> DeleteFileAsync(string fileName)
         {
@@ -170,6 +108,11 @@ namespace CodeStore8UI
             var ivFile = await ApplicationData.Current.RoamingFolder.CreateFileAsync(Constants.IV_FILE_NAME, CreationCollisionOption.OpenIfExists);
             string json = await FileIO.ReadTextAsync(ivFile);
             return Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+        }
+
+        internal static IStorageFolder GetLocalFolder()
+        {
+            return _localFolder;
         }
 
         public static async Task SaveIVFile(Dictionary<string, string> saltDict)

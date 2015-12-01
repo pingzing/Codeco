@@ -8,15 +8,15 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Views;
 using Microsoft.Practices.ServiceLocation;
-using CodeStore8UI.Services;
+using Codeco.Services;
 using System.Threading.Tasks;
-using CodeStore8UI.ViewModel.DesignViewModels;
-using CodeStore8UI.Services.Mocks;
+using Codeco.ViewModel.DesignViewModels;
+using Codeco.Services.Mocks;
 #if WINDOWS_PHONE_APP
 using Windows.Phone.UI.Input;
 #endif
 
-namespace CodeStore8UI.ViewModel
+namespace Codeco.ViewModel
 {
     /// <summary>
     /// This class contains static references to all the view models in the

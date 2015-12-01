@@ -1,7 +1,7 @@
-﻿using CodeStore8UI.Common;
-using CodeStore8UI.Model;
-using CodeStore8UI.Services;
-using CodeStore8UI.ViewModel;
+﻿using Codeco.Common;
+using Codeco.Model;
+using Codeco.Services;
+using Codeco.ViewModel;
 using Microsoft.Practices.ServiceLocation;
 using System;
 using Windows.Storage;
@@ -13,7 +13,7 @@ using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace CodeStore8UI
+namespace Codeco
 {
     public sealed partial class MainPage : BindablePage
     {

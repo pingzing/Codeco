@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CodeStore8UI.Model
+namespace Codeco.Model
 {
     public class AddFileDialogOutput
     {

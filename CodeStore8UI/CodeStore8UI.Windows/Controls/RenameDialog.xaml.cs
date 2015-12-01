@@ -19,7 +19,7 @@ using Windows.UI.Xaml.Navigation;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
-namespace CodeStore8UI.Controls
+namespace Codeco.Controls
 {
     public sealed partial class RenameDialog : CustomDialog, INotifyPropertyChanged
     {

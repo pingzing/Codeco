@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeStore8UI.Services.Mocks
+namespace Codeco.Services.Mocks
 {
     class MockFileService : IService
     {

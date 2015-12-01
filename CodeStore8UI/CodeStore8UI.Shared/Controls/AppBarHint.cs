@@ -2,7 +2,7 @@
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 
-namespace CodeStore8UI.Controls
+namespace Codeco.Controls
 {
     public class AppBarHint : Button
     {

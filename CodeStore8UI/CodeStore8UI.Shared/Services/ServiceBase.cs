@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeStore8UI.Services
+namespace Codeco.Services
 {
     public abstract class ServiceBase : IService
     {

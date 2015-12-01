@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using CodeStore8UI.Services;
+using Codeco.Services;
 using GalaSoft.MvvmLight.Views;
-using CodeStore8UI.Model;
+using Codeco.Model;
 using System.Collections.ObjectModel;
-using CodeStore8UI.Model.Mocks;
-using CodeStore8UI.Common;
+using Codeco.Model.Mocks;
+using Codeco.Common;
 
-namespace CodeStore8UI.ViewModel.DesignViewModels
+namespace Codeco.ViewModel.DesignViewModels
 {
     public class SettingsViewModelDesign : SettingsViewModel
     {

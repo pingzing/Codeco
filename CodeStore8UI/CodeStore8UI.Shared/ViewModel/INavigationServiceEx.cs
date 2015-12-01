@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using CodeStore8UI.Common;
+using Codeco.Common;
 #if WINDOWS_PHONE_APP
 using Windows.Phone.UI.Input;
 #endif
 using GalaSoft.MvvmLight.Views;
 
-namespace CodeStore8UI.ViewModel
+namespace Codeco.ViewModel
 {
     public interface INavigationServiceEx : INavigationService
     {

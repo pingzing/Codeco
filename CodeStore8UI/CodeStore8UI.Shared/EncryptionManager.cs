@@ -7,7 +7,7 @@ using Windows.Security.Cryptography;
 using Windows.Security.Cryptography.Core;
 using Windows.Storage.Streams;
 
-namespace CodeStore8UI
+namespace Codeco
 {
     public static class EncryptionManager
     {
@@ -42,31 +42,38 @@ namespace CodeStore8UI
 
         public static string Decrypt(string encryptedData, string pw, string iv)
         {
-            IBuffer pwBuffer = CryptographicBuffer.ConvertStringToBinary(pw, BinaryStringEncoding.Utf8);
-            IBuffer ivBuffer = CryptographicBuffer.ConvertStringToBinary(iv, BinaryStringEncoding.Utf16LE);
-            IBuffer cipherBuffer = CryptographicBuffer.DecodeFromBase64String(encryptedData);
+            try {
+                IBuffer pwBuffer = CryptographicBuffer.ConvertStringToBinary(pw, BinaryStringEncoding.Utf8);
+                IBuffer ivBuffer = CryptographicBuffer.ConvertStringToBinary(iv, BinaryStringEncoding.Utf16LE);
+                IBuffer cipherBuffer = CryptographicBuffer.DecodeFromBase64String(encryptedData);
 
-            // Derive key material for password size 32 bytes for AES256 algorithm
-            KeyDerivationAlgorithmProvider keyDerivationProvider = Windows.Security.Cryptography.Core.KeyDerivationAlgorithmProvider.OpenAlgorithm("PBKDF2_SHA1");
-            // using IV and 1000 iterations
-            KeyDerivationParameters pbkdf2Parms = KeyDerivationParameters.BuildForPbkdf2(ivBuffer, 1000);
+                // Derive key material for password size 32 bytes for AES256 algorithm
+                KeyDerivationAlgorithmProvider keyDerivationProvider = KeyDerivationAlgorithmProvider.OpenAlgorithm("PBKDF2_SHA1");
+                // using IV and 1000 iterations
+                KeyDerivationParameters pbkdf2Parms = KeyDerivationParameters.BuildForPbkdf2(ivBuffer, 1000);
 
-            // create a key based on original key and derivation parmaters
-            CryptographicKey keyOriginal = keyDerivationProvider.CreateKey(pwBuffer);
-            IBuffer keyMaterial = CryptographicEngine.DeriveKeyMaterial(keyOriginal, pbkdf2Parms, 32);
-            CryptographicKey derivedPwKey = keyDerivationProvider.CreateKey(pwBuffer);
+                // create a key based on original key and derivation parmaters
+                CryptographicKey keyOriginal = keyDerivationProvider.CreateKey(pwBuffer);
+                IBuffer keyMaterial = CryptographicEngine.DeriveKeyMaterial(keyOriginal, pbkdf2Parms, 32);
+                CryptographicKey derivedPwKey = keyDerivationProvider.CreateKey(pwBuffer);
 
-            // derive buffer to be used for encryption iv from derived password key
-            IBuffer ivMaterial = CryptographicEngine.DeriveKeyMaterial(derivedPwKey, pbkdf2Parms, 16);            
+                // derive buffer to be used for encryption iv from derived password key
+                IBuffer ivMaterial = CryptographicEngine.DeriveKeyMaterial(derivedPwKey, pbkdf2Parms, 16);
 
-            SymmetricKeyAlgorithmProvider symProvider = SymmetricKeyAlgorithmProvider.OpenAlgorithm("AES_CBC_PKCS7");
-            // create symmetric key from derived password material
-            CryptographicKey symmKey = symProvider.CreateSymmetricKey(keyMaterial);
+                SymmetricKeyAlgorithmProvider symProvider = SymmetricKeyAlgorithmProvider.OpenAlgorithm("AES_CBC_PKCS7");
+                // create symmetric key from derived password material
+                CryptographicKey symmKey = symProvider.CreateSymmetricKey(keyMaterial);
 
-            // encrypt data buffer using symmetric key and derived IV material
-            IBuffer resultBuffer = CryptographicEngine.Decrypt(symmKey, cipherBuffer, ivMaterial);
-            string result = CryptographicBuffer.ConvertBinaryToString(BinaryStringEncoding.Utf16LE, resultBuffer);
-            return result;
+                // decrypt data buffer using symmetric key and derived IV material
+                IBuffer resultBuffer = CryptographicEngine.Decrypt(symmKey, cipherBuffer, ivMaterial);
+                string result = CryptographicBuffer.ConvertBinaryToString(BinaryStringEncoding.Utf16LE, resultBuffer);
+                return result;
+            }
+            catch(System.Exception)
+            {
+                System.Diagnostics.Debug.WriteLine("Failed to decrypt file. Throwing exception up the chain.");
+                throw;
+            }
         }        
     }
 }

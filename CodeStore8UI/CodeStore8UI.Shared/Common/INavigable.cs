@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Windows.UI.Xaml.Navigation;
 
-namespace CodeStore8UI.Common
+namespace Codeco.Common
 {
     public interface INavigable
     {

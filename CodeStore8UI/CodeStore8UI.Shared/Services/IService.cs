@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeStore8UI.Services
+namespace Codeco.Services
 {
     public interface IService
     {

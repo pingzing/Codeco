@@ -1,4 +1,4 @@
-﻿using CodeStore8UI.Common;
+﻿using Codeco.Common;
 using GalaSoft.MvvmLight;
 using System;
 using System.Collections.Generic;
@@ -8,13 +8,13 @@ using Windows.Storage.Search;
 using Windows.UI.Xaml.Navigation;
 using System.Linq;
 using System.Collections.ObjectModel;
-using CodeStore8UI.Services;
-using CodeStore8UI.Model;
+using Codeco.Services;
+using Codeco.Model;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
 using System.Threading.Tasks;
 
-namespace CodeStore8UI.ViewModel
+namespace Codeco.ViewModel
 {
     public class SettingsViewModel : ViewModelBase, INavigable
     {

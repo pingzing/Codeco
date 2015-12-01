@@ -15,13 +15,13 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
-using CodeStore8UI.Common;
+using Codeco.Common;
 using Windows.UI.ViewManagement;
 using System.Diagnostics;
 
 // The Universal Hub Application project template is documented at http://go.microsoft.com/fwlink/?LinkID=391955
 
-namespace CodeStore8UI
+namespace Codeco
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.

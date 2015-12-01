@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CodeStore8UI.Common
+namespace Codeco.Common
 {
     /// <summary>
     /// Simple mutex that can be used in async methods like this:

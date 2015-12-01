@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Windows.Storage;
 
-namespace CodeStore8UI.Model
+namespace Codeco.Model
 {
     public class SavedFiles
     {

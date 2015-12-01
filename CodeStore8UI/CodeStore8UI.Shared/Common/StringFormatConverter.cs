@@ -1,7 +1,7 @@
 ﻿using System;
 using Windows.UI.Xaml.Data;
 
-namespace CodeStore8UI.Common
+namespace Codeco.Common
 {
     public sealed class StringFormatConverter : IValueConverter
     {

@@ -1,6 +1,6 @@
-﻿using CodeStore8UI.Common;
-using CodeStore8UI.Model;
-using CodeStore8UI.ViewModel;
+﻿using Codeco.Common;
+using Codeco.Model;
+using Codeco.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,7 +18,7 @@ using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
 
-namespace CodeStore8UI
+namespace Codeco
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.

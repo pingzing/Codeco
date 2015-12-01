@@ -1,12 +1,12 @@
-<Application x:Class="CodeStore8UI.App" 
-             xmlns:common="using:CodeStore8UI.Common"
+<Application x:Class="Codeco.App" 
+             xmlns:common="using:Codeco.Common"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="using:CodeStore8UI" 
-             xmlns:vm="using:CodeStore8UI.ViewModel">
+             xmlns:local="using:Codeco" 
+             xmlns:vm="using:Codeco.ViewModel">
     <Application.Resources>
         <ResourceDictionary>
-            <vm:ViewModelLocator x:Key="Locator" xmlns:vm="using:CodeStore8UI.ViewModel" />           
+            <vm:ViewModelLocator x:Key="Locator" xmlns:vm="using:Codeco.ViewModel" />           
             <common:StringFormatConverter x:Key="StringFormatConverter"/>
 
             <!--This style gets filled at runtime. We're using it to work around the lack of 

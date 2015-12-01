@@ -5,7 +5,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
-namespace CodeStore8UI.Common
+namespace Codeco.Common
 {
     public class BindablePage : Page
     {

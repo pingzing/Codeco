@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 
-namespace CodeStore8UI.Model.Mocks
+namespace Codeco.Model.Mocks
 {
     class MockBindableStorageFile : IBindableStorageFile
     {

@@ -1,6 +1,6 @@
-﻿using CodeStore8UI.Common;
-using CodeStore8UI.Model;
-using CodeStore8UI.Services;
+﻿using Codeco.Common;
+using Codeco.Model;
+using Codeco.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
 
-namespace CodeStore8UI
+namespace Codeco
 {
     public class FileService : ServiceBase
     {
@@ -111,11 +111,18 @@ namespace CodeStore8UI
                 {
                     throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
                 }
+                if(contents == null)
+                {
+                    throw new ArgumentException("File contents cannot be null.");
+                }
 
                 string iv = Guid.NewGuid().ToString("N");
-
-                string savedFileName = await FileUtilities.SaveAndEncryptFileAsync(contents, fileName, password, iv);
-                StorageFile savedFile = await FileUtilities.GetEncryptedFileAsync(savedFileName);
+                
+                string encryptedContents = EncryptionManager.Encrypt(contents, password, iv);
+                var savedFile = await FileUtilities.GetLocalFolder().CreateFileAsync(fileName, CreationCollisionOption.GenerateUniqueName);
+                await FileIO.WriteTextAsync(savedFile, encryptedContents);
+                string savedFileName = savedFile.Name;
+                
                 BindableStorageFile bsf = await BindableStorageFile.Create(savedFile);                
                 _localFiles.Add(bsf);
 
@@ -236,6 +243,7 @@ namespace CodeStore8UI
             }
         }
 
+        //TODO: Fix this to actually update lists in the various views somehow. Maybe each view should be responsible for subscribing to it?
         private async void OnRoamingDataChanged(ApplicationData sender, object args)
         {
             using (await f_lock.Acquire())

@@ -1,7 +1,7 @@
-﻿using CodeStore8UI.Common;
-using CodeStore8UI.Controls;
-using CodeStore8UI.Model;
-using CodeStore8UI.ViewModel;
+﻿using Codeco.Common;
+using Codeco.Controls;
+using Codeco.Model;
+using Codeco.ViewModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Storage;
 using Windows.UI.Xaml;
@@ -12,7 +12,7 @@ using Windows.UI.Xaml.Input;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace CodeStore8UI
+namespace Codeco
 {
     public sealed partial class MainPage : BindablePage, IFileOpenPickerContinuable
     {       

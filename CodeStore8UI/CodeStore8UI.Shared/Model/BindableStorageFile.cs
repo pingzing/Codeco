@@ -1,4 +1,4 @@
-﻿using CodeStore8UI.Common;
+﻿using Codeco.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 
-namespace CodeStore8UI.Model
+namespace Codeco.Model
 {
     public class BindableStorageFile : INotifyPropertyChanged, IBindableStorageFile
     {

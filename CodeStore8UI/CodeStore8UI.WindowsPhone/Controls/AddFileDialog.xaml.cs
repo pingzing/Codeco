@@ -8,7 +8,7 @@ using Windows.UI.Xaml.Controls;
 
 // The Content Dialog item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
 
-namespace CodeStore8UI.Controls
+namespace Codeco.Controls
 {
     public sealed partial class AddFileDialog : ContentDialog, INotifyPropertyChanged
     {

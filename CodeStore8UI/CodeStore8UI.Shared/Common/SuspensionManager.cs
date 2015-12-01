@@ -11,7 +11,7 @@ using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace CodeStore8UI.Common
+namespace Codeco.Common
 {
     /// <summary>
     /// SuspensionManager captures global session state to simplify process lifetime management
