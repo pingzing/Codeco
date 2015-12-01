@@ -128,8 +128,7 @@ namespace Codeco.ViewModel
                 var syncedFiles = FileGroups.First(x => x.Location == FileService.FileLocation.Roamed).Files;
                 for (int i = syncedFiles.Count - 1; i >= 0; i--)
                 {
-                    space += await syncedFiles[i].GetFileSizeInBytes();
-                    await Task.Delay(250);
+                    space += await syncedFiles[i].GetFileSizeInBytes();                    
                 }
                 space += await FileUtilities.GetIVFileSize();
                 RoamingSpaceUsed = (double)space / 1024;
@@ -166,17 +165,17 @@ namespace Codeco.ViewModel
         {
             _navigationService.BackButtonPressed += OnBackPressed;
 
-            if (navigationMode == NavigationMode.New && FileGroups.Count == 0)
-            {                
-                FileGroups.Add(new FileCollection(Constants.ROAMED_FILES_TITLE, 
-                    new ObservableCollection<IBindableStorageFile>(_fileService.GetRoamedFiles()), FileService.FileLocation.Roamed));
-                FileGroups.Add(new FileCollection(Constants.LOCAL_FILES_TITLE, 
-                    new ObservableCollection<IBindableStorageFile>(_fileService.GetLocalFiles()), FileService.FileLocation.Local));
-            }
+            //TODO: Rework this to not clear + add, but instead just check somehow for a changed list and add only what's changed
+            FileGroups.Clear();
+            FileGroups.Add(new FileCollection(Constants.ROAMED_FILES_TITLE,
+                new ObservableCollection<IBindableStorageFile>(_fileService.GetRoamedFiles()), FileService.FileLocation.Roamed));
+            FileGroups.Add(new FileCollection(Constants.LOCAL_FILES_TITLE,
+                new ObservableCollection<IBindableStorageFile>(_fileService.GetLocalFiles()), FileService.FileLocation.Local));
+
             await UpdateRoamingSpaceUsed();
         }
 
-        public async void Deactivating(object parameter)
+        public void Deactivating(object parameter)
         {
             
         }

@@ -45,6 +45,14 @@
                     <Setter Property="HorizontalAlignment" Value="Stretch"/>
                 </Style>
             </ListView.ItemContainerStyle>
+            <!--Some vagary of the way the default ItemsPanel (ItemsStackPanel) works makes the ToggleButtons occasionally get stuck in the 
+            wrong position when an item switches groups. Performance and functionality seem identical with the VirtualizingStackPanel,
+            and no bugs! So we're using it instead, here.-->
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ToggleSwitch OnContent="Syncing" 

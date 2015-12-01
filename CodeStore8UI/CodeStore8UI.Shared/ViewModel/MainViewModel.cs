@@ -200,7 +200,7 @@ namespace Codeco.ViewModel
             }
             string contents = await FileIO.ReadTextAsync(file);
             ActiveFile = await _fileService.SaveAndEncryptFileAsync(contents, output.FileName, output.Password);
-            FileGroups.Where(x => x.Location == FileService.FileLocation.Local).First().Files.Add(ActiveFile);
+            FileGroups.Where(x => x.Location == FileService.FileLocation.Local).First().Files.Add(ActiveFile);            
             _codeDictionary = await GetCodes(output.Password);
         }        
 
