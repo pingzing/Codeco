@@ -154,7 +154,15 @@ namespace Codeco
                 IVStorage ivs = new IVStorage();
                 await ivs.LoadFromStorage();
                 string iv = ivs.FileNameIVDict[fileName];
-                return EncryptionManager.Decrypt(encryptedContents, password, iv);
+                try
+                {
+                    return EncryptionManager.Decrypt(encryptedContents, password, iv);
+                }
+                catch(Exception ex)
+                {
+                    //Just explicitly noting that .Decrypt() can and WILL throw.
+                    throw;
+                }
             }
 
         }

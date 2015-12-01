@@ -31,9 +31,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Model\BindableStorageFile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model\FileCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model\IBindableStorageFile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\IVStorage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model\Mocks\MockBindableStorageFile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model\Mocks\MockStorageFile.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Model\IVStorage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model\SavedFiles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\FileService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IService.cs" />

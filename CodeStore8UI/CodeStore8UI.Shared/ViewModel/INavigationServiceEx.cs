@@ -11,9 +11,7 @@ namespace Codeco.ViewModel
 {
     public interface INavigationServiceEx : INavigationService
     {
-#if WINDOWS_PHONE_APP
         event EventHandler<UniversalBackPressedEventArgs> BackButtonPressed;
         void OnBackButtonPressed(object sender, UniversalBackPressedEventArgs args);
-#endif
     }
 }

@@ -90,7 +90,7 @@ namespace Codeco
                         // Something went wrong restoring state.
                         // Assume there is no state and continue
                     }
-                }
+                }                 
 
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;                

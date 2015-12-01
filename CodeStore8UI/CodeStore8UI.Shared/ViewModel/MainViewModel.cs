@@ -127,7 +127,7 @@ namespace Codeco.ViewModel
                     return;
                 }
                 _activeFile = value;
-                OpenFileText = value.Name;
+                OpenFileText = value?.Name ?? "none";
                 RaisePropertyChanged(nameof(ActiveFile));
             }
         }
@@ -240,30 +240,44 @@ namespace Codeco.ViewModel
 #endif
         }
 
+        private async Task ShowErrorDialog(string title, string message)
+        {
+            MessageDialog errorDialog = new MessageDialog(message, title);
+            await errorDialog.ShowAsync();
+        }
+
         private async Task<Dictionary<string, string>> GetCodes(string password)
         {
             Dictionary<string, string> codeDict = new Dictionary<string, string>();
             FileService.FileLocation location = _fileService.GetFileLocation(ActiveFile);
-            string fileContents = await _fileService.RetrieveFileContentsAsync(ActiveFile.Name, password, location);
-
-            if (fileContents == null)
+            try
             {
+                string fileContents = await _fileService.RetrieveFileContentsAsync(ActiveFile.Name, password, location);
+
+                if (fileContents == null)
+                {
+                    return codeDict;
+                }
+                string[] lines = fileContents.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                LongestCode = 1;
+                foreach (string line in lines)
+                {
+                    string[] codePair = line
+                        .Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(x => x = x.Trim())
+                        .ToArray();
+                    codeDict.Add(codePair[0], codePair[1]);
+
+                    LongestCode = codePair[0].Length > LongestCode ? codePair[0].Length : LongestCode;                    
+                }
                 return codeDict;
-            }
-            string[] lines = fileContents.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-            LongestCode = 1;
-            foreach (string line in lines)
+            }    
+            catch(Exception ex)
             {
-                string[] codePair = line
-                    .Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => x = x.Trim())
-                    .ToArray();
-                codeDict.Add(codePair[0], codePair[1]);
-
-                LongestCode = codePair[0].Length > LongestCode ? codePair[0].Length : LongestCode;
-            }
-
-            return codeDict;
+                ActiveFile = null;
+                await ShowErrorDialog("Could not decrypt file", "Unable to decrypt and open the file. Ensure that you've entered your password correctly, and try again.");
+                return new Dictionary<string, string>();           
+            }              
         }
 
         private async void DeleteCodes()
