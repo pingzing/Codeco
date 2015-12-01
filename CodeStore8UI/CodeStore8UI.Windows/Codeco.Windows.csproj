@@ -147,7 +147,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <AppxManifest Include="Package.appxmanifest">
+    <AppxManifest Include="Controls\Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="packages.config" />

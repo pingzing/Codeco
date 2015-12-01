@@ -2,6 +2,7 @@
 using Codeco.Model;
 using Codeco.ViewModel;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -25,7 +26,7 @@ namespace Codeco
         {            
             _pageLoaded = true;
         }
-        private void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+        private async void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
         {
             if(!_pageLoaded)
             {
@@ -36,6 +37,12 @@ namespace Codeco
             {
                 return;
             }
+
+            //Cheap hack to reduce the likelihood of of Togglebuttons being "stuck" in the wrong state after switching groups.
+            //It looks like it's an issue with virtualization and reusing the same datatemplate, but failing to update its state.
+            //It only occurs if multiple items are swapped from "Roaming" to "Local" simultaneously.
+            //Alternatively: disable virtualization? Not sure if UI/UX bug or performance loss is worse.
+            await Task.Delay(250);
             
             var context = (DataContext as SettingsViewModel);
             if (!tappedItem.IsRoamed && !context.FileGroups.First(x => x.Location == FileService.FileLocation.Local).Files.Contains(tappedItem))
