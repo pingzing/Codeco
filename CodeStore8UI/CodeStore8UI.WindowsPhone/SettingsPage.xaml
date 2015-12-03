@@ -33,8 +33,15 @@
                   Grid.Row="1"
                   ItemsSource="{Binding Source={StaticResource FileViewSource}}"                  
                   SelectionMode="None" 
-                  ItemContainerStyle="{StaticResource ListViewItemNoTiltStretchStyle}"
-                  IsEnabled="{Binding IsListReady}">
+                  ItemContainerStyle="{StaticResource ListViewItemNoTiltStretchStyle}">
+            <!--Some vagary of the way the default ItemsPanel (ItemsStackPanel) works makes 
+            the app crash in a few scenarios. Performance and functionality seem identical 
+            with the VirtualizingStackPanel, and no bugs! So we're using it instead, here.-->
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ToggleSwitch OnContent="Syncing"                                     
