@@ -16,7 +16,7 @@ namespace Codeco.Model
 
         public async Task LoadFromStorage()
         {
-            var ivs = await FileUtilities.GetIVFile();
+            var ivs = await FileUtilities.GetIVFileContentsAsync();
             FileNameIVDict = ivs ?? FileNameIVDict;
         }
 

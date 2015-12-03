@@ -16,6 +16,7 @@ using System.Diagnostics;
 using System.Collections.ObjectModel;
 using Codeco.Model;
 using Windows.UI.Popups;
+using Windows.UI.Xaml.Input;
 using Codeco.Services;
 using GalaSoft.MvvmLight.Views;
 
@@ -23,10 +24,14 @@ namespace Codeco.ViewModel
 {
     public class MainViewModel : ViewModelBase, INavigable
     {
+        private const string ACTIVE_INPUT_PREFIX_TEXT = "Input method:";
         private Dictionary<string, string> _codeDictionary = new Dictionary<string, string>();
-        private FileService _fileService;
+        private readonly FileService _fileService;
+        //TODO: This is only used for a debug function. Probably best to find a way to remove it.
         public FileService FileService => _fileService;
-        private NavigationServiceEx _navigationService;
+        private readonly NavigationServiceEx _navigationService;
+        private int currentInputScopeIndex = 0;
+        private readonly List<InputScope> _availableInputScopes = new List<InputScope>();
 
         private RelayCommand _addFileCommand;
         public RelayCommand AddFileCommand => _addFileCommand ?? (_addFileCommand = new RelayCommand(AddFile));        
@@ -48,6 +53,10 @@ namespace Codeco.ViewModel
 
         private RelayCommand _goToSettingsCommand;
         public RelayCommand GoToSettingsCommand => _goToSettingsCommand ?? (_goToSettingsCommand = new RelayCommand(GoToSettings));
+
+        private RelayCommand _cycleInputScopeCommand;
+
+        public RelayCommand CycleInputScopeCommand => _cycleInputScopeCommand ?? (_cycleInputScopeCommand = new RelayCommand(CycleInputScope));        
 
         private int _longestCode = 1;
         #region LongestCode Property
@@ -147,12 +156,60 @@ namespace Codeco.ViewModel
             }
         }
 
+        private InputScope _activeInputScope;
+
+        public InputScope ActiveInputScope
+        {
+            get
+            {
+                return _activeInputScope;
+            }
+            set
+            {
+                if (_activeInputScope == value)
+                {
+                    return;
+                }
+                _activeInputScope = value;
+                ActiveInputScopeText = GetNewActiveInputScopeText();
+                RaisePropertyChanged(nameof(ActiveInputScope));
+            }
+        }
+
+        
+
+        private string _activeInputScopeText;
+
+        public string ActiveInputScopeText
+        {
+            get
+            {
+                return _activeInputScopeText;               
+            }
+            set
+            {
+                if (_activeInputScopeText == value)
+                {
+                    return;
+                }
+                _activeInputScopeText = value;
+                RaisePropertyChanged(nameof(ActiveInputScopeText));
+            }
+        }
+
         public bool AllowGoingBack { get; set; }
 
         public MainViewModel(IService fileService, INavigationServiceEx navService)
         {
             _fileService = (fileService as FileService);
-            _navigationService = navService as NavigationServiceEx;            
+            _navigationService = navService as NavigationServiceEx;
+            InputScope numberScope = new InputScope();
+            numberScope.Names.Add(new InputScopeName(InputScopeNameValue.Number));
+            InputScope defaultScope = new InputScope();
+            defaultScope.Names.Add(new InputScopeName(InputScopeNameValue.Default));
+            _availableInputScopes.Add(numberScope);
+            _availableInputScopes.Add(defaultScope);
+            ActiveInputScope = _availableInputScopes[0];
         }        
 
         private async void AddFile()
@@ -200,7 +257,7 @@ namespace Codeco.ViewModel
             }
             string contents = await FileIO.ReadTextAsync(file);
             ActiveFile = await _fileService.SaveAndEncryptFileAsync(contents, output.FileName, output.Password);
-            FileGroups.Where(x => x.Location == FileService.FileLocation.Local).First().Files.Add(ActiveFile);            
+            FileGroups.First(x => x.Location == FileService.FileLocation.Local).Files.Add(ActiveFile);            
             _codeDictionary = await GetCodes(output.Password);
         }        
 
@@ -222,9 +279,11 @@ namespace Codeco.ViewModel
                 return null;
             }
 #else
-            AddFileDialog dialog = new AddFileDialog();
-            dialog.FileName = fileName;
-            dialog.IsOpen = true;
+            AddFileDialog dialog = new AddFileDialog
+            {
+                FileName = fileName,
+                IsOpen = true
+            };
             if ((await dialog.WhenClosed()).DialogResult == AddFileDialog.Result.Ok)
             {
                 return new AddFileDialogOutput
@@ -324,8 +383,7 @@ namespace Codeco.ViewModel
                 return null;
             }
 #else
-            PasswordDialog dialog = new PasswordDialog();
-            dialog.IsOpen = true;
+            PasswordDialog dialog = new PasswordDialog {IsOpen = true};
             if ((await dialog.WhenClosed()).DialogResult == PasswordDialog.Result.Ok)
             {
                 return dialog.Password;
@@ -341,8 +399,7 @@ namespace Codeco.ViewModel
         {
             FileService.FileLocation location = _fileService.GetFileLocation(item);
             await _fileService.DeleteFileAsync((StorageFile)item.BackingFile, location);
-            FileGroups.Where(x => x.Location == location)
-                .First()
+            FileGroups.First(x => x.Location == location)
                 .Files
                 .Remove(item);
         }
@@ -370,8 +427,7 @@ namespace Codeco.ViewModel
                 return null;
             }
 #else
-            RenameDialog dialog = new RenameDialog();
-            dialog.IsOpen = true;
+            RenameDialog dialog = new RenameDialog {IsOpen = true};
             if((await dialog.WhenClosed()).DialogResult == RenameDialog.Result.Ok)
             {
                 return dialog.NewName;
@@ -386,6 +442,27 @@ namespace Codeco.ViewModel
         private void GoToSettings()
         {
             _navigationService.NavigateTo(nameof(SettingsPage));
+        }
+
+        private void CycleInputScope()
+        {
+            currentInputScopeIndex = (currentInputScopeIndex + 1) > (_availableInputScopes.Count - 1)
+                ? 0
+                : currentInputScopeIndex + 1;
+            ActiveInputScope = _availableInputScopes[currentInputScopeIndex];            
+        }
+
+        private string GetNewActiveInputScopeText()
+        {
+            switch (ActiveInputScope.Names[0].NameValue)
+            {
+                case InputScopeNameValue.Default:
+                     return ACTIVE_INPUT_PREFIX_TEXT + " General";
+                case InputScopeNameValue.Number:
+                    return ACTIVE_INPUT_PREFIX_TEXT + " Numbers only";
+                default:
+                    return "";
+            }
         }
 
         public void Activate(object parameter, NavigationMode navigationMode)

@@ -53,7 +53,7 @@ namespace Codeco
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Failed to delete file: " + ex.ToString());
+                Debug.WriteLine("Failed to delete file: " + ex);
                 return false;
             }
         }
@@ -72,15 +72,8 @@ namespace Codeco
             {
                 return false;
             }
-            foreach(string line in lines)
-            {
-                string[] splitString = line.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                if(splitString.Length != 2)
-                {
-                    return false;
-                }
-            }
-            return true;
+            return lines.Select(line => line.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries))
+                .All(splitString => splitString.Length == 2);
         }
 
         /// <summary>
@@ -103,7 +96,7 @@ namespace Codeco
             await backingFile.RenameAsync(newName, NameCollisionOption.GenerateUniqueName);
         }
 
-        public static async Task<Dictionary<string, string>> GetIVFile()
+        public static async Task<Dictionary<string, string>> GetIVFileContentsAsync()
         {
             var ivFile = await ApplicationData.Current.RoamingFolder.CreateFileAsync(Constants.IV_FILE_NAME, CreationCollisionOption.OpenIfExists);
             string json = await FileIO.ReadTextAsync(ivFile);
@@ -124,7 +117,7 @@ namespace Codeco
 
         public static async Task<ulong> GetIVFileSize()
         {
-            StorageFile file = await ApplicationData.Current.RoamingFolder.GetFileAsync(Constants.IV_FILE_NAME);
+            StorageFile file = await ApplicationData.Current.RoamingFolder.CreateFileAsync(Constants.IV_FILE_NAME, CreationCollisionOption.OpenIfExists);
             var props = await file.GetBasicPropertiesAsync();
             return props.Size;
         }

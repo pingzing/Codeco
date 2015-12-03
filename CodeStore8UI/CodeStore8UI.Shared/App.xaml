@@ -8,6 +8,7 @@
         <ResourceDictionary>
             <vm:ViewModelLocator x:Key="Locator" xmlns:vm="using:Codeco.ViewModel" />           
             <common:StringFormatConverter x:Key="StringFormatConverter"/>
+            <common:FilenameToColorConverter x:Key="FilenameToColorConverter"/>
 
             <!--This style gets filled at runtime. We're using it to work around the lack of 
             runtime discrimination between platforms in XAML.-->

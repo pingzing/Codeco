@@ -29,11 +29,13 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Text="{Binding OpenFileText}" Style="{StaticResource HeaderTextBlockStyle}" FontSize="45"/>
+                <TextBlock Text="{Binding OpenFileText}" Style="{StaticResource HeaderTextBlockStyle}" FontSize="45"
+                           Foreground="{Binding OpenFileText, Converter={StaticResource FilenameToColorConverter}}"/>
 
                 <Grid Grid.Row="1" Margin="12,12,12,0" VerticalAlignment="Center">
 
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -51,9 +53,14 @@
                     <TextBox x:Name="InputBox"
                              Grid.Row="2"
                              Header="Input"
-                             InputScope="Number"
+                             InputScope="{Binding ActiveInputScope}"
                              MaxLength="{Binding LongestCode}"
                              Text="{Binding InputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock x:Name="InputScopeBlock"
+                               Grid.Row="3"
+                               Text="{Binding ActiveInputScopeText}"
+                               Foreground="{ThemeResource PhoneAccentBrush}"
+                               FontSize="12"/>
                 </Grid>
             </Grid>
         </PivotItem>
@@ -81,8 +88,9 @@
 
     <Page.BottomAppBar>
         <CommandBar Background="{ThemeResource PhoneAccentBrush}">
+            <AppBarButton Icon="Keyboard" Label="input style" Command="{Binding CycleInputScopeCommand}" />
             <AppBarButton Icon="Setting" Label="settings" Command="{Binding GoToSettingsCommand}"/>
-            <AppBarButton Icon="Add" Label="add file" Command="{Binding AddFileCommand}"/>            
+            <AppBarButton Icon="Add" Label="add file" Command="{Binding AddFileCommand}"/>                        
             <CommandBar.SecondaryCommands>
                 <AppBarButton Label="delete active file" Command="{Binding DeleteCodesCommand}"/>
             </CommandBar.SecondaryCommands>

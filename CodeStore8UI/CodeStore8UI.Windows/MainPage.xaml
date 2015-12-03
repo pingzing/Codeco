@@ -33,7 +33,8 @@
 
         <StackPanel Margin="12,12,0,0">
             <TextBlock Text="Active File" Style="{StaticResource HeaderTextBlockStyle}" LineHeight="56"/>
-            <TextBlock Text="{Binding OpenFileText}" Style="{StaticResource HeaderTextBlockStyle}" LineHeight="56" FontSize="40"/>
+            <TextBlock Text="{Binding OpenFileText}" Style="{StaticResource HeaderTextBlockStyle}" LineHeight="56" FontSize="40"
+                       Foreground="{Binding OpenFileText, Converter={StaticResource FilenameToColorConverter}}"/>
         </StackPanel>
 
         <Grid Grid.Row="1" Margin="12,0,12,0" VerticalAlignment="Center">
@@ -57,7 +58,7 @@
                      Header="Input"
                      FontSize="20"
                      HorizontalAlignment="Center"
-                     InputScope="Number" 
+                     InputScope="{Binding ActiveInputScope}"
                      MaxLength="{Binding LongestCode}" 
                      Text="{Binding InputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
