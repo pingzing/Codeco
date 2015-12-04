@@ -115,6 +115,10 @@ namespace Codeco
             await FileIO.WriteTextAsync(saltFile, json);
         }
 
+        /// <summary>
+        /// Gets the IV file's current size in bytes.
+        /// </summary>
+        /// <returns></returns>
         public static async Task<ulong> GetIVFileSize()
         {
             StorageFile file = await ApplicationData.Current.RoamingFolder.CreateFileAsync(Constants.IV_FILE_NAME, CreationCollisionOption.OpenIfExists);

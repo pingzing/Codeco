@@ -347,6 +347,10 @@ namespace Codeco.ViewModel
             FileGroups.First(x => x.Location == location)
                 .Files
                 .Remove(item);
+            if (item == ActiveFile)
+            {
+                ActiveFile = null;
+            }
         }
 
         private async void RenameFile(BindableStorageFile item)

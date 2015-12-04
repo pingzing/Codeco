@@ -48,7 +48,22 @@ namespace Codeco.ViewModel
                 _roamingSpaceUsed = value;
                 RaisePropertyChanged();                
             }
-        }                
+        }
+
+        private double _roamingSpaceFree = 100;
+        public double RoamingSpaceFree
+        {
+            get { return _roamingSpaceFree; }
+            set
+            {
+                if (value == _roamingSpaceFree)
+                {
+                    return;
+                }
+                _roamingSpaceFree = value;
+                RaisePropertyChanged();
+            }
+        } 
 
         private ObservableCollection<FileCollection> _fileGroups = new ObservableCollection<FileCollection>();
         public ObservableCollection<FileCollection> FileGroups
@@ -75,17 +90,17 @@ namespace Codeco.ViewModel
         {            
             FileGroups.First(x => x.Location == FileService.FileLocation.Local).Files.Remove(file);
             FileGroups.First(x => x.Location == FileService.FileLocation.Roamed).Files.Add(file);            
-            await UpdateRoamingSpaceUsed();            
+            await UpdateAvailableRoamingSpace();            
         }
 
         private async void RemoveFileFromSync(BindableStorageFile file)
         {
             FileGroups.First(x => x.Location == FileService.FileLocation.Roamed).Files.Remove(file);
             FileGroups.First(x => x.Location == FileService.FileLocation.Local).Files.Add(file);               
-            await UpdateRoamingSpaceUsed();            
+            await UpdateAvailableRoamingSpace();            
         }
 
-        private async Task UpdateRoamingSpaceUsed()
+        private async Task UpdateAvailableRoamingSpace()
         {
             using (await s_lock.Acquire())
             {
@@ -98,10 +113,13 @@ namespace Codeco.ViewModel
                 var syncedFiles = FileGroups.First(x => x.Location == FileService.FileLocation.Roamed).Files;
                 for (int i = syncedFiles.Count - 1; i >= 0; i--)
                 {
+                    if (syncedFiles[i].Name == Constants.IV_FILE_NAME) continue; //want to hide this from the user...
                     space += await syncedFiles[i].GetFileSizeInBytes();                    
                 }
-                space += await FileUtilities.GetIVFileSize();
+                ulong ivFileSize = await FileUtilities.GetIVFileSize();
+                space += ivFileSize;
                 RoamingSpaceUsed = (double)space / 1024;
+                RoamingSpaceFree = (100 - ((double)ivFileSize / 1024));
             }            
         }                
 
@@ -141,7 +159,7 @@ namespace Codeco.ViewModel
             FileGroups.Add(new FileCollection(Constants.LOCAL_FILES_TITLE,
                 new ObservableCollection<IBindableStorageFile>(_fileService.GetLocalFiles()), FileService.FileLocation.Local));
 
-            await UpdateRoamingSpaceUsed();
+            await UpdateAvailableRoamingSpace();
         }
 
         public void Deactivating(object parameter)

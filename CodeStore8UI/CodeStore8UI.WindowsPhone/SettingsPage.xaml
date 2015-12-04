@@ -25,7 +25,9 @@
             <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" FontSize="20" Margin="0,12,0,24">
                 <Run Text="synced files space:"/>
                 <Run Text="{Binding RoamingSpaceUsed, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0.###}'}"/>
-                <Run Text="kB / 100 kB"/>
+                <Run Text="kB /"/>
+                <Run Text="{Binding RoamingSpaceFree, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0.##}'}"/>
+                <Run Text="kB"></Run>
             </TextBlock>
         </StackPanel>
 
