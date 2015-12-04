@@ -69,10 +69,16 @@ namespace Codeco.ViewModel
             navService.Configure(nameof(SettingsPage), typeof(SettingsPage));
 #if WINDOWS_PHONE_APP
             HardwareButtons.BackPressed += (s, e) =>
-            {                
-                //TODO: Extend the navService so it has access to the back stack so we can be smarter here
-                navService.OnBackButtonPressed(s, new Common.UniversalBackPressedEventArgs(e.Handled));                                
-                e.Handled = true;
+            {
+                if (navService.BackStack[navService.BackStackDepth - 1] == null)
+                {
+                    e.Handled = false; //let the system do what it will
+                }
+                else
+                {
+                    navService.OnBackButtonPressed(s, new Common.UniversalBackPressedEventArgs(e.Handled));
+                    e.Handled = true;
+                }
             };
 #endif
             return navService;

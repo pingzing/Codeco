@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Windows.UI.Xaml.Navigation;
 using Codeco.Common;
 #if WINDOWS_PHONE_APP
 using Windows.Phone.UI.Input;
@@ -13,5 +14,6 @@ namespace Codeco.ViewModel
     {
         event EventHandler<UniversalBackPressedEventArgs> BackButtonPressed;
         void OnBackButtonPressed(object sender, UniversalBackPressedEventArgs args);
+        IList<PageStackEntry> BackStack { get; }
     }
 }

@@ -18,11 +18,11 @@ namespace Codeco.ViewModel
 {
     public class SettingsViewModel : ViewModelBase, INavigable
     {
-        private FileService _fileService;
-        private NavigationServiceEx _navigationService;
+        private readonly FileService _fileService;
+        private readonly NavigationServiceEx _navigationService;
 
         public bool AllowGoingBack { get; set; } = true;
-        private static AsyncLock s_lock = new AsyncLock();
+        private static readonly AsyncLock s_lock = new AsyncLock();
 
         private RelayCommand<BindableStorageFile> _syncFileCommand;
         public RelayCommand<BindableStorageFile> SyncFileCommand => 

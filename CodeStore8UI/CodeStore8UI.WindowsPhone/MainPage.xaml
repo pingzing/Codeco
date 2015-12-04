@@ -67,7 +67,7 @@
                                Grid.Row="3"
                                Text=""
                                Foreground="{ThemeResource PhoneAccentBrush}"
-                               FontSize="12"/>
+                               FontSize="15"/>
                 </Grid>
             </Grid>
         </PivotItem>
