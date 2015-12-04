@@ -50,15 +50,22 @@
                                Style="{ThemeResource ListViewItemTextBlockStyle}"
                                HorizontalAlignment="Center"
                                Text="{Binding CodeText}"/>
-                    <TextBox x:Name="InputBox"
+                    <TextBox x:Name="InputBoxNumbers"
                              Grid.Row="2"
                              Header="Input"
-                             InputScope="{Binding ActiveInputScope}"
+                             InputScope="Number"
+                             MaxLength="{Binding LongestCode}"
+                             Text="{Binding InputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="InputBoxGeneral"
+                             Grid.Row="2"
+                             Header="Input"
+                             Visibility="Collapsed"
+                             InputScope="Default"
                              MaxLength="{Binding LongestCode}"
                              Text="{Binding InputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <TextBlock x:Name="InputScopeBlock"
                                Grid.Row="3"
-                               Text="{Binding ActiveInputScopeText}"
+                               Text=""
                                Foreground="{ThemeResource PhoneAccentBrush}"
                                FontSize="12"/>
                 </Grid>
@@ -88,7 +95,7 @@
 
     <Page.BottomAppBar>
         <CommandBar Background="{ThemeResource PhoneAccentBrush}">
-            <AppBarButton Icon="Keyboard" Label="input style" Command="{Binding CycleInputScopeCommand}" />
+            <AppBarButton x:Name="CycleInputScopeButton" Icon="Keyboard" Label="input style" Click="CycleInputScopeButton_OnClick" />
             <AppBarButton Icon="Setting" Label="settings" Command="{Binding GoToSettingsCommand}"/>
             <AppBarButton Icon="Add" Label="add file" Command="{Binding AddFileCommand}"/>                        
             <CommandBar.SecondaryCommands>
