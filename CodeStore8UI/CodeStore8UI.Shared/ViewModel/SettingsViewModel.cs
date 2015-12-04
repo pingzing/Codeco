@@ -137,8 +137,8 @@ namespace Codeco.ViewModel
 
         private async void GoBack()
         {
-            await BeforeGoingBack();       
-            _navigationService.GoBack();            
+            await BeforeGoingBack();            
+            _navigationService.GoBack();                        
         }
 
         //This is seperate from GoBack() because the MVVM Commanding model requires async void, and the

@@ -70,7 +70,7 @@ namespace Codeco.ViewModel
 #if WINDOWS_PHONE_APP
             HardwareButtons.BackPressed += (s, e) =>
             {
-                if (navService.BackStack[navService.BackStackDepth - 1] == null)
+                if (navService.BackStackDepth == 0 || navService.BackStack[navService.BackStackDepth - 1] == null)
                 {
                     e.Handled = false; //let the system do what it will
                 }

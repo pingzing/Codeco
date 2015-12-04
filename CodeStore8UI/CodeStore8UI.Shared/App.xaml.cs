@@ -99,7 +99,6 @@ namespace Codeco
             if (rootFrame.Content == null)
             {
 #if WINDOWS_PHONE_APP
-
                 // Fill the style to be later used in the Files lists header
                 Style style = (Style)Current.Resources["SubheaderTextBlockStyle"];
                 SolidColorBrush accentBrush = (SolidColorBrush)Current.Resources["PhoneAccentBrush"];
@@ -158,29 +157,40 @@ namespace Codeco
 #endif
 
         protected override async void OnActivated(IActivatedEventArgs args)
-        {
-            base.OnActivated(args);
+        {            
 #if WINDOWS_PHONE_APP
+            // Fill the style to be later used in the Files lists header
+            Style style = (Style) Current.Resources["SubheaderTextBlockStyle"];
+            SolidColorBrush accentBrush = (SolidColorBrush) Current.Resources["PhoneAccentBrush"];
+            FontFamily normalFont = (FontFamily) Current.Resources["PhoneFontFamilyNormal"];
+            style.Setters.Add(new Setter(TextBlock.FontSizeProperty, 30d));
+            style.Setters.Add(new Setter(TextBlock.ForegroundProperty, accentBrush));
+            style.Setters.Add(new Setter(TextBlock.FontWeightProperty, "SemiBold"));
+            style.Setters.Add(new Setter(TextBlock.FontFamilyProperty, normalFont));
+            Current.Resources["DynamicFileHeaderPhoneStyle"] = style;
+            System.Diagnostics.Debug.WriteLine("OnActivated is firing!");
+
             Frame rootFrame = Window.Current.Content as Frame;
-            if(rootFrame == null)
+            if (rootFrame == null)
             {
                 rootFrame = new Frame();
                 Window.Current.Content = rootFrame;
             }
 
-            if(args.PreviousExecutionState == ApplicationExecutionState.Terminated)
+            if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
             {
-                await SuspensionManager.RestoreAsync();
+                //await SuspensionManager.RestoreAsync(); //Disable this until we can figure out how to catch a re-activation so the SettingsViewModel can resubscribe to listening to Back Button presses
             }
 
             var continuationEventArgs = args as IContinuationActivatedEventArgs;
-            if(continuationEventArgs != null)
+            if (continuationEventArgs != null)
             {
                 //assuming we've already navigated to the MainPage at this point
                 ContinuationManager manager = new ContinuationManager();
                 manager.Continue(continuationEventArgs, rootFrame);
-            }                        
+            }
 #endif
+            base.OnActivated(args);
         }
 
         /// <summary>
