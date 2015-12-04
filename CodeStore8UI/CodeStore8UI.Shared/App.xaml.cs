@@ -167,8 +167,7 @@ namespace Codeco
             style.Setters.Add(new Setter(TextBlock.ForegroundProperty, accentBrush));
             style.Setters.Add(new Setter(TextBlock.FontWeightProperty, "SemiBold"));
             style.Setters.Add(new Setter(TextBlock.FontFamilyProperty, normalFont));
-            Current.Resources["DynamicFileHeaderPhoneStyle"] = style;
-            System.Diagnostics.Debug.WriteLine("OnActivated is firing!");
+            Current.Resources["DynamicFileHeaderPhoneStyle"] = style;            
 
             Frame rootFrame = Window.Current.Content as Frame;
             if (rootFrame == null)

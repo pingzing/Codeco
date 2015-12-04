@@ -1,2 +1,2 @@
-MainPackage=D:\Source Code\CodeStore\CodeStore8UI\CodeStore8UI.WindowsPhone\bin\Release\CodeStore8UI.WindowsPhone_0.1.0.0_AnyCPU.appx
-SymbolPackage=D:\Source Code\CodeStore\CodeStore8UI\CodeStore8UI.WindowsPhone\AppPackages\CodeStore8UI.WindowsPhone_0.1.0.0_Test\CodeStore8UI.WindowsPhone_0.1.0.0_AnyCPU.appxsym
+MainPackage=D:\Source Code\CodeStore\CodeStore8UI\CodeStore8UI.WindowsPhone\bin\Release\Codeco.WindowsPhone_0.2.0.0_AnyCPU.appx
+SymbolPackage=D:\Source Code\CodeStore\CodeStore8UI\CodeStore8UI.WindowsPhone\AppPackages\Codeco.WindowsPhone_0.2.0.0_Test\Codeco.WindowsPhone_0.2.0.0_AnyCPU.appxsym

@@ -48,11 +48,6 @@ namespace Codeco
             {
                 context?.SyncFileCommand.Execute(tappedItem);
             }            
-        }
-
-        private void BindablePage_Loaded(object sender, RoutedEventArgs e)
-        {
-            System.Diagnostics.Debugger.Break();
-        }
+        }        
     }
 }
