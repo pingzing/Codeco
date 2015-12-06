@@ -46,6 +46,7 @@ namespace Codeco
         private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             Debugger.Break();
+            
         }
 
         /// <summary>
@@ -157,7 +158,8 @@ namespace Codeco
 #endif
 
         protected override async void OnActivated(IActivatedEventArgs args)
-        {            
+        {
+            base.OnActivated(args);
 #if WINDOWS_PHONE_APP
             // Fill the style to be later used in the Files lists header
             Style style = (Style) Current.Resources["SubheaderTextBlockStyle"];
@@ -178,18 +180,20 @@ namespace Codeco
 
             if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
             {
-                //await SuspensionManager.RestoreAsync(); //Disable this until we can figure out how to catch a re-activation so the SettingsViewModel can resubscribe to listening to Back Button presses
+                //await SuspensionManager.RestoreAsync(); //disabling this until we can find a way to not trap users on the SettingsPage.
             }
 
             var continuationEventArgs = args as IContinuationActivatedEventArgs;
             if (continuationEventArgs != null)
-            {
-                //assuming we've already navigated to the MainPage at this point
+            {                
+                if(rootFrame.CurrentSourcePageType != typeof(MainPage))
+                {
+                    rootFrame.Navigate(typeof(MainPage));
+                }
                 ContinuationManager manager = new ContinuationManager();
                 manager.Continue(continuationEventArgs, rootFrame);
             }
-#endif
-            base.OnActivated(args);
+#endif            
         }
 
         /// <summary>
