@@ -1,2 +1,2 @@
-MainPackage=C:\Users\mcali\Desktop\Repositories\Codeco\CodeStore8UI\CodeStore8UI.WindowsPhone\bin\Release\Codeco.WindowsPhone_0.2.2.0_AnyCPU.appx
-SymbolPackage=C:\Users\mcali\Desktop\Repositories\Codeco\CodeStore8UI\CodeStore8UI.WindowsPhone\AppPackages\Codeco.WindowsPhone_0.2.2.0_Test\Codeco.WindowsPhone_0.2.2.0_AnyCPU.appxsym
+MainPackage=C:\Users\mcali\Desktop\Repositories\Codeco\Codeco\Codeco.WindowsPhone\bin\Release\Codeco.WindowsPhone_0.2.3.0_AnyCPU.appx
+SymbolPackage=C:\Users\mcali\Desktop\Repositories\Codeco\Codeco\Codeco.WindowsPhone\AppPackages\Codeco.WindowsPhone_0.2.3.0_Test\Codeco.WindowsPhone_0.2.3.0_AnyCPU.appxsym
