@@ -39,10 +39,10 @@ namespace Codeco
         public App()
         {
             this.InitializeComponent();
-            this.Suspending += this.OnSuspending;
+            this.Suspending += this.OnSuspending;            
             this.UnhandledException += App_UnhandledException;                         
         }
-
+         
         private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             Debugger.Break();
@@ -62,7 +62,7 @@ namespace Codeco
             {
                 this.DebugSettings.EnableFrameRateCounter = true;
             }
-#endif
+#endif            
 
             Frame rootFrame = Window.Current.Content as Frame;
 
@@ -148,7 +148,7 @@ namespace Codeco
 #endif
 
         protected override async void OnActivated(IActivatedEventArgs args)
-        {
+        {            
             base.OnActivated(args);
 #if WINDOWS_PHONE_APP            
             Frame rootFrame = Window.Current.Content as Frame;
@@ -187,5 +187,6 @@ namespace Codeco
             await SuspensionManager.SaveAsync();
             deferral.Complete();
         }
+    
     }
 }

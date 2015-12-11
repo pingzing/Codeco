@@ -91,6 +91,6 @@ namespace Codeco
             {
                 InputScopeBlock.Text = GetNewActiveInputScopeText(InputScopeNameValue.Number);
             }
-        }
+        }        
     }
 }

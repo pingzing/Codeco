@@ -27,7 +27,7 @@ namespace Codeco
                 if (!_localFiles.Contains(file))
                 {                                      
                     //Backing values
-                    await FileUtilities.MoveFileToRoamingAsync((StorageFile)file.BackingFile);
+                    await FileUtilities.MoveFileToLocalAsync((StorageFile)file.BackingFile);
 
                     _roamedFiles.Remove(file);
 
@@ -46,7 +46,7 @@ namespace Codeco
                 if (!_roamedFiles.Contains(file))
                 {                    
                     //Backing values
-                    await FileUtilities.MoveFileToLocalAsync((StorageFile)file.BackingFile);
+                    await FileUtilities.MoveFileToRoamingAsync((StorageFile)file.BackingFile);
 
                     _localFiles.Remove(file);
 

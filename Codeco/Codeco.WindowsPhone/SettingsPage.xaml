@@ -8,7 +8,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-    DataContext="{Binding Source={StaticResource Locator}, Path=Settings}">
+    DataContext="{Binding Source={StaticResource Locator}, Path=Settings}"
+    NavigationCacheMode="Required">
 
     <common:BindablePage.Resources>
         <CollectionViewSource x:Key="FileViewSource" Source="{Binding FileGroups}" IsSourceGrouped="True" ItemsPath="Files"/>               

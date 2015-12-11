@@ -96,7 +96,7 @@ namespace Codeco.ViewModel
         private async void RemoveFileFromSync(BindableStorageFile file)
         {
             FileGroups.First(x => x.Location == FileService.FileLocation.Roamed).Files.Remove(file);
-            FileGroups.First(x => x.Location == FileService.FileLocation.Local).Files.Add(file);               
+            FileGroups.First(x => x.Location == FileService.FileLocation.Local).Files.Add(file);            
             await UpdateAvailableRoamingSpace();            
         }
 

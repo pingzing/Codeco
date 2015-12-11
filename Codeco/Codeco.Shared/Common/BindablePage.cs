@@ -9,6 +9,21 @@ namespace Codeco.Common
 {
     public class BindablePage : Page
     {
+
+        public BindablePage() : base()
+        {
+            App.Current.Resuming += Current_Resuming;
+        }
+
+        private void Current_Resuming(object sender, object e)
+        {
+            if (Frame.Content == this)
+            {
+                var navigableViewModel = this.DataContext as INavigable;
+                navigableViewModel?.Activate(e, NavigationMode.Refresh);
+            }
+        }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
