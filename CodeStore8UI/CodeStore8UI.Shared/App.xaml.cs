@@ -99,17 +99,7 @@ namespace Codeco
 
             if (rootFrame.Content == null)
             {
-#if WINDOWS_PHONE_APP
-                // Fill the style to be later used in the Files lists header
-                Style style = (Style)Current.Resources["SubheaderTextBlockStyle"];
-                SolidColorBrush accentBrush = (SolidColorBrush)Current.Resources["PhoneAccentBrush"];
-                FontFamily normalFont = (FontFamily)Current.Resources["PhoneFontFamilyNormal"];
-                style.Setters.Add(new Setter(TextBlock.FontSizeProperty, 30d));
-                style.Setters.Add(new Setter(TextBlock.ForegroundProperty, accentBrush));
-                style.Setters.Add(new Setter(TextBlock.FontWeightProperty, "SemiBold"));
-                style.Setters.Add(new Setter(TextBlock.FontFamilyProperty, normalFont));
-                Current.Resources["DynamicFileHeaderPhoneStyle"] = style;
-
+#if WINDOWS_PHONE_APP                
                 // Removes the turnstile navigation for startup.
                 if (rootFrame.ContentTransitions != null)
                 {
@@ -160,17 +150,7 @@ namespace Codeco
         protected override async void OnActivated(IActivatedEventArgs args)
         {
             base.OnActivated(args);
-#if WINDOWS_PHONE_APP
-            // Fill the style to be later used in the Files lists header
-            Style style = (Style) Current.Resources["SubheaderTextBlockStyle"];
-            SolidColorBrush accentBrush = (SolidColorBrush) Current.Resources["PhoneAccentBrush"];
-            FontFamily normalFont = (FontFamily) Current.Resources["PhoneFontFamilyNormal"];
-            style.Setters.Add(new Setter(TextBlock.FontSizeProperty, 30d));
-            style.Setters.Add(new Setter(TextBlock.ForegroundProperty, accentBrush));
-            style.Setters.Add(new Setter(TextBlock.FontWeightProperty, "SemiBold"));
-            style.Setters.Add(new Setter(TextBlock.FontFamilyProperty, normalFont));
-            Current.Resources["DynamicFileHeaderPhoneStyle"] = style;            
-
+#if WINDOWS_PHONE_APP            
             Frame rootFrame = Window.Current.Content as Frame;
             if (rootFrame == null)
             {
