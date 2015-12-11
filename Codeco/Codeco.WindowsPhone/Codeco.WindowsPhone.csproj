@@ -7,8 +7,8 @@
     <ProjectGuid>{4B8D53C6-C7D4-4FDB-BCFA-A82003AED854}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CodeStore8UI</RootNamespace>
-    <AssemblyName>CodeStore8UI.WindowsPhone</AssemblyName>
+    <RootNamespace>Codeco</RootNamespace>
+    <AssemblyName>Codeco.WindowsPhone</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformVersion>8.1</TargetPlatformVersion>
     <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
@@ -185,7 +185,7 @@
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
   </PropertyGroup>
-  <Import Project="..\CodeStore8UI.Shared\CodeStore8UI.Shared.projitems" Label="Shared" />
+  <Import Project="..\Codeco.Shared\Codeco.Shared.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(TargetPlatformIdentifier)' == '' ">
     <TargetPlatformIdentifier>WindowsPhoneApp</TargetPlatformIdentifier>
   </PropertyGroup>

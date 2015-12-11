@@ -6,7 +6,7 @@
     <SharedGUID>1a8de50e-3155-4d92-b8ab-28baeef56d43</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>CodeStore8UI</Import_RootNamespace>
+    <Import_RootNamespace>Codeco</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <ApplicationDefinition Include="$(MSBuildThisFileDirectory)App.xaml">
