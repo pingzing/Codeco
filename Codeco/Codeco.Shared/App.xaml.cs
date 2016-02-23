@@ -45,8 +45,7 @@ namespace Codeco
          
         private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            Debugger.Break();
-            
+            Debugger.Break();            
         }
 
         /// <summary>
