@@ -12,7 +12,7 @@ namespace Codeco.Common
 
         public BindablePage() : base()
         {
-            App.Current.Resuming += Current_Resuming;
+            Application.Current.Resuming += Current_Resuming;
         }
 
         private void Current_Resuming(object sender, object e)
