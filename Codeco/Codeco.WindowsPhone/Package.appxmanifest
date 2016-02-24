@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">
-  <Identity Name="10707NeilApps.Codeco" Publisher="CN=B458EF9C-1F3A-4DD2-AB1A-76FB5056CF30" Version="0.2.3.0" />
+  <Identity Name="10707NeilApps.Codeco" Publisher="CN=B458EF9C-1F3A-4DD2-AB1A-76FB5056CF30" Version="2.4.0.2" />
   <mp:PhoneIdentity PhoneProductId="a98d9f8e-b45e-4252-b504-8061731b44bb" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Codeco</DisplayName>
