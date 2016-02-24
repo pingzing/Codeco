@@ -359,6 +359,10 @@ namespace Codeco.ViewModel
             if (newName != null)
             {
                 await _fileService.RenameFileAsync(item, newName);                
+                if(ActiveFile == item)
+                {
+                    OpenFileText = item.Name;
+                }
             }
         }
 

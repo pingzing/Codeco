@@ -23,53 +23,58 @@
 
     <Pivot x:Name="MainPivot" Title="CODECO" DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
         <PivotItem x:Name="ActivePivotItem" Header="active">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-
-                <TextBlock Text="{Binding OpenFileText}" Style="{StaticResource HeaderTextBlockStyle}" FontSize="45"
-                           Foreground="{Binding OpenFileText, Converter={StaticResource FilenameToColorConverter}}"/>
-
-                <Grid Grid.Row="1" Margin="12,12,12,0" VerticalAlignment="Center">
-
+            <ScrollViewer Margin="-18 0 -18 0" VerticalScrollBarVisibility="Auto">
+                <Grid Margin="18 0 18 0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0"  
+                    <TextBlock Text="{Binding OpenFileText}" 
+                           Style="{StaticResource HeaderTextBlockStyle}" 
+                           FontSize="45"
+                           TextWrapping="WrapWholeWords"
+                           Foreground="{Binding OpenFileText, Converter={StaticResource FilenameToColorConverter}}"/>
+
+                    <Grid Grid.Row="1" Margin="12,12,12,0" VerticalAlignment="Center">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0"  
                                Text="🔑" 
                                FontSize="30" 
                                HorizontalAlignment="Center"/>
-                    <TextBlock x:Name="KeyBlock"
+                        <TextBlock x:Name="KeyBlock"
                                Grid.Row="1" 
                                Style="{ThemeResource ListViewItemTextBlockStyle}"
                                HorizontalAlignment="Center"
                                Text="{Binding CodeText}"/>
-                    <TextBox x:Name="InputBoxNumbers"
+                        <TextBox x:Name="InputBoxNumbers"
                              Grid.Row="2"
                              Header="Input"
                              InputScope="Number"
                              MaxLength="{Binding LongestCode}"
                              Text="{Binding InputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <TextBox x:Name="InputBoxGeneral"
+                        <TextBox x:Name="InputBoxGeneral"
                              Grid.Row="2"
                              Header="Input"
                              Visibility="Collapsed"
                              InputScope="Default"
                              MaxLength="{Binding LongestCode}"
                              Text="{Binding InputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <TextBlock x:Name="InputScopeBlock"
+                        <TextBlock x:Name="InputScopeBlock"
                                Grid.Row="3"
                                Text=""
                                Foreground="{ThemeResource PhoneAccentBrush}"
                                FontSize="15"/>
+                    </Grid>
                 </Grid>
-            </Grid>
+            </ScrollViewer>
         </PivotItem>
 
         <PivotItem x:Name="SavedPivotItem" Header="saved files">
@@ -97,7 +102,7 @@
         <CommandBar Background="{ThemeResource PhoneAccentBrush}" Foreground="White">
             <AppBarButton x:Name="CycleInputScopeButton" Icon="Keyboard" Label="input style" Click="CycleInputScopeButton_OnClick" />
             <AppBarButton Icon="Setting" Label="settings" Command="{Binding GoToSettingsCommand}"/>
-            <AppBarButton Icon="Add" Label="add file" Command="{Binding AddFileCommand}"/>                        
+            <AppBarButton Icon="Add" Label="add file" Command="{Binding AddFileCommand}"/>
             <CommandBar.SecondaryCommands>
                 <AppBarButton Label="delete active file" Command="{Binding DeleteCodesCommand}"/>
             </CommandBar.SecondaryCommands>
