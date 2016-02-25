@@ -16,14 +16,17 @@ namespace Codeco.Windows10.Views
 
         public MainPage()
         {
-            this.InitializeComponent();                        
-            if (InputBoxNumbers.Visibility == Visibility.Visible)
+            this.InitializeComponent();
+            
+            if (InputBoxNumbers.Visibility == Visibility.Visible || WideInputBoxNumbers.Visibility == Visibility.Visible)
             {
                 InputScopeBlock.Text = GetNewActiveInputScopeText(InputScopeNameValue.Number);
+                WideInputScopeBlock.Text = GetNewActiveInputScopeText(InputScopeNameValue.Number);
             }
             else
             {
                 InputScopeBlock.Text = GetNewActiveInputScopeText(InputScopeNameValue.Default);
+                WideInputScopeBlock.Text = GetNewActiveInputScopeText(InputScopeNameValue.Default);
             }                        
         }                               
 
@@ -76,14 +79,22 @@ namespace Codeco.Windows10.Views
             InputBoxGeneral.Visibility = InputBoxGeneral.Visibility == Visibility.Visible
                 ? Visibility.Collapsed
                 : Visibility.Visible;
+            WideInputBoxNumbers.Visibility = WideInputBoxNumbers.Visibility == Visibility.Visible
+                ? Visibility.Collapsed
+                : Visibility.Visible;
+            WideInputBoxGeneral.Visibility = WideInputBoxNumbers.Visibility == Visibility.Visible
+                ? Visibility.Collapsed
+                : Visibility.Visible;
 
             if (InputBoxGeneral.Visibility == Visibility.Visible)
             {
                 InputScopeBlock.Text = GetNewActiveInputScopeText(InputScopeNameValue.Default);
+                WideInputScopeBlock.Text = GetNewActiveInputScopeText(InputScopeNameValue.Default);
             }
             else
             {
                 InputScopeBlock.Text = GetNewActiveInputScopeText(InputScopeNameValue.Number);
+                WideInputScopeBlock.Text = GetNewActiveInputScopeText(InputScopeNameValue.Number);
             }
         }        
     }

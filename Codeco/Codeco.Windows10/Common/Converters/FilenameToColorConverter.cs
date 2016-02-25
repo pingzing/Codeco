@@ -21,10 +21,10 @@ namespace Codeco.Windows10.Common.Converters
                 return new SolidColorBrush(Colors.Gray);
             }
             else
-            {
-                if (Application.Current.Resources.ContainsKey("PhoneAccentBrush"))
+            {                
+                if (Application.Current.Resources.ContainsKey("SystemControlBackgroundAccentBrush"))
                 {
-                    return (SolidColorBrush) Application.Current.Resources["PhoneAccentBrush"];
+                    return (SolidColorBrush) Application.Current.Resources["SystemControlBackgroundAccentBrush"];
                 }
                 else
                 {

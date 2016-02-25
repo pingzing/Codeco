@@ -16,108 +16,284 @@
             <MenuFlyoutItem Text="Rename" Command="{Binding Main.RenameFileCommand, Mode=OneWay, Source={StaticResource Locator}}" CommandParameter="{Binding}"/>
         </MenuFlyout>
         <CollectionViewSource x:Key="FileViewSource" ItemsPath="Files" Source="{Binding FileGroups}" IsSourceGrouped="True"/>
+
+        <Style x:Key="PivotTitleTextBlockStyle" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="{ThemeResource PivotTitleFontFamily}" />
+            <Setter Property="FontWeight" Value="{ThemeResource PivotTitleThemeFontWeight}" />
+            <Setter Property="FontSize" Value="{ThemeResource PivotTitleFontSize}" />
+        </Style>
+
     </Page.Resources>
 
-    <Pivot x:Name="MainPivot" Title="CODECO" DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
-        <PivotItem x:Name="ActivePivotItem" Header="active">
-            <ScrollViewer Margin="-18 0 -18 0" VerticalScrollBarVisibility="Auto">
-                <Grid Margin="18 0 18 0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
+    <Grid x:Name="LayoutRoot" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="Common">
+                <VisualState x:Name="Narrow">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0"/>
+                    </VisualState.StateTriggers>
+                </VisualState>
+                <VisualState x:Name="Wide">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="600"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="MainPivot.(UIElement.Visibility)" Value="Collapsed"/>
+                        <Setter Target="WideGrid.(UIElement.Visibility)" Value="Visible"/>
+                        <Setter Target="TopCommandBar.(UIElement.Visibility)" Value="Visible"/>
+                        <Setter Target="BottomCommandBar.(UIElement.Visibility)" Value="Collapsed"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
 
-                    <TextBlock Text="{Binding OpenFileText}" 
+        <Pivot x:Name="MainPivot"                
+               Title="CODECO" 
+               DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
+               Visibility="Visible">
+            <PivotItem x:Name="ActivePivotItem" Header="Active">
+                <ScrollViewer Margin="-16 0 -16 0" VerticalScrollBarVisibility="Auto">
+                    <Grid Margin="16 0 16 0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="{Binding OpenFileText}" 
                            Style="{StaticResource HeaderTextBlockStyle}" 
                            FontSize="45"
                            TextWrapping="WrapWholeWords"
                            Foreground="{Binding OpenFileText, Converter={StaticResource FilenameToColorConverter}}"/>
 
-                    <Grid Grid.Row="1" Margin="12,12,12,0" VerticalAlignment="Center">
+                        <Grid Grid.Row="1" Margin="10,10,10,0" VerticalAlignment="Center">
 
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
 
-                        <TextBlock Grid.Row="0"  
+                            <TextBlock Grid.Row="0"  
                                Text="🔑" 
                                FontSize="30" 
                                HorizontalAlignment="Center"/>
-                        <TextBlock x:Name="KeyBlock"
+                            <TextBlock x:Name="KeyBlock"
                                Grid.Row="1" 
                                Style="{ThemeResource SubtitleTextBlockStyle}"
                                HorizontalAlignment="Center"
                                Text="{Binding CodeText}"/>
-                        <TextBox x:Name="InputBoxNumbers"
+                            <TextBox x:Name="InputBoxNumbers"
                              Grid.Row="2"
                              Header="Input"
                              InputScope="Number"
                              MaxLength="{Binding LongestCode}"
                              Text="{Binding InputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <TextBox x:Name="InputBoxGeneral"
+                            <TextBox x:Name="InputBoxGeneral"
                              Grid.Row="2"
                              Header="Input"
                              Visibility="Collapsed"
                              InputScope="Default"
                              MaxLength="{Binding LongestCode}"
                              Text="{Binding InputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <TextBlock x:Name="InputScopeBlock"
+                            <TextBlock x:Name="InputScopeBlock"
                                Grid.Row="3"
                                Text=""
                                Foreground="{ThemeResource SystemControlBackgroundAccentBrush}"
                                FontSize="15"/>
+                        </Grid>
                     </Grid>
-                </Grid>
-            </ScrollViewer>
-        </PivotItem>
+                </ScrollViewer>
+            </PivotItem>
 
-        <PivotItem x:Name="SavedPivotItem" Header="saved files">
-            <ListView x:Name="FileListCollection"
-                          Grid.Row="1"                          
-                          Margin="0 10 0 0"
-                          ItemsSource="{Binding Source={StaticResource FileViewSource}}">
-                <ListView.GroupStyle>
-                    <GroupStyle HidesIfEmpty="True">
-                        <GroupStyle.HeaderTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding}" Style="{StaticResource HeaderTextBlockStyle}" Margin="-10 0 0 0"/>
-                            </DataTemplate>
-                        </GroupStyle.HeaderTemplate>
-                    </GroupStyle>
-                </ListView.GroupStyle>
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                    </Style>
-                </ListView.ItemContainerStyle>
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Tapped="SavedFile_Tapped"
+            <PivotItem x:Name="SavedPivotItem" Header="Saved Files">
+                <ListView x:Name="FileListCollection"
+                      Grid.Row="1"                          
+                      Margin="0 10 0 0"
+                      ItemsSource="{Binding Source={StaticResource FileViewSource}}"
+                      SelectionMode="None">
+                    <ListView.GroupStyle>
+                        <GroupStyle HidesIfEmpty="True">
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" Style="{StaticResource HeaderTextBlockStyle}" Margin="-10 0 0 0"/>
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                        </GroupStyle>
+                    </ListView.GroupStyle>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Tapped="SavedFile_Tapped"
                                     RightTapped="SavedFile_RightTapped" 
                                     Tag="{Binding}" 
                                     FlyoutBase.AttachedFlyout="{StaticResource SavedFilesFlyout}">
 
-                            <TextBlock Text="{Binding Name}" 
+                                <TextBlock Text="{Binding Name}" 
                                            Style="{StaticResource SubheaderTextBlockStyle}"/>
-                            <TextBlock Text="{Binding CreateDate}" 
+                                <TextBlock Text="{Binding CreateDate}" 
                                            Style="{StaticResource CaptionTextBlockStyle}" 
                                            Foreground="{ThemeResource SystemControlBackgroundBaseMediumBrush}"/>
-                            <TextBlock Text="{Binding FileSize}" 
+                                <TextBlock Text="{Binding FileSize}" 
                                            Style="{StaticResource CaptionTextBlockStyle}" 
                                            Foreground="{ThemeResource SystemControlBackgroundBaseMediumBrush}"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </PivotItem>
-    </Pivot>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </PivotItem>
+        </Pivot>
+
+        <Grid x:Name="WideGrid"                          
+             Visibility="Collapsed"
+             Margin="0 2 0 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+
+            <Grid Grid.Column="0" Margin="12 5 12 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           Style="{ThemeResource TitleTextBlockStyle}"
+                           Text="Active"/>
+
+                <ScrollViewer Grid.Row="1" Margin="-12 0 -12 0" VerticalScrollBarVisibility="Auto">
+                    <Grid Margin="12 8 12 0" HorizontalAlignment="Stretch">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="{Binding OpenFileText}" 
+                           Style="{StaticResource HeaderTextBlockStyle}" 
+                           FontSize="45"
+                           TextWrapping="WrapWholeWords"
+                           Foreground="{Binding OpenFileText, Converter={StaticResource FilenameToColorConverter}}"/>
+
+                        <Grid Grid.Row="1" Margin="10,10,10,0" VerticalAlignment="Center">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0"  
+                                       Text="🔑" 
+                                       FontSize="30" 
+                                       HorizontalAlignment="Center"/>
+                            <TextBlock x:Name="WideKeyBlock"
+                                       Grid.Row="1" 
+                                       Style="{ThemeResource SubtitleTextBlockStyle}"
+                                       HorizontalAlignment="Center"
+                                       Text="{Binding CodeText}"/>
+                            <TextBox x:Name="WideInputBoxNumbers"
+                                     Grid.Row="2"
+                                     Header="Input"
+                                     InputScope="Number"
+                                     MaxLength="{Binding LongestCode}"
+                                     Text="{Binding InputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBox x:Name="WideInputBoxGeneral"
+                                     Grid.Row="2"
+                                     Header="Input"
+                                     Visibility="Collapsed"
+                                     InputScope="Default"
+                                     MaxLength="{Binding LongestCode}"
+                                     Text="{Binding InputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBlock x:Name="WideInputScopeBlock"
+                                       Grid.Row="3"
+                                       Text=""
+                                       Foreground="{ThemeResource SystemControlBackgroundAccentBrush}"
+                                       FontSize="15"/>
+                        </Grid>
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
+
+            <Grid Grid.Column="1" Margin="0 10 0 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                       Style="{ThemeResource TitleTextBlockStyle}"
+                       Text="Saved Files"/>
+
+                <ListView x:Name="WideFileListCollection"                      
+                      Grid.Row="1"
+                      ItemsSource="{Binding Source={StaticResource FileViewSource}}"
+                      SelectionMode="None">
+                    <ListView.GroupStyle>
+                        <GroupStyle HidesIfEmpty="True">
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" Style="{StaticResource HeaderTextBlockStyle}" Margin="-10 0 0 0"/>
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                        </GroupStyle>
+                    </ListView.GroupStyle>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Tapped="SavedFile_Tapped"
+                                    RightTapped="SavedFile_RightTapped" 
+                                    Tag="{Binding}" 
+                                    FlyoutBase.AttachedFlyout="{StaticResource SavedFilesFlyout}">
+
+                                <TextBlock Text="{Binding Name}" 
+                                           Style="{StaticResource SubheaderTextBlockStyle}"/>
+                                <TextBlock Text="{Binding CreateDate}" 
+                                           Style="{StaticResource CaptionTextBlockStyle}" 
+                                           Foreground="{ThemeResource SystemControlBackgroundBaseMediumBrush}"/>
+                                <TextBlock Text="{Binding FileSize}" 
+                                           Style="{StaticResource CaptionTextBlockStyle}" 
+                                           Foreground="{ThemeResource SystemControlBackgroundBaseMediumBrush}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+        </Grid>
+    </Grid>
+
+    <Page.TopAppBar>
+        <CommandBar x:Name="TopCommandBar" Visibility="Collapsed">
+            <CommandBar.Content>
+                <TextBlock Text="CODECO"
+                           Margin="12 14 0 0"
+                                FontFamily="{ThemeResource PivotTitleFontFamily}"
+                                FontWeight="{ThemeResource PivotTitleThemeFontWeight}"
+                                FontSize="{ThemeResource PivotTitleFontSize}"
+                                OpticalMarginAlignment="TrimSideBearings"/>
+            </CommandBar.Content>
+            <AppBarButton Icon="Keyboard" Label="Input Style" Click="CycleInputScopeButton_OnClick" />
+            <AppBarButton Icon="Setting" Label="Settings" Command="{Binding GoToSettingsCommand}"/>
+            <AppBarButton Icon="Add" Label="Add file" Command="{Binding AddFileCommand}"/>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Label="Delete active file" Command="{Binding DeleteCodesCommand}"/>
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.TopAppBar>
 
     <Page.BottomAppBar>
-        <CommandBar>
-            <AppBarButton x:Name="CycleInputScopeButton" Icon="Keyboard" Label="Input Style" Click="CycleInputScopeButton_OnClick" />
+        <CommandBar x:Name="BottomCommandBar">
+            <AppBarButton Icon="Keyboard" Label="Input Style" Click="CycleInputScopeButton_OnClick" />
             <AppBarButton Icon="Setting" Label="Settings" Command="{Binding GoToSettingsCommand}"/>
             <AppBarButton Icon="Add" Label="Add file" Command="{Binding AddFileCommand}"/>
             <CommandBar.SecondaryCommands>
