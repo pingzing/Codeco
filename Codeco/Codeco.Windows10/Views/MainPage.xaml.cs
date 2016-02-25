@@ -32,7 +32,11 @@ namespace Codeco.Windows10.Views
             var item = sender as FrameworkElement;
             if(item != null)
             {
-                FlyoutBase.ShowAttachedFlyout(item);
+                MenuFlyout flyout = FlyoutBase.GetAttachedFlyout(item) as MenuFlyout;
+                if(flyout != null)
+                {
+                    flyout.ShowAt(this, e.GetPosition(this));
+                }
             }
         }
 

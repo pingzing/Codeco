@@ -12,8 +12,8 @@
 
     <Page.Resources>
         <MenuFlyout x:Key="SavedFilesFlyout">
-            <MenuFlyoutItem Text="delete" Command="{Binding Main.DeleteFileCommand, Mode=OneWay, Source={StaticResource Locator}}" CommandParameter="{Binding}"/>
-            <MenuFlyoutItem Text="rename" Command="{Binding Main.RenameFileCommand, Mode=OneWay, Source={StaticResource Locator}}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem Text="Delete" Command="{Binding Main.DeleteFileCommand, Mode=OneWay, Source={StaticResource Locator}}" CommandParameter="{Binding}"/>
+            <MenuFlyoutItem Text="Rename" Command="{Binding Main.RenameFileCommand, Mode=OneWay, Source={StaticResource Locator}}" CommandParameter="{Binding}"/>
         </MenuFlyout>
         <CollectionViewSource x:Key="FileViewSource" ItemsPath="Files" Source="{Binding FileGroups}" IsSourceGrouped="True"/>
     </Page.Resources>
@@ -75,61 +75,53 @@
         </PivotItem>
 
         <PivotItem x:Name="SavedPivotItem" Header="saved files">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-
-                <TextBlock Grid.Row="0"
-                           Text="Saved Files"
-                           Style="{StaticResource HeaderTextBlockStyle}"
-                           Margin="10 0 0 0"
-                           LineHeight="56"/>
-
-                <ListView x:Name="FileListCollection"
+            <ListView x:Name="FileListCollection"
                           Grid.Row="1"                          
                           Margin="0 10 0 0"
                           ItemsSource="{Binding Source={StaticResource FileViewSource}}">
-                    <ListView.GroupStyle>
-                        <GroupStyle HidesIfEmpty="True">
-                            <GroupStyle.HeaderTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding}" Style="{StaticResource DynamicFileHeaderPhoneStyle}"/>
-                                </DataTemplate>
-                            </GroupStyle.HeaderTemplate>
-                        </GroupStyle>
-                    </ListView.GroupStyle>
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Tapped="SavedFile_Tapped"
+                <ListView.GroupStyle>
+                    <GroupStyle HidesIfEmpty="True">
+                        <GroupStyle.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" Style="{StaticResource HeaderTextBlockStyle}" Margin="-10 0 0 0"/>
+                            </DataTemplate>
+                        </GroupStyle.HeaderTemplate>
+                    </GroupStyle>
+                </ListView.GroupStyle>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Tapped="SavedFile_Tapped"
                                     RightTapped="SavedFile_RightTapped" 
                                     Tag="{Binding}" 
                                     FlyoutBase.AttachedFlyout="{StaticResource SavedFilesFlyout}">
 
-                                <TextBlock Text="{Binding Name}" 
-                                           Style="{StaticResource TitleTextBlockStyle}"/>
-                                <TextBlock Text="{Binding CreateDate}" 
+                            <TextBlock Text="{Binding Name}" 
+                                           Style="{StaticResource SubheaderTextBlockStyle}"/>
+                            <TextBlock Text="{Binding CreateDate}" 
                                            Style="{StaticResource CaptionTextBlockStyle}" 
-                                           Foreground="{ThemeResource SystemControlBackgroundBaseLowBrush}"/>
-                                <TextBlock Text="{Binding FileSize}" 
+                                           Foreground="{ThemeResource SystemControlBackgroundBaseMediumBrush}"/>
+                            <TextBlock Text="{Binding FileSize}" 
                                            Style="{StaticResource CaptionTextBlockStyle}" 
-                                           Foreground="{ThemeResource SystemControlBackgroundBaseLowBrush}"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </Grid>
+                                           Foreground="{ThemeResource SystemControlBackgroundBaseMediumBrush}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </PivotItem>
     </Pivot>
 
     <Page.BottomAppBar>
         <CommandBar>
-            <AppBarButton x:Name="CycleInputScopeButton" Icon="Keyboard" Label="input style" Click="CycleInputScopeButton_OnClick" />
-            <AppBarButton Icon="Setting" Label="settings" Command="{Binding GoToSettingsCommand}"/>
-            <AppBarButton Icon="Add" Label="add file" Command="{Binding AddFileCommand}"/>
+            <AppBarButton x:Name="CycleInputScopeButton" Icon="Keyboard" Label="Input Style" Click="CycleInputScopeButton_OnClick" />
+            <AppBarButton Icon="Setting" Label="Settings" Command="{Binding GoToSettingsCommand}"/>
+            <AppBarButton Icon="Add" Label="Add file" Command="{Binding AddFileCommand}"/>
             <CommandBar.SecondaryCommands>
-                <AppBarButton Label="delete active file" Command="{Binding DeleteCodesCommand}"/>
+                <AppBarButton Label="Delete active file" Command="{Binding DeleteCodesCommand}"/>
             </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.BottomAppBar>
