@@ -20,7 +20,7 @@ namespace Codeco
 
         public MainPage()
         {
-            this.InitializeComponent();
+            this.InitializeComponent();                        
             if (InputBoxNumbers.Visibility == Visibility.Visible)
             {
                 InputScopeBlock.Text = GetNewActiveInputScopeText(InputScopeNameValue.Number);
@@ -28,7 +28,7 @@ namespace Codeco
             else
             {
                 InputScopeBlock.Text = GetNewActiveInputScopeText(InputScopeNameValue.Default);
-            }
+            }                        
         }                               
 
         private void SavedFile_RightTapped(object sender, RightTappedRoutedEventArgs e)

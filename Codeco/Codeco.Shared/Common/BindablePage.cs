@@ -12,7 +12,10 @@ namespace Codeco.Common
 
         public BindablePage()
         {
-            Application.Current.Resuming += Current_Resuming;
+            if (!Windows.ApplicationModel.DesignMode.DesignModeEnabled)
+            {
+                Application.Current.Resuming += Current_Resuming;
+            }
         }
 
         private void Current_Resuming(object sender, object e)

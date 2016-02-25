@@ -208,42 +208,7 @@ namespace Codeco.ViewModel
 
         private async Task<AddFileDialogOutput> ShowAddFileDialog(string fileName)
         {
-#if WINDOWS_PHONE_APP
-            AddFileDialog dialog = new AddFileDialog();    
-            dialog.FileName = fileName;        
-            if ((await dialog.ShowAsync()) == ContentDialogResult.Primary)
-            {
-                return new AddFileDialogOutput
-                {
-                    FileName = dialog.FileName,
-                    Password = dialog.Password
-                };                
-            }
-            else
-            {
-                return null;
-            }
-#elif WINDOWS_UWP
-            return null;
-#else
-            AddFileDialog dialog = new AddFileDialog
-            {
-                FileName = fileName,
-                IsOpen = true
-            };
-            if ((await dialog.WhenClosed()).DialogResult == AddFileDialog.Result.Ok)
-            {
-                return new AddFileDialogOutput
-                {
-                    FileName = dialog.FileName,
-                    Password = dialog.Password
-                };
-            }
-            else
-            {
-                return null;
-            }
-#endif
+            throw new NotImplementedException("Need to create an add file dialog for UWP.");
         }
 
         private async Task ShowErrorDialog(string title, string message)
@@ -318,30 +283,7 @@ namespace Codeco.ViewModel
 
         private async Task<string> GetPassword()
         {
-#if WINDOWS_PHONE_APP
-            PasswordDialog dialog = new PasswordDialog();
-            var result = await dialog.ShowAsync();
-            if(result == ContentDialogResult.Primary)
-            {
-                return dialog.Password;
-            }
-            else
-            {
-                return null;
-            }
-#elif WINDOWS_UWP
-            return null;
-#else
-            PasswordDialog dialog = new PasswordDialog {IsOpen = true};
-            if ((await dialog.WhenClosed()).DialogResult == PasswordDialog.Result.Ok)
-            {
-                return dialog.Password;
-            }
-            else
-            {
-                return null;
-            }
-#endif
+            throw new NotImplementedException("Need to create a Get Pasword dialog for UWP");
         }
 
         private async void DeleteFile(BindableStorageFile item)
@@ -372,30 +314,7 @@ namespace Codeco.ViewModel
 
         private async Task<string> GetNewName()
         {
-#if WINDOWS_PHONE_APP
-            RenameDialog dialog = new RenameDialog();
-            var result = await dialog.ShowAsync();
-            if(result == ContentDialogResult.Primary)
-            {
-                return dialog.NewName;
-            }
-            else
-            {
-                return null;
-            }
-#elif WINDOWS_UWP
-            return null;
-#else
-            RenameDialog dialog = new RenameDialog {IsOpen = true};
-            if((await dialog.WhenClosed()).DialogResult == RenameDialog.Result.Ok)
-            {
-                return dialog.NewName;
-            }
-            else
-            {
-                return null;
-            }
-#endif
+            throw new NotImplementedException("Need to create a GetName dialog for UWP");
         }
 
 
