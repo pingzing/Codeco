@@ -36,7 +36,7 @@ namespace Codeco.ViewModel
                 // Create design time view services and models
                 //SimpleIoc.Default.Register<IDataService, DesignDataService>();
                 //SimpleIoc.Default.Register<IService, FileService>();                                 
-                SimpleIoc.Default.Register<IService, MockFileService>();
+                SimpleIoc.Default.Register<IFileService, MockFileService>();
                 SimpleIoc.Default.Register<INavigationServiceEx, NavigationServiceEx>();
                 SimpleIoc.Default.Register<SettingsViewModelDesign>();
                 SimpleIoc.Default.Register<MainViewModelDesign>();
@@ -47,19 +47,10 @@ namespace Codeco.ViewModel
                 //SimpleIoc.Default.Register<IDataService, DataService>();                
                 NavigationServiceEx navService = InitializeNavigationService();
                 SimpleIoc.Default.Register<INavigationServiceEx>(() => navService);
-
-                IService fileService = InitializeFileService().Result;
-                SimpleIoc.Default.Register(() => fileService);
-
+                SimpleIoc.Default.Register<IFileService, FileService>();                               
                 SimpleIoc.Default.Register<MainViewModel>();
                 SimpleIoc.Default.Register<SettingsViewModel>();
             }            
-        }
-
-        private async Task<IService> InitializeFileService()
-        {
-            FileService service = new FileService();
-            return await service.InitializeAsync();
         }
 
         private NavigationServiceEx InitializeNavigationService()

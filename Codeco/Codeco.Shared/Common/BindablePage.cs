@@ -10,7 +10,7 @@ namespace Codeco.Common
     public class BindablePage : Page
     {
 
-        public BindablePage() : base()
+        public BindablePage()
         {
             Application.Current.Resuming += Current_Resuming;
         }

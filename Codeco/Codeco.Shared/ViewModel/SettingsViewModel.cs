@@ -80,7 +80,7 @@ namespace Codeco.ViewModel
             }
         }        
 
-        public SettingsViewModel(IService fileService, INavigationServiceEx navService)
+        public SettingsViewModel(IFileService fileService, INavigationServiceEx navService)
         {
             _fileService = fileService as FileService;
             _navigationService = navService as NavigationServiceEx;            

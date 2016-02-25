@@ -151,7 +151,7 @@ namespace Codeco.ViewModel
 
         public bool AllowGoingBack { get; set; }
 
-        public MainViewModel(IService fileService, INavigationServiceEx navService)
+        public MainViewModel(IFileService fileService, INavigationServiceEx navService)
         {
             _fileService = (fileService as FileService);
             _navigationService = navService as NavigationServiceEx;            
@@ -223,6 +223,8 @@ namespace Codeco.ViewModel
             {
                 return null;
             }
+#elif WINDOWS_UWP
+            return null;
 #else
             AddFileDialog dialog = new AddFileDialog
             {
@@ -327,6 +329,8 @@ namespace Codeco.ViewModel
             {
                 return null;
             }
+#elif WINDOWS_UWP
+            return null;
 #else
             PasswordDialog dialog = new PasswordDialog {IsOpen = true};
             if ((await dialog.WhenClosed()).DialogResult == PasswordDialog.Result.Ok)
@@ -379,6 +383,8 @@ namespace Codeco.ViewModel
             {
                 return null;
             }
+#elif WINDOWS_UWP
+            return null;
 #else
             RenameDialog dialog = new RenameDialog {IsOpen = true};
             if((await dialog.WhenClosed()).DialogResult == RenameDialog.Result.Ok)
@@ -392,6 +398,7 @@ namespace Codeco.ViewModel
 #endif
         }
 
+
         private void GoToSettings()
         {
             _navigationService.NavigateTo(nameof(SettingsPage));
@@ -400,6 +407,10 @@ namespace Codeco.ViewModel
         public void Activate(object parameter, NavigationMode navigationMode)
         {
             _navigationService.BackButtonPressed += OnBackPressed;
+
+            while (!FileService.Initialized)
+            {
+            }
 
             FileGroups.Add(new FileCollection(Constants.ROAMED_FILES_TITLE,
                 new ObservableCollection<IBindableStorageFile>(_fileService.GetRoamedFiles()), FileService.FileLocation.Roamed));

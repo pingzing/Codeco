@@ -11,14 +11,13 @@ using Windows.Storage;
 
 namespace Codeco
 {
-    public class FileService : ServiceBase
-    {
-        private bool _initialized = false;
+    public class FileService : ServiceBase, IFileService
+    {                
         private AsyncLock f_lock = new AsyncLock();
         private List<IBindableStorageFile> _localFiles;
         private List<IBindableStorageFile> _roamedFiles;
 
-        public enum FileLocation { Local, Roamed };                
+        public enum FileLocation { Local, Roamed };        
 
         public async Task StopRoamingFile(IBindableStorageFile file)
         {
@@ -58,9 +57,9 @@ namespace Codeco
             }
         }
 
-        protected async override Task CreateAsync()
+        protected override async Task CreateAsync()
         {
-            if(_initialized)
+            if(Initialized)
             {
                 return;
             }
@@ -83,7 +82,7 @@ namespace Codeco
                 _roamedFiles.Add(bsf);
             }
                         
-            _initialized = true;
+            Initialized = true;
         }        
 
         public IReadOnlyList<IBindableStorageFile> GetLocalFiles()
@@ -107,7 +106,7 @@ namespace Codeco
         {
             using (await f_lock.Acquire())
             {
-                if (!_initialized)
+                if (!Initialized)
                 {
                     throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
                 }
@@ -135,9 +134,9 @@ namespace Codeco
             }
         }        
 
-        internal async Task<string> RetrieveFileContentsAsync(string fileName, string password, FileLocation location)
+        public async Task<string> RetrieveFileContentsAsync(string fileName, string password, FileLocation location)
         {
-            if (!_initialized)
+            if (!Initialized)
             {
                 throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
             }
@@ -167,9 +166,9 @@ namespace Codeco
 
         }
 
-        internal async Task ClearFileAsync(string name, FileLocation location)
+        public async Task ClearFileAsync(string name, FileLocation location)
         {
-            if (!_initialized)
+            if (!Initialized)
             {
                 throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
             }
@@ -182,9 +181,9 @@ namespace Codeco
             }
         }
 
-        internal async Task DeleteFileAsync(StorageFile backingFile, FileLocation location)
+        public async Task DeleteFileAsync(StorageFile backingFile, FileLocation location)
         {
-            if (!_initialized)
+            if (!Initialized)
             {
                 throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
             }
@@ -203,9 +202,9 @@ namespace Codeco
             }
         }
 
-        internal async Task RenameFileAsync(IBindableStorageFile file, string newName)
+        public async Task RenameFileAsync(IBindableStorageFile file, string newName)
         {
-            if(!_initialized)
+            if(!Initialized)
             {
                 throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
             }
@@ -227,7 +226,7 @@ namespace Codeco
 
         public async Task NukeFiles()
         {
-            if(!_initialized)
+            if(!Initialized)
             {
                 throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
             }
@@ -276,7 +275,7 @@ namespace Codeco
             }
         }                
 
-        internal FileLocation GetFileLocation(BindableStorageFile file)
+        public FileLocation GetFileLocation(BindableStorageFile file)
         {            
             return file.IsRoamed ? FileLocation.Roamed : FileLocation.Local;
         }

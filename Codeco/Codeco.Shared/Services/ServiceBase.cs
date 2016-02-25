@@ -9,6 +9,19 @@ namespace Codeco.Services
 {
     public abstract class ServiceBase : IService
     {
+        public bool Initialized { get; set; }
+
+        protected ServiceBase()
+        {
+            InitializeSync();
+        }
+
+        public IService InitializeSync()
+        {
+            CreateAsync();
+            return this;
+        }
+
         public async Task<IService> InitializeAsync()
         {
             await CreateAsync();

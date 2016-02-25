@@ -8,7 +8,7 @@ namespace Codeco.ViewModel.DesignViewModels
 {
     public class MainViewModelDesign : MainViewModel
     {
-        public MainViewModelDesign(IService fileService, INavigationServiceEx navService) : base(fileService, navService)
+        public MainViewModelDesign(IFileService fileService, INavigationServiceEx navService) : base(fileService, navService)
         {
         }
     }

@@ -12,7 +12,7 @@ namespace Codeco.ViewModel.DesignViewModels
 {
     public class SettingsViewModelDesign : SettingsViewModel
     {
-        public SettingsViewModelDesign(IService fileService, INavigationServiceEx navService) : base(fileService, navService)
+        public SettingsViewModelDesign(IFileService fileService, INavigationServiceEx navService) : base(fileService, navService)
         {
             ObservableCollection<IBindableStorageFile> localFiles = new ObservableCollection<IBindableStorageFile>
             {

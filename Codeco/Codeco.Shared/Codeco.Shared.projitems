@@ -37,6 +37,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Model\Mocks\MockStorageFile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model\SavedFiles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\FileService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\IFileService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Mocks\MockFileService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ServiceBase.cs" />

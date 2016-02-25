@@ -11,5 +11,7 @@ namespace Codeco.Services
         event PropertyChangedEventHandler PropertyChanged;
         void RaisePropertyChanged(string property);
         Task<IService> InitializeAsync();
+        IService InitializeSync();
+        bool Initialized { get; set; }
     }
 }
