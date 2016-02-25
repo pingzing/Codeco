@@ -17,20 +17,16 @@ namespace Codeco.Windows10.Controls
 
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            OkClicked(PasswordBox.Password);            
+            Result = PasswordBox.Password;
+            this.Hide();
         }        
 
         private void PasswordBox_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
         {
             if(e.Key == Windows.System.VirtualKey.Enter)
             {
-                OkClicked(PasswordBox.Password);
+                ContentDialog_PrimaryButtonClick(this, null);
             }
-        }
-
-        private void OkClicked(string password)
-        {
-            Result = password;            
-        }       
+        }            
     }
 }

@@ -204,8 +204,8 @@ namespace Codeco.Windows10.ViewModels
         private async Task<AddFileDialogOutput> ShowAddFileDialog(string fileName)
         {
             AddFileDialog dialog = new AddFileDialog(fileName);
-            var result = await dialog.ShowAsync();
-            if(result == Windows.UI.Xaml.Controls.ContentDialogResult.Primary)
+            await dialog.ShowAsync();
+            if(dialog.Result != null)
             {
                 return dialog.Result;
             }
@@ -281,15 +281,15 @@ namespace Codeco.Windows10.ViewModels
             if (password != null)
             {
                 ActiveFile = arg;
-                _codeDictionary = await GetCodes(password);
+                _codeDictionary = await GetCodes(password);                
             }
         }
 
         private async Task<string> GetPassword()
         {
             PasswordDialog dialog = new PasswordDialog();            
-            var result = await dialog.ShowAsync();
-            if (result == Windows.UI.Xaml.Controls.ContentDialogResult.Primary)
+            await dialog.ShowAsync();
+            if (dialog.Result != null)
             {
                 return dialog.Result;
             }

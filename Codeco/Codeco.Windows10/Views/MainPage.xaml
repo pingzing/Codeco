@@ -48,6 +48,7 @@
         </VisualStateManager.VisualStateGroups>
 
         <Pivot x:Name="MainPivot"                
+               x:DeferLoadStrategy="Lazy"
                Title="CODECO" 
                DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
                Visibility="Visible">
@@ -148,9 +149,10 @@
             </PivotItem>
         </Pivot>
 
-        <Grid x:Name="WideGrid"                          
-             Visibility="Collapsed"
-             Margin="0 2 0 0">
+        <Grid x:Name="WideGrid"     
+              x:DeferLoadStrategy="Lazy"
+              Visibility="Collapsed"
+              Margin="0 2 0 0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>

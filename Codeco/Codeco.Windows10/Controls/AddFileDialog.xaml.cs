@@ -49,7 +49,7 @@ namespace Codeco.Windows10.Controls
             {
                 if(AreBothBoxesFilled)
                 {
-                    OkClicked(FilenameBox.Text, PasswordBox.Password);
+                    ContentDialog_PrimaryButtonClick(this, null);
                 }
                 else
                 {
@@ -64,7 +64,7 @@ namespace Codeco.Windows10.Controls
             {
                 if (AreBothBoxesFilled)
                 {
-                    OkClicked(FilenameBox.Text, PasswordBox.Password);
+                    ContentDialog_PrimaryButtonClick(this, null);
                 }
             }
         }
@@ -81,12 +81,8 @@ namespace Codeco.Windows10.Controls
 
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            OkClicked(FilenameBox.Text, PasswordBox.Password);
-        }
-
-        private void OkClicked(string filename, string password)
-        {
-            Result = new AddFileDialogOutput { FileName = filename, Password = password };
+            Result = new AddFileDialogOutput { FileName = FilenameBox.Text, Password = PasswordBox.Password };
+            this.Hide();
         }
 
         private void UpdateBothBoxesFilled()
