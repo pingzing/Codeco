@@ -89,17 +89,52 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <Content Include="Assets\test.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MainPage.xaml.cs">
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Common\AsyncLock.cs" />
+    <Compile Include="Common\BindablePage.cs" />
+    <Compile Include="Common\Constants.cs" />
+    <Compile Include="Common\FilenameToColorConverter.cs" />
+    <Compile Include="Common\INavigable.cs" />
+    <Compile Include="Common\ObservableDictionary.cs" />
+    <Compile Include="Common\StringFormatConverter.cs" />
+    <Compile Include="Common\SuspensionManager.cs" />
+    <Compile Include="Common\UniversalBackPressedEventArgs.cs" />
+    <Compile Include="EncryptionManager.cs" />
+    <Compile Include="FileUtilities.cs" />
+    <Compile Include="Models\AddFileDialogOutput.cs" />
+    <Compile Include="Models\BindableStorageFile.cs" />
+    <Compile Include="Models\IBindableStorageFile.cs" />
+    <Compile Include="Models\IVStorage.cs" />
+    <Compile Include="Models\Mocks\MockBindableStorageFile.cs" />
+    <Compile Include="Models\Mocks\MockStorageFile.cs" />
+    <Compile Include="Models\SavedFiles.cs" />
+    <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\FileCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SettingsPage.xaml.cs">
+    <Compile Include="Services\FileService.cs" />
+    <Compile Include="Services\IFileService.cs" />
+    <Compile Include="Services\Mocks\MockFileService.cs" />
+    <Compile Include="Services\ServiceNotInitializedException.cs" />
+    <Compile Include="Views\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\DesignViewModels\MainViewModelDesign.cs" />
+    <Compile Include="ViewModels\DesignViewModels\SettingsViewModelDesign.cs" />
+    <Compile Include="ViewModels\INavigationServiceEx.cs" />
+    <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\NavigationServiceEx.cs" />
+    <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelLocator.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -118,7 +153,10 @@
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="MainPage.xaml">
+    <ApplicationDefinition Include="App.xaml">
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Page Include="Views\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -127,12 +165,12 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
-    <Page Include="SettingsPage.xaml">
+    <Page Include="Views\SettingsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <Import Project="..\Codeco.Shared\Codeco.Shared.projitems" Label="Shared" />
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

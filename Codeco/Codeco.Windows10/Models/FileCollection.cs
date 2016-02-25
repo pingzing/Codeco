@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Codeco.Windows10.Services;
 using System.Collections.ObjectModel;
-using System.Text;
 
-namespace Codeco.Model
+namespace Codeco.Windows10.Models
 {
     public class FileCollection
     {

@@ -1,19 +1,15 @@
-﻿using Codeco.Common;
-using Codeco.Controls;
-using Codeco.Model;
-using Codeco.ViewModel;
-using Windows.ApplicationModel.Activation;
-using Windows.Storage;
+﻿using Codeco.Windows10.Common;
+using Codeco.Windows10.Models;
+using Codeco.Windows10.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace Codeco
-{    
+namespace Codeco.Windows10.Views
+{
     public sealed partial class MainPage : BindablePage
     {
         private const string ACTIVE_INPUT_PREFIX_TEXT = "Input method:";
