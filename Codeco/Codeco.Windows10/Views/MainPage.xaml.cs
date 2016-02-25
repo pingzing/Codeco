@@ -12,22 +12,16 @@ namespace Codeco.Windows10.Views
 {
     public sealed partial class MainPage : BindablePage
     {
-        private const string ACTIVE_INPUT_PREFIX_TEXT = "Input method:";
+        private MainViewModel _viewModel;
+        public MainViewModel ViewModel
+        {
+            get { return _viewModel; }
+        }
 
         public MainPage()
-        {
+        {            
             this.InitializeComponent();
-            
-            if (InputBoxNumbers.Visibility == Visibility.Visible || WideInputBoxNumbers.Visibility == Visibility.Visible)
-            {
-                InputScopeBlock.Text = GetNewActiveInputScopeText(InputScopeNameValue.Number);
-                WideInputScopeBlock.Text = GetNewActiveInputScopeText(InputScopeNameValue.Number);
-            }
-            else
-            {
-                InputScopeBlock.Text = GetNewActiveInputScopeText(InputScopeNameValue.Default);
-                WideInputScopeBlock.Text = GetNewActiveInputScopeText(InputScopeNameValue.Default);
-            }                        
+            _viewModel = DataContext as MainViewModel;
         }                               
 
         private void SavedFile_RightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -53,49 +47,6 @@ namespace Codeco.Windows10.Views
 
             var context = (DataContext as MainViewModel);
             context?.ChangeActiveFileCommand.Execute(tappedFile);
-        }        
-
-        private string GetNewActiveInputScopeText(InputScopeNameValue currentScope)
-        {
-            switch (currentScope)
-            {
-                case InputScopeNameValue.Default:
-                    return ACTIVE_INPUT_PREFIX_TEXT + " General";
-                case InputScopeNameValue.Number:
-                    return ACTIVE_INPUT_PREFIX_TEXT + " Numbers only";
-                default:
-                    return "";
-            }
-        }
-    
-        //This gets handled in code-behind by swapping text-boxes rather than having a single text box with a databound InputScope
-        //becaue apparently, changing a TextBox's InputScope at runtime doesn't work on WP8.1 Universal. Ugh.
-        private void CycleInputScopeButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            //Toggle visibility of both textboxes
-            InputBoxNumbers.Visibility = InputBoxNumbers.Visibility == Visibility.Visible
-                ? Visibility.Collapsed
-                : Visibility.Visible;
-            InputBoxGeneral.Visibility = InputBoxGeneral.Visibility == Visibility.Visible
-                ? Visibility.Collapsed
-                : Visibility.Visible;
-            WideInputBoxNumbers.Visibility = WideInputBoxNumbers.Visibility == Visibility.Visible
-                ? Visibility.Collapsed
-                : Visibility.Visible;
-            WideInputBoxGeneral.Visibility = WideInputBoxNumbers.Visibility == Visibility.Visible
-                ? Visibility.Collapsed
-                : Visibility.Visible;
-
-            if (InputBoxGeneral.Visibility == Visibility.Visible)
-            {
-                InputScopeBlock.Text = GetNewActiveInputScopeText(InputScopeNameValue.Default);
-                WideInputScopeBlock.Text = GetNewActiveInputScopeText(InputScopeNameValue.Default);
-            }
-            else
-            {
-                InputScopeBlock.Text = GetNewActiveInputScopeText(InputScopeNameValue.Number);
-                WideInputScopeBlock.Text = GetNewActiveInputScopeText(InputScopeNameValue.Number);
-            }
-        }        
+        }                
     }
 }

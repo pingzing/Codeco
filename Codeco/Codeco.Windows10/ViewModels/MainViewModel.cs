@@ -14,11 +14,16 @@ using Codeco.Windows10.Models;
 using Codeco.Windows10.Common;
 using Codeco.Windows10.Views;
 using Codeco.Windows10.Controls;
+using Windows.UI.Xaml.Input;
 
 namespace Codeco.Windows10.ViewModels
 {
     public class MainViewModel : ViewModelBase, INavigable
-    {        
+    {
+        private const string ACTIVE_INPUT_PREFIX_TEXT = "Input method:";
+        private InputScope _numberInputScope = new InputScope();
+        private InputScope _generalInputScope = new InputScope();
+
         private Dictionary<string, string> _codeDictionary = new Dictionary<string, string>();
         private readonly FileService _fileService;
         //TODO: This is only used for a debug function. Probably best to find a way to remove it.
@@ -44,7 +49,11 @@ namespace Codeco.Windows10.ViewModels
             ?? (_renameFileCommand = new RelayCommand<BindableStorageFile>(RenameFile));
 
         private RelayCommand _goToSettingsCommand;
-        public RelayCommand GoToSettingsCommand => _goToSettingsCommand ?? (_goToSettingsCommand = new RelayCommand(GoToSettings));        
+        public RelayCommand GoToSettingsCommand => _goToSettingsCommand ?? (_goToSettingsCommand = new RelayCommand(GoToSettings));
+
+        private RelayCommand _changeInputScopeCommand;
+        public RelayCommand ChangeInputScopeCommand => _changeInputScopeCommand ?? (_changeInputScopeCommand = new RelayCommand(ChangeInputScope));        
+
 
         private int _longestCode = 1;
         #region LongestCode Property
@@ -98,6 +107,40 @@ namespace Codeco.Windows10.ViewModels
         }
         #endregion
 
+        public string CurrentInputMethodText
+        {
+            get
+            {
+                if (CurrentInputScope == _numberInputScope)
+                {
+                    return "Numbers only";
+                }
+                else if(CurrentInputScope == _generalInputScope)
+                {
+                    return "General";
+                }
+                else
+                {
+                    return "";
+                }
+            }
+        }
+
+        private InputScope _currentInputScope;
+        public InputScope CurrentInputScope
+        {
+            get { return _currentInputScope; }
+            set
+            {
+                if(_currentInputScope != value)
+                {
+                    _currentInputScope = value;
+                    RaisePropertyChanged(nameof(CurrentInputScope));
+                    RaisePropertyChanged(nameof(CurrentInputMethodText));
+                }
+            }
+        }
+
         private ObservableCollection<FileCollection> _fileGroups = new ObservableCollection<FileCollection>();
         public ObservableCollection<FileCollection> FileGroups
         {
@@ -149,7 +192,12 @@ namespace Codeco.Windows10.ViewModels
         public MainViewModel(IFileService fileService, INavigationServiceEx navService)
         {
             _fileService = (fileService as FileService);
-            _navigationService = navService as NavigationServiceEx;            
+            _navigationService = navService as NavigationServiceEx;
+
+            _numberInputScope.Names.Add(new InputScopeName(InputScopeNameValue.Number));
+            _generalInputScope.Names.Add(new InputScopeName(InputScopeNameValue.Default));
+
+            CurrentInputScope = _numberInputScope;
         }        
 
         private async void AddFile()
@@ -159,27 +207,14 @@ namespace Codeco.Windows10.ViewModels
             picker.FileTypeFilter.Add(".txt");
             picker.FileTypeFilter.Add(".csv");
             picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
-#if WINDOWS_PHONE_APP
-            picker.PickSingleFileAndContinue();
-#else
+
             StorageFile file = await picker.PickSingleFileAsync();
             if (file != null)
             {
                 await OpenFile(file);
             }
-#endif
         }
 
-#if WINDOWS_PHONE_APP
-        public async Task AddFile_PhoneContinued(FileOpenPickerContinuationEventArgs args)
-        {
-            if (args.Files.Count > 0)
-            {
-                StorageFile file = args.Files[0];
-                await OpenFile(file);
-            }
-        }
-#endif
 
         private async Task OpenFile(StorageFile file)
         {
@@ -335,7 +370,19 @@ namespace Codeco.Windows10.ViewModels
         {
             _navigationService.NavigateTo(nameof(SettingsPage));
         }
-       
+
+        private void ChangeInputScope()
+        {
+            if(CurrentInputScope == _generalInputScope)
+            {
+                CurrentInputScope = _numberInputScope;
+            }
+            else if(CurrentInputScope == _numberInputScope)
+            {
+                CurrentInputScope = _generalInputScope;
+            }
+        }
+
         public async void Activate(object parameter, NavigationMode navigationMode)
         {
             _navigationService.BackButtonPressed += OnBackPressed;

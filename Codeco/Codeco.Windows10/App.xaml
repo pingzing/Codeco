@@ -13,7 +13,7 @@
                 <ResourceDictionary Source="PlatformResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
             
-            <vm:ViewModelLocator x:Key="Locator" />
+            <vm:ViewModelLocator x:Key="Locator" x:Name="ViewModelLocator" />
 
             <converters:StringFormatConverter x:Key="StringFormatConverter" />
             <converters:FilenameToColorConverter x:Key="FilenameToColorConverter" />

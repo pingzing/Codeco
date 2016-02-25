@@ -28,9 +28,7 @@ namespace Codeco.Windows10.ViewModels
 
             if (ViewModelBase.IsInDesignModeStatic)
             {
-                // Create design time view services and models
-                //SimpleIoc.Default.Register<IDataService, DesignDataService>();
-                //SimpleIoc.Default.Register<IService, FileService>();                                 
+                // Create design time view services and models                                    
                 SimpleIoc.Default.Register<IFileService, MockFileService>();
                 SimpleIoc.Default.Register<INavigationServiceEx, NavigationServiceEx>();
                 SimpleIoc.Default.Register<SettingsViewModelDesign>();
@@ -38,8 +36,7 @@ namespace Codeco.Windows10.ViewModels
             }
             else
             {
-                // Create run time view services and models
-                //SimpleIoc.Default.Register<IDataService, DataService>();                
+                // Create run time view services and models                          
                 NavigationServiceEx navService = InitializeNavigationService();
                 SimpleIoc.Default.Register<INavigationServiceEx>(() => navService);
                 SimpleIoc.Default.Register<IFileService, FileService>();                               
@@ -52,19 +49,7 @@ namespace Codeco.Windows10.ViewModels
         {
             NavigationServiceEx navService = new NavigationServiceEx();
             navService.Configure(nameof(MainPage), typeof(MainPage));
-            navService.Configure(nameof(SettingsPage), typeof(SettingsPage));
-            Windows.UI.Core.SystemNavigationManager.GetForCurrentView().BackRequested += (s, e) =>
-            {
-                if (navService.BackStackDepth == 0 || navService.BackStack[navService.BackStackDepth - 1] == null)
-                {
-                    e.Handled = false; //let the system do what it will
-                }
-                else
-                {
-                    navService.OnBackButtonPressed(s, new Common.UniversalBackPressedEventArgs(e.Handled));
-                    e.Handled = true;
-                }
-            };
+            navService.Configure(nameof(SettingsPage), typeof(SettingsPage));                        
             return navService;
         }
 

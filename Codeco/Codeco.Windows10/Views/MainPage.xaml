@@ -158,7 +158,6 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-
             <Grid Grid.Column="0" Margin="12 5 12 0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -200,24 +199,19 @@
                                        Style="{ThemeResource SubtitleTextBlockStyle}"
                                        HorizontalAlignment="Center"
                                        Text="{Binding CodeText}"/>
-                            <TextBox x:Name="WideInputBoxNumbers"
+                            <TextBox x:Name="WideInputBox"
                                      Grid.Row="2"
                                      Header="Input"
-                                     InputScope="Number"
-                                     MaxLength="{Binding LongestCode}"
-                                     Text="{Binding InputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                            <TextBox x:Name="WideInputBoxGeneral"
-                                     Grid.Row="2"
-                                     Header="Input"
-                                     Visibility="Collapsed"
-                                     InputScope="Default"
+                                     InputScope="{x:Bind ViewModel.CurrentInputScope, Mode=OneWay}"
                                      MaxLength="{Binding LongestCode}"
                                      Text="{Binding InputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock x:Name="WideInputScopeBlock"
-                                       Grid.Row="3"
-                                       Text=""
-                                       Foreground="{ThemeResource SystemControlBackgroundAccentBrush}"
-                                       FontSize="15"/>
+                                       Grid.Row="3"                                                                              
+                                       FontSize="15">
+                                <Run Text="Input method:"/>
+                                <Run Text="{x:Bind ViewModel.CurrentInputMethodText, Mode=OneWay}"
+                                     Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" />
+                            </TextBlock>
                         </Grid>
                     </Grid>
                 </ScrollViewer>
@@ -284,7 +278,7 @@
                                 FontSize="{ThemeResource PivotTitleFontSize}"
                                 OpticalMarginAlignment="TrimSideBearings"/>
             </CommandBar.Content>
-            <AppBarButton Icon="Keyboard" Label="Input Style" Click="CycleInputScopeButton_OnClick" />
+            <AppBarButton Icon="Keyboard" Label="Input Style" Command="{x:Bind ViewModel.ChangeInputScopeCommand}" />
             <AppBarButton Icon="Setting" Label="Settings" Command="{Binding GoToSettingsCommand}"/>
             <AppBarButton Icon="Add" Label="Add file" Command="{Binding AddFileCommand}"/>
             <CommandBar.SecondaryCommands>
@@ -295,7 +289,7 @@
 
     <Page.BottomAppBar>
         <CommandBar x:Name="BottomCommandBar">
-            <AppBarButton Icon="Keyboard" Label="Input Style" Click="CycleInputScopeButton_OnClick" />
+            <AppBarButton Icon="Keyboard" Label="Input Style" Command="{x:Bind ViewModel.ChangeInputScopeCommand}" />
             <AppBarButton Icon="Setting" Label="Settings" Command="{Binding GoToSettingsCommand}"/>
             <AppBarButton Icon="Add" Label="Add file" Command="{Binding AddFileCommand}"/>
             <CommandBar.SecondaryCommands>

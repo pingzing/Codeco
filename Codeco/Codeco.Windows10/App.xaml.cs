@@ -6,6 +6,7 @@ using Windows.UI.Xaml.Controls;
 using System.Diagnostics;
 using Codeco.Windows10.Common;
 using Codeco.Windows10.Views;
+using Codeco.Windows10.ViewModels;
 
 // The Universal Hub Application project template is documented at http://go.microsoft.com/fwlink/?LinkID=391955
 
@@ -15,7 +16,7 @@ namespace Codeco.Windows10
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
     public sealed partial class App : Application
-    {
+    {        
         /// <summary>
         /// Initializes the singleton instance of the <see cref="App"/> class. This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
