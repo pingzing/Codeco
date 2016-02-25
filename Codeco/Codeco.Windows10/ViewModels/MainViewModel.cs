@@ -13,6 +13,7 @@ using Codeco.Windows10.Services;
 using Codeco.Windows10.Models;
 using Codeco.Windows10.Common;
 using Codeco.Windows10.Views;
+using Codeco.Windows10.Controls;
 
 namespace Codeco.Windows10.ViewModels
 {
@@ -202,7 +203,16 @@ namespace Codeco.Windows10.ViewModels
 
         private async Task<AddFileDialogOutput> ShowAddFileDialog(string fileName)
         {
-            throw new NotImplementedException("Need to create an add file dialog for UWP.");
+            AddFileDialog dialog = new AddFileDialog(fileName);
+            var result = await dialog.ShowAsync();
+            if(result == Windows.UI.Xaml.Controls.ContentDialogResult.Primary)
+            {
+                return dialog.Result;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         private async Task ShowErrorDialog(string title, string message)
@@ -277,7 +287,16 @@ namespace Codeco.Windows10.ViewModels
 
         private async Task<string> GetPassword()
         {
-            throw new NotImplementedException("Need to create a Get Pasword dialog for UWP");
+            PasswordDialog dialog = new PasswordDialog();            
+            var result = await dialog.ShowAsync();
+            if (result == Windows.UI.Xaml.Controls.ContentDialogResult.Primary)
+            {
+                return dialog.Result;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         private async void DeleteFile(BindableStorageFile item)
