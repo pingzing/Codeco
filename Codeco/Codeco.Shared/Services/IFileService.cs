@@ -7,8 +7,10 @@ using Codeco.Model;
 
 namespace Codeco.Services
 {
-    public interface IFileService : IService
+    public interface IFileService
     {
+        TaskCompletionSource<bool> IsInitialized { get; }
+
         Task StopRoamingFile(IBindableStorageFile file);
         Task RoamFile(IBindableStorageFile file);
         IReadOnlyList<IBindableStorageFile> GetLocalFiles();

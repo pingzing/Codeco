@@ -11,13 +11,21 @@ using Windows.Storage;
 
 namespace Codeco
 {
-    public class FileService : ServiceBase, IFileService
-    {                
+    public class FileService : IFileService
+    {
+        private bool _initialized = false;
         private AsyncLock f_lock = new AsyncLock();
         private List<IBindableStorageFile> _localFiles;
         private List<IBindableStorageFile> _roamedFiles;
 
-        public enum FileLocation { Local, Roamed };        
+        public enum FileLocation { Local, Roamed };
+
+        public TaskCompletionSource<bool> IsInitialized { get; } = new TaskCompletionSource<bool>();
+
+        public FileService()
+        {
+            CreateAsync();
+        }
 
         public async Task StopRoamingFile(IBindableStorageFile file)
         {
@@ -57,12 +65,13 @@ namespace Codeco
             }
         }
 
-        protected override async Task CreateAsync()
+        private async Task CreateAsync()
         {
-            if(Initialized)
+            if(_initialized)
             {
                 return;
-            }
+            }            
+
             ApplicationData.Current.DataChanged += OnRoamingDataChanged;
             _localFiles = new List<IBindableStorageFile>();
             _roamedFiles = new List<IBindableStorageFile>();
@@ -82,7 +91,8 @@ namespace Codeco
                 _roamedFiles.Add(bsf);
             }
                         
-            Initialized = true;
+            _initialized = true;
+            IsInitialized.SetResult(true);
         }        
 
         public IReadOnlyList<IBindableStorageFile> GetLocalFiles()
@@ -106,7 +116,7 @@ namespace Codeco
         {
             using (await f_lock.Acquire())
             {
-                if (!Initialized)
+                if (_initialized)
                 {
                     throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
                 }
@@ -136,7 +146,7 @@ namespace Codeco
 
         public async Task<string> RetrieveFileContentsAsync(string fileName, string password, FileLocation location)
         {
-            if (!Initialized)
+            if (_initialized)
             {
                 throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
             }
@@ -168,7 +178,7 @@ namespace Codeco
 
         public async Task ClearFileAsync(string name, FileLocation location)
         {
-            if (!Initialized)
+            if (_initialized)
             {
                 throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
             }
@@ -183,7 +193,7 @@ namespace Codeco
 
         public async Task DeleteFileAsync(StorageFile backingFile, FileLocation location)
         {
-            if (!Initialized)
+            if (_initialized)
             {
                 throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
             }
@@ -204,7 +214,7 @@ namespace Codeco
 
         public async Task RenameFileAsync(IBindableStorageFile file, string newName)
         {
-            if(!Initialized)
+            if(_initialized)
             {
                 throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
             }
@@ -226,7 +236,7 @@ namespace Codeco
 
         public async Task NukeFiles()
         {
-            if(!Initialized)
+            if(_initialized)
             {
                 throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
             }

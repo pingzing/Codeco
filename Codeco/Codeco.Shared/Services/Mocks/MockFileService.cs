@@ -10,31 +10,29 @@ namespace Codeco.Services.Mocks
 {
     class MockFileService : IFileService
     {
+        public TaskCompletionSource<bool> IsInitialized
+        {
+            get
+            {
+                var tcs = new TaskCompletionSource<bool>();
+                tcs.SetResult(true);
+                return tcs;
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public Task<IService> InitializeAsync()
-        {
-            return null;
-        }
-
-        public IService InitializeSync()
+        public Task ClearFileAsync(string name, FileService.FileLocation location)
         {
             throw new NotImplementedException();
         }
 
-        public bool Initialized { get; set; }
-
-        public void RaisePropertyChanged(string property)
+        public Task DeleteFileAsync(StorageFile backingFile, FileService.FileLocation location)
         {
             throw new NotImplementedException();
         }
 
-        public Task StopRoamingFile(IBindableStorageFile file)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task RoamFile(IBindableStorageFile file)
+        public FileService.FileLocation GetFileLocation(BindableStorageFile file)
         {
             throw new NotImplementedException();
         }
@@ -49,22 +47,7 @@ namespace Codeco.Services.Mocks
             throw new NotImplementedException();
         }
 
-        public Task<BindableStorageFile> SaveAndEncryptFileAsync(string contents, string fileName, string password)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<string> RetrieveFileContentsAsync(string fileName, string password, FileService.FileLocation location)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task ClearFileAsync(string name, FileService.FileLocation location)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task DeleteFileAsync(StorageFile backingFile, FileService.FileLocation location)
+        public Task NukeFiles()
         {
             throw new NotImplementedException();
         }
@@ -74,12 +57,22 @@ namespace Codeco.Services.Mocks
             throw new NotImplementedException();
         }
 
-        public Task NukeFiles()
+        public Task<string> RetrieveFileContentsAsync(string fileName, string password, FileService.FileLocation location)
         {
             throw new NotImplementedException();
         }
 
-        public FileService.FileLocation GetFileLocation(BindableStorageFile file)
+        public Task RoamFile(IBindableStorageFile file)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<BindableStorageFile> SaveAndEncryptFileAsync(string contents, string fileName, string password)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task StopRoamingFile(IBindableStorageFile file)
         {
             throw new NotImplementedException();
         }

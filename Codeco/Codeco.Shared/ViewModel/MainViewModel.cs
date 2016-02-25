@@ -404,13 +404,11 @@ namespace Codeco.ViewModel
             _navigationService.NavigateTo(nameof(SettingsPage));
         }
        
-        public void Activate(object parameter, NavigationMode navigationMode)
+        public async void Activate(object parameter, NavigationMode navigationMode)
         {
             _navigationService.BackButtonPressed += OnBackPressed;
 
-            while (!FileService.Initialized)
-            {
-            }
+            await FileService.IsInitialized.Task;
 
             FileGroups.Add(new FileCollection(Constants.ROAMED_FILES_TITLE,
                 new ObservableCollection<IBindableStorageFile>(_fileService.GetRoamedFiles()), FileService.FileLocation.Roamed));

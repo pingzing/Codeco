@@ -38,9 +38,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Model\SavedFiles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\FileService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IFileService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\IService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Mocks\MockFileService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\ServiceBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ServiceNotInitializedException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\DesignViewModels\MainViewModelDesign.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\DesignViewModels\SettingsViewModelDesign.cs" />

@@ -98,7 +98,7 @@
     </Pivot>
 
     <Page.BottomAppBar>
-        <CommandBar Background="{ThemeResource SystemControlBackgroundAccentBrush}" Foreground="White">
+        <CommandBar>
             <AppBarButton x:Name="CycleInputScopeButton" Icon="Keyboard" Label="input style" Click="CycleInputScopeButton_OnClick" />
             <AppBarButton Icon="Setting" Label="settings" Command="{Binding GoToSettingsCommand}"/>
             <AppBarButton Icon="Add" Label="add file" Command="{Binding AddFileCommand}"/>
