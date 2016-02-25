@@ -101,12 +101,19 @@
     <Compile Include="Common\AsyncLock.cs" />
     <Compile Include="Common\BindablePage.cs" />
     <Compile Include="Common\Constants.cs" />
-    <Compile Include="Common\FilenameToColorConverter.cs" />
+    <Compile Include="Common\Converters\EmptyNullToBooleanConverter.cs" />
+    <Compile Include="Common\Converters\FilenameToColorConverter.cs" />
     <Compile Include="Common\INavigable.cs" />
     <Compile Include="Common\ObservableDictionary.cs" />
-    <Compile Include="Common\StringFormatConverter.cs" />
+    <Compile Include="Common\Converters\StringFormatConverter.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
     <Compile Include="Common\UniversalBackPressedEventArgs.cs" />
+    <Compile Include="Controls\AddFileDialog.xaml.cs">
+      <DependentUpon>AddFileDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PasswordDialog.xaml.cs">
+      <DependentUpon>PasswordDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="EncryptionManager.cs" />
     <Compile Include="FileUtilities.cs" />
     <Compile Include="Models\AddFileDialogOutput.cs" />
@@ -156,6 +163,14 @@
     <ApplicationDefinition Include="App.xaml">
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\AddFileDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\PasswordDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

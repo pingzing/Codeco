@@ -4,7 +4,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 
-namespace Codeco.Windows10.Common
+namespace Codeco.Windows10.Common.Converters
 {
     //A little hacky, but eh, who cares
     public class FilenameToColorConverter : IValueConverter
