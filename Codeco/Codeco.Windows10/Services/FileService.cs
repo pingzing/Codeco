@@ -114,7 +114,7 @@ namespace Codeco.Windows10.Services
         {
             using (await f_lock.Acquire())
             {
-                if (_initialized)
+                if (!_initialized)
                 {
                     throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
                 }
@@ -144,7 +144,7 @@ namespace Codeco.Windows10.Services
 
         public async Task<string> RetrieveFileContentsAsync(string fileName, string password, FileLocation location)
         {
-            if (_initialized)
+            if (!_initialized)
             {
                 throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
             }
@@ -176,7 +176,7 @@ namespace Codeco.Windows10.Services
 
         public async Task ClearFileAsync(string name, FileLocation location)
         {
-            if (_initialized)
+            if (!_initialized)
             {
                 throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
             }
@@ -191,7 +191,7 @@ namespace Codeco.Windows10.Services
 
         public async Task DeleteFileAsync(StorageFile backingFile, FileLocation location)
         {
-            if (_initialized)
+            if (!_initialized)
             {
                 throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
             }
@@ -212,7 +212,7 @@ namespace Codeco.Windows10.Services
 
         public async Task RenameFileAsync(IBindableStorageFile file, string newName)
         {
-            if(_initialized)
+            if(!_initialized)
             {
                 throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
             }
@@ -234,7 +234,7 @@ namespace Codeco.Windows10.Services
 
         public async Task NukeFiles()
         {
-            if(_initialized)
+            if(!_initialized)
             {
                 throw new ServiceNotInitializedException($"{nameof(FileService)} was not initialized before access was attempted.");
             }
@@ -249,7 +249,6 @@ namespace Codeco.Windows10.Services
                 {
                     await DeleteFileAsync((StorageFile)_roamedFiles[i].BackingFile, FileLocation.Roamed);
                 }
-
 
             IVStorage ivs = new IVStorage();
             await ivs.LoadFromStorage();
