@@ -87,6 +87,7 @@
                             <TextBlock x:Name="KeyBlock"
                                        Grid.Row="1"
                                        Style="{ThemeResource SubtitleTextBlockStyle}"
+                                       Foreground="{ThemeResource ApplicationForegroundThemeBrush}"
                                        HorizontalAlignment="Center"
                                        Text="{Binding CodeText}" />
                             <TextBox x:Name="InputBox"
@@ -197,6 +198,7 @@
                             <TextBlock x:Name="WideKeyBlock"
                                        Grid.Row="1"
                                        Style="{ThemeResource SubtitleTextBlockStyle}"
+                                       Foreground="{ThemeResource ApplicationForegroundThemeBrush}"
                                        HorizontalAlignment="Center"
                                        Text="{Binding CodeText}" />
                             <TextBox x:Name="WideInputBox"
