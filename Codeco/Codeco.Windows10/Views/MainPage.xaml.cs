@@ -12,16 +12,12 @@ namespace Codeco.Windows10.Views
 {
     public sealed partial class MainPage : BindablePage
     {
-        private MainViewModel _viewModel;
-        public MainViewModel ViewModel
-        {
-            get { return _viewModel; }
-        }
+        public MainViewModel ViewModel { get; }
 
         public MainPage()
         {            
             this.InitializeComponent();
-            _viewModel = DataContext as MainViewModel;
+            ViewModel = DataContext as MainViewModel;
         }                               
 
         private void SavedFile_RightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -30,10 +26,7 @@ namespace Codeco.Windows10.Views
             if(item != null)
             {
                 MenuFlyout flyout = FlyoutBase.GetAttachedFlyout(item) as MenuFlyout;
-                if(flyout != null)
-                {
-                    flyout.ShowAt(this, e.GetPosition(this));
-                }
+                flyout?.ShowAt(this, e.GetPosition(this));
             }
         }
 

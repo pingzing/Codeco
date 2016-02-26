@@ -21,8 +21,13 @@ namespace Codeco.Windows10.ViewModels
     public class MainViewModel : UniversalBaseViewModel, INavigable
     {
         private const string ACTIVE_INPUT_PREFIX_TEXT = "Input method:";
-        private readonly InputScope _numberInputScope = new InputScope();
-        private readonly InputScope _generalInputScope = new InputScope();
+
+        //All this skullduggery is necessary because apparently, an InputScope can only be attached to exactly ONE control at a time,
+        //or we get errors at runtime
+        private readonly InputScope _narrowDefaultScope = new InputScope();
+        private readonly InputScope _narrowNumberScope = new InputScope();
+        private readonly InputScope _wideDefaultScope = new InputScope();
+        private readonly InputScope _wideNumberScope = new InputScope();
 
         private Dictionary<string, string> _codeDictionary = new Dictionary<string, string>();
         private readonly FileService _fileService;
@@ -110,11 +115,13 @@ namespace Codeco.Windows10.ViewModels
         {
             get
             {
-                if (CurrentInputScope == _numberInputScope)
+                if (CurrentNarrowInputScope.Names[0].NameValue == InputScopeNameValue.Number
+                    || CurrentWideInputScope.Names[0].NameValue == InputScopeNameValue.Number)
                 {
                     return "Numbers only";
                 }
-                else if(CurrentInputScope == _generalInputScope)
+                else if(CurrentNarrowInputScope.Names[0].NameValue == InputScopeNameValue.Default
+                    || CurrentWideInputScope.Names[0].NameValue == InputScopeNameValue.Default)
                 {
                     return "General";
                 }
@@ -125,16 +132,32 @@ namespace Codeco.Windows10.ViewModels
             }
         }
 
-        private InputScope _currentInputScope;
-        public InputScope CurrentInputScope
+        private InputScope _currentNarrowInputScope;
+        public InputScope CurrentNarrowInputScope
         {
-            get { return _currentInputScope; }
+            get { return _currentNarrowInputScope; }
             set
             {
-                if(_currentInputScope != value)
+                if(_currentNarrowInputScope != value)
                 {
-                    _currentInputScope = value;
-                    RaisePropertyChanged(nameof(CurrentInputScope));
+                    _currentNarrowInputScope = value;
+                    RaisePropertyChanged(nameof(CurrentNarrowInputScope));
+                    RaisePropertyChanged(nameof(CurrentInputMethodText));
+                }
+            }
+        }
+
+        private InputScope _currentWideInputScope;
+
+        public InputScope CurrentWideInputScope
+        {
+            get { return _currentWideInputScope; }
+            set
+            {
+                if (_currentWideInputScope != value)
+                {
+                    _currentWideInputScope = value;
+                    RaisePropertyChanged();
                     RaisePropertyChanged(nameof(CurrentInputMethodText));
                 }
             }
@@ -188,12 +211,15 @@ namespace Codeco.Windows10.ViewModels
 
         public MainViewModel(IFileService fileService, INavigationServiceEx navService) : base(navService)
         {
-            _fileService = (fileService as FileService);            
+            _fileService = (fileService as FileService);                        
 
-            _numberInputScope.Names.Add(new InputScopeName(InputScopeNameValue.Number));
-            _generalInputScope.Names.Add(new InputScopeName(InputScopeNameValue.Default));
+            _narrowNumberScope.Names.Add(new InputScopeName(InputScopeNameValue.Number));
+            _narrowDefaultScope.Names.Add(new InputScopeName(InputScopeNameValue.Default));
+            _wideNumberScope.Names.Add(new InputScopeName(InputScopeNameValue.Number));
+            _wideDefaultScope.Names.Add(new InputScopeName(InputScopeNameValue.Default));
 
-            CurrentInputScope = _numberInputScope;
+            CurrentNarrowInputScope = _narrowNumberScope;
+            CurrentWideInputScope = _wideNumberScope;
         }        
 
         private async void AddFile()
@@ -355,13 +381,17 @@ namespace Codeco.Windows10.ViewModels
 
         private void ChangeInputScope()
         {
-            if(CurrentInputScope == _generalInputScope)
-            {
-                CurrentInputScope = _numberInputScope;
+            if(CurrentNarrowInputScope.Names[0].NameValue == InputScopeNameValue.Default
+                || CurrentWideInputScope.Names[0].NameValue == InputScopeNameValue.Default)
+            {                
+                CurrentNarrowInputScope = _narrowNumberScope;
+                CurrentWideInputScope = _wideNumberScope;
             }
-            else if(CurrentInputScope == _numberInputScope)
-            {
-                CurrentInputScope = _generalInputScope;
+            else if(CurrentNarrowInputScope.Names[0].NameValue == InputScopeNameValue.Number
+                || CurrentNarrowInputScope.Names[0].NameValue == InputScopeNameValue.Number)
+            {                
+                CurrentNarrowInputScope = _narrowDefaultScope;
+                CurrentWideInputScope = _wideDefaultScope;
             }
         }
 
