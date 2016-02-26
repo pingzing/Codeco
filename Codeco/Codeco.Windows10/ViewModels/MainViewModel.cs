@@ -233,7 +233,7 @@ namespace Codeco.Windows10.ViewModels
             StorageFile file = await picker.PickSingleFileAsync();
             if (file != null)
             {
-                await OpenFile(file);
+                await OpenFile(file);                
             }
         }
 

@@ -26,6 +26,7 @@ namespace Codeco.Windows10.Controls
             if(e.Key == Windows.System.VirtualKey.Enter)
             {
                 ContentDialog_PrimaryButtonClick(this, null);
+                e.Handled = true;
             }
         }            
     }

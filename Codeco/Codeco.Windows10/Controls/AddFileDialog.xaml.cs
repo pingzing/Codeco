@@ -50,11 +50,13 @@ namespace Codeco.Windows10.Controls
                 if(AreBothBoxesFilled)
                 {
                     ContentDialog_PrimaryButtonClick(this, null);
+                    
                 }
                 else
                 {
                     FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
                 }
+                e.Handled = true;
             }
         }
 
@@ -66,6 +68,7 @@ namespace Codeco.Windows10.Controls
                 {
                     ContentDialog_PrimaryButtonClick(this, null);
                 }
+                e.Handled = true;
             }
         }
 
