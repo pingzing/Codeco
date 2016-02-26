@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:Codeco.Windows10.Models"
     x:Class="Codeco.Windows10.Views.MainPage"
     mc:Ignorable="d"
     NavigationCacheMode="Required"
@@ -11,14 +12,6 @@
     DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
 
     <Page.Resources>
-        <MenuFlyout x:Key="SavedFilesFlyout">
-            <MenuFlyoutItem Text="Delete"
-                            Command="{Binding Main.DeleteFileCommand, Mode=OneWay, Source={StaticResource Locator}}"
-                            CommandParameter="{Binding}" />
-            <MenuFlyoutItem Text="Rename"
-                            Command="{Binding Main.RenameFileCommand, Mode=OneWay, Source={StaticResource Locator}}"
-                            CommandParameter="{Binding}" />
-        </MenuFlyout>
         <CollectionViewSource x:Key="FileViewSource" ItemsPath="Files" Source="{Binding FileGroups}"
                               IsSourceGrouped="True" />
 
@@ -129,11 +122,21 @@
                         </Style>
                     </ListView.ItemContainerStyle>
                     <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Tapped="SavedFile_Tapped"
+                        <DataTemplate x:DataType="models:IBindableStorageFile">
+                            <StackPanel x:Name="ContainerStackPanel"
+                                Tapped="SavedFile_Tapped"
                                         RightTapped="SavedFile_RightTapped"
-                                        Tag="{Binding}"
-                                        FlyoutBase.AttachedFlyout="{StaticResource SavedFilesFlyout}">
+                                        Tag="{x:Bind Mode=OneWay}">
+                                <FlyoutBase.AttachedFlyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem Text="Delete"
+                                                        Command="{Binding Main.DeleteFileCommand, Mode=OneWay, Source={StaticResource Locator}}"
+                                                        CommandParameter="{Binding ElementName=ContainerStackPanel, Path=Tag}" />
+                                        <MenuFlyoutItem Text="Rename"
+                                                        Command="{Binding Main.RenameFileCommand, Mode=OneWay, Source={StaticResource Locator}}"
+                                                        CommandParameter="{Binding ElementName=ContainerStackPanel, Path=Tag}" />
+                                    </MenuFlyout>
+                                </FlyoutBase.AttachedFlyout>
 
                                 <TextBlock Text="{Binding Name}"
                                            Style="{StaticResource SubheaderTextBlockStyle}" />
@@ -249,11 +252,21 @@
                         </Style>
                     </ListView.ItemContainerStyle>
                     <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Tapped="SavedFile_Tapped"
+                        <DataTemplate x:DataType="models:IBindableStorageFile">
+                            <StackPanel x:Name="ContainerStackPanel"
+                                        Tapped="SavedFile_Tapped"
                                         RightTapped="SavedFile_RightTapped"
-                                        Tag="{Binding}"
-                                        FlyoutBase.AttachedFlyout="{StaticResource SavedFilesFlyout}">
+                                        Tag="{x:Bind}">
+                                <FlyoutBase.AttachedFlyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem Text="Delete"
+                                                        Command="{Binding Main.DeleteFileCommand, Mode=OneWay, Source={StaticResource Locator}}"
+                                                        CommandParameter="{Binding ElementName=ContainerStackPanel, Path=Tag}" />
+                                        <MenuFlyoutItem Text="Rename"
+                                                        Command="{Binding Main.RenameFileCommand, Mode=OneWay, Source={StaticResource Locator}}"
+                                                        CommandParameter="{Binding ElementName=ContainerStackPanel, Path=Tag}" />
+                                    </MenuFlyout>
+                                </FlyoutBase.AttachedFlyout>
 
                                 <TextBlock Text="{Binding Name}"
                                            Style="{StaticResource SubheaderTextBlockStyle}" />
