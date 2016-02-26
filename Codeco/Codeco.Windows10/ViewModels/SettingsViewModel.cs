@@ -11,12 +11,10 @@ using Codeco.Windows10.Models;
 
 namespace Codeco.Windows10.ViewModels
 {
-    public class SettingsViewModel : ViewModelBase, INavigable
+    public class SettingsViewModel : UniversalBaseViewModel, INavigable
     {
-        private readonly FileService _fileService;
-        private readonly NavigationServiceEx _navigationService;
-
-        public bool AllowGoingBack { get; set; } = true;
+        private readonly FileService _fileService;        
+        
         private static readonly AsyncLock s_lock = new AsyncLock();
 
         private RelayCommand<BindableStorageFile> _syncFileCommand;
@@ -75,10 +73,9 @@ namespace Codeco.Windows10.ViewModels
             }
         }        
 
-        public SettingsViewModel(IFileService fileService, INavigationServiceEx navService)
+        public SettingsViewModel(IFileService fileService, INavigationServiceEx navService) : base(navService)
         {
-            _fileService = fileService as FileService;
-            _navigationService = navService as NavigationServiceEx;            
+            _fileService = fileService as FileService;            
         }        
 
         private async void SyncFile(BindableStorageFile file)
@@ -133,7 +130,7 @@ namespace Codeco.Windows10.ViewModels
         private async void GoBack()
         {
             await BeforeGoingBack();            
-            _navigationService.GoBack();                        
+            NavigationService.GoBack();                        
         }
 
         //This is seperate from GoBack() because the MVVM Commanding model requires async void, and the
@@ -145,7 +142,7 @@ namespace Codeco.Windows10.ViewModels
 
         public async void Activate(object parameter, NavigationMode navigationMode)
         {
-            _navigationService.BackButtonPressed += OnBackPressed;
+            //_navigationService.BackButtonPressed += OnBackPressed;
 
             //TODO: Rework this to not clear + add, but instead just check somehow for a changed list and add only what's changed
             FileGroups.Clear();
@@ -164,7 +161,7 @@ namespace Codeco.Windows10.ViewModels
 
         public void Deactivated(object parameter)
         {
-            _navigationService.BackButtonPressed -= OnBackPressed;
+            //_navigationService.BackButtonPressed -= OnBackPressed;
         }
     }
 }

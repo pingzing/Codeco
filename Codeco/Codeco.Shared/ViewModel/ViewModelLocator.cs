@@ -58,20 +58,6 @@ namespace Codeco.ViewModel
             NavigationServiceEx navService = new NavigationServiceEx();
             navService.Configure(nameof(MainPage), typeof(MainPage));
             navService.Configure(nameof(SettingsPage), typeof(SettingsPage));
-#if WINDOWS_PHONE_APP
-            HardwareButtons.BackPressed += (s, e) =>
-            {
-                if (navService.BackStackDepth == 0 || navService.BackStack[navService.BackStackDepth - 1] == null)
-                {
-                    e.Handled = false; //let the system do what it will
-                }
-                else
-                {
-                    navService.OnBackButtonPressed(s, new Common.UniversalBackPressedEventArgs(e.Handled));
-                    e.Handled = true;
-                }
-            };
-#endif
             return navService;
         }
 

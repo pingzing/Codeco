@@ -18,17 +18,16 @@ using Windows.UI.Xaml.Input;
 
 namespace Codeco.Windows10.ViewModels
 {
-    public class MainViewModel : ViewModelBase, INavigable
+    public class MainViewModel : UniversalBaseViewModel, INavigable
     {
         private const string ACTIVE_INPUT_PREFIX_TEXT = "Input method:";
-        private InputScope _numberInputScope = new InputScope();
-        private InputScope _generalInputScope = new InputScope();
+        private readonly InputScope _numberInputScope = new InputScope();
+        private readonly InputScope _generalInputScope = new InputScope();
 
         private Dictionary<string, string> _codeDictionary = new Dictionary<string, string>();
         private readonly FileService _fileService;
         //TODO: This is only used for a debug function. Probably best to find a way to remove it.
-        public FileService FileService => _fileService;
-        private readonly NavigationServiceEx _navigationService;        
+        public FileService FileService => _fileService;         
 
         private RelayCommand _addFileCommand;
         public RelayCommand AddFileCommand => _addFileCommand ?? (_addFileCommand = new RelayCommand(AddFile));        
@@ -185,14 +184,11 @@ namespace Codeco.Windows10.ViewModels
                 _openFileText = value;
                 RaisePropertyChanged(nameof(OpenFileText));
             }
-        }                        
+        }                                
 
-        public bool AllowGoingBack { get; set; }
-
-        public MainViewModel(IFileService fileService, INavigationServiceEx navService)
+        public MainViewModel(IFileService fileService, INavigationServiceEx navService) : base(navService)
         {
-            _fileService = (fileService as FileService);
-            _navigationService = navService as NavigationServiceEx;
+            _fileService = (fileService as FileService);            
 
             _numberInputScope.Names.Add(new InputScopeName(InputScopeNameValue.Number));
             _generalInputScope.Names.Add(new InputScopeName(InputScopeNameValue.Default));
@@ -240,14 +236,7 @@ namespace Codeco.Windows10.ViewModels
         {
             AddFileDialog dialog = new AddFileDialog(fileName);
             await dialog.ShowAsync();
-            if(dialog.Result != null)
-            {
-                return dialog.Result;
-            }
-            else
-            {
-                return null;
-            }
+            return dialog.Result;
         }
 
         private async Task ShowErrorDialog(string title, string message)
@@ -324,14 +313,7 @@ namespace Codeco.Windows10.ViewModels
         {
             PasswordDialog dialog = new PasswordDialog();            
             await dialog.ShowAsync();
-            if (dialog.Result != null)
-            {
-                return dialog.Result;
-            }
-            else
-            {
-                return null;
-            }
+            return dialog.Result;
         }
 
         private async void DeleteFile(BindableStorageFile item)
@@ -368,7 +350,7 @@ namespace Codeco.Windows10.ViewModels
 
         private void GoToSettings()
         {
-            _navigationService.NavigateTo(nameof(SettingsPage));
+            NavigationService.NavigateTo(nameof(SettingsPage));
         }
 
         private void ChangeInputScope()
@@ -384,9 +366,7 @@ namespace Codeco.Windows10.ViewModels
         }
 
         public async void Activate(object parameter, NavigationMode navigationMode)
-        {
-            _navigationService.BackButtonPressed += OnBackPressed;
-
+        {            
             await FileService.IsInitialized.Task;
 
             FileGroups.Add(new FileCollection(Constants.ROAMED_FILES_TITLE,
@@ -399,7 +379,7 @@ namespace Codeco.Windows10.ViewModels
         private void OnBackPressed(object sender, UniversalBackPressedEventArgs args)
         {
             System.Diagnostics.Debug.WriteLine("MainPageVM BackPressed!");
-            _navigationService.GoBack();
+            NavigationService.GoBack();
         }
 
 
@@ -409,8 +389,7 @@ namespace Codeco.Windows10.ViewModels
         }
 
         public void Deactivated(object parameter)
-        {
-            _navigationService.BackButtonPressed -= OnBackPressed;
+        {            
             FileGroups.Clear();
         }
     }

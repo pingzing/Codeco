@@ -6,7 +6,6 @@ namespace Codeco.Windows10.Common
     {
         void Activate(object parameter, NavigationMode navigationMode);
         void Deactivating(object parameter);
-        void Deactivated(object parameter);
-        bool AllowGoingBack { get; set; }
+        void Deactivated(object parameter);        
     }
 }

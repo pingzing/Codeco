@@ -45,19 +45,8 @@ namespace Codeco.Windows10.Common
             base.OnNavigatingFrom(e);
 
             var navigable = this.DataContext as INavigable;
-            if(navigable == null)
-            {
-                return;
-            }
 
-            navigable.Deactivating(e.Parameter);
-
-            if (e.NavigationMode != NavigationMode.Back || navigable.AllowGoingBack)
-            {
-                return;
-            }            
-            e.Cancel = true;
-            Application.Current.Exit();
+            navigable?.Deactivating(e.Parameter);            
         }
     }
 }

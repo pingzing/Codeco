@@ -7,6 +7,7 @@ using System.Diagnostics;
 using Codeco.Windows10.Common;
 using Codeco.Windows10.Views;
 using Codeco.Windows10.ViewModels;
+using GalaSoft.MvvmLight.Threading;
 
 // The Universal Hub Application project template is documented at http://go.microsoft.com/fwlink/?LinkID=391955
 
@@ -39,7 +40,7 @@ namespace Codeco.Windows10
         /// search results, and so forth.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
-        protected async override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {            
             Frame rootFrame = Window.Current.Content as Frame;
 
@@ -76,82 +77,24 @@ namespace Codeco.Windows10
 
             if (rootFrame.Content == null)
             {                
-
-#if WINDOWS_PHONE_APP
-                // Removes the turnstile navigation for startup.
-                if (rootFrame.ContentTransitions != null)
-                {
-                    this.transitions = new TransitionCollection();
-                    foreach (var c in rootFrame.ContentTransitions)
-                    {
-                        this.transitions.Add(c);
-                    }
-                }
-
-                rootFrame.ContentTransitions = null;
-                rootFrame.Navigated += this.RootFrame_FirstNavigated;
-#endif
-
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
-#if WINDOWS_PHONE_APP
-            if(!rootFrame.Navigate(typeof(MainPage), e.Arguments))
-                {
-                    throw new Exception("Failed to create MainPage");
-                }
-#else
+
                 if (!rootFrame.Navigate(typeof(MainPage), e.Arguments))
                 {
                     throw new Exception("Failed to create initial page");
                 }
-#endif
             }
             // Ensure the current window is active
             Window.Current.Activate();
+
+            DispatcherHelper.Initialize();
         }
 
-#if WINDOWS_PHONE_APP
-        /// <summary>
-        /// Restores the content transitions after the app has launched.
-        /// </summary>
-        /// <param name="sender">The object where the handler is attached.</param>
-        /// <param name="e">Details about the navigation event.</param>
-        private void RootFrame_FirstNavigated(object sender, NavigationEventArgs e)
-        {
-            var rootFrame = sender as Frame;
-            rootFrame.ContentTransitions = this.transitions ?? new TransitionCollection() { new NavigationThemeTransition() };
-            rootFrame.Navigated -= this.RootFrame_FirstNavigated;
-        }
-#endif
-
-        protected override async void OnActivated(IActivatedEventArgs args)
+        protected override void OnActivated(IActivatedEventArgs args)
         {            
-            base.OnActivated(args);
-#if WINDOWS_PHONE_APP            
-            Frame rootFrame = Window.Current.Content as Frame;
-            if (rootFrame == null)
-            {
-                rootFrame = new Frame();
-                Window.Current.Content = rootFrame;
-            }
-
-            if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
-            {
-                //await SuspensionManager.RestoreAsync(); //disabling this until we can find a way to not trap users on the SettingsPage.
-            }
-
-            var continuationEventArgs = args as IContinuationActivatedEventArgs;
-            if (continuationEventArgs != null)
-            {                
-                if(rootFrame.CurrentSourcePageType != typeof(MainPage))
-                {
-                    rootFrame.Navigate(typeof(MainPage));
-                }
-                ContinuationManager manager = new ContinuationManager();
-                manager.Continue(continuationEventArgs, rootFrame);
-            }
-#endif            
+            base.OnActivated(args);          
         }
 
         /// <summary>

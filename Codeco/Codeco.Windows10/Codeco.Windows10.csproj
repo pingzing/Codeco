@@ -123,6 +123,7 @@
     <Compile Include="Models\Mocks\MockBindableStorageFile.cs" />
     <Compile Include="Models\Mocks\MockStorageFile.cs" />
     <Compile Include="Models\SavedFiles.cs" />
+    <Compile Include="ViewModels\UniversalBaseViewModel.cs" />
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
