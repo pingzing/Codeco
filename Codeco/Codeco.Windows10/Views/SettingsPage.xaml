@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"    
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:Codeco.Windows10.Models"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     DataContext="{Binding Source={StaticResource Locator}, Path=Settings}"
@@ -24,9 +25,9 @@
             <TextBlock Text="settings" Style="{ThemeResource HeaderTextBlockStyle}"/>
             <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" FontSize="20" Margin="0,12,0,24">
                 <Run Text="synced files space:"/>
-                <Run Text="{Binding RoamingSpaceUsed, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0.###}'}"/>
+                <Run Text="{x:Bind ViewModel.RoamingSpaceUsed, Mode=OneWay, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0.###}'}"/>
                 <Run Text="kB /"/>
-                <Run Text="{Binding RoamingSpaceFree, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0.##}'}"/>
+                <Run Text="{x:Bind ViewModel.RoamingSpaceFree, Mode=OneWay, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0.##}'}"/>
                 <Run Text="kB"></Run>
             </TextBlock>
         </StackPanel>
@@ -34,30 +35,19 @@
         <ListView x:Name="SavedFilesList"
                   Grid.Row="1"
                   ItemsSource="{Binding Source={StaticResource FileViewSource}}"                  
-                  SelectionMode="None" 
-                  ItemContainerStyle="{StaticResource ListViewItemNoTiltStretchStyle}">
-            <!--Some vagary of the way the default ItemsPanel (ItemsStackPanel) works makes 
-            the app crash in a few scenarios. Performance and functionality seem identical 
-            with the VirtualizingStackPanel, and no bugs! So we're using it instead, here.-->
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <VirtualizingStackPanel />
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
+                  SelectionMode="None" >
             <ListView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="models:BindableStorageFile">
                     <ToggleSwitch OnContent="Syncing"                                     
                                   OffContent="Not Syncing"
-                                  Tag="{Binding}"
-                                  Toggled="ToggleSwitch_Toggled"
-                                  Style="{StaticResource ToggleSwitchLongHeaderStyle}"
-                                  IsOn="{Binding IsRoamed, Mode=TwoWay}"
-                                  >
+                                  Tag="{x:Bind Mode=OneWay}"
+                                  Toggled="ToggleSwitch_Toggled"                                  
+                                  IsOn="{Binding IsRoamed, Mode=TwoWay}">
                         <ToggleSwitch.Header>
                             <StackPanel>
-                                <TextBlock Text="{Binding Name}" Style="{StaticResource ListViewItemTextBlockStyle}"/>
-                                <TextBlock Text="{Binding CreateDate}" Style="{StaticResource ListViewItemSubheaderTextBlockStyle}"/>
-                                <TextBlock Text="{Binding FileSize}" Style="{StaticResource ListViewItemSubheaderTextBlockStyle}"/>
+                                <TextBlock Text="{x:Bind Name, Mode=OneWay}" Style="{StaticResource SubheaderTextBlockStyle}"/>
+                                <TextBlock Text="{x:Bind CreateDate, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}"/>
+                                <TextBlock Text="{x:Bind FileSize, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}"/>
                             </StackPanel>
                         </ToggleSwitch.Header>
                     </ToggleSwitch>
@@ -67,13 +57,13 @@
             <ListView.GroupStyle>
                 <GroupStyle HidesIfEmpty="True">
                     <GroupStyle.HeaderTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="models:FileCollection">
                             <StackPanel>
-                                <TextBlock Text="{Binding}" 
+                                <TextBlock Text="{x:Bind Title, Mode=OneWay}" 
                                            Margin="0,24,0,0" 
                                            Style="{StaticResource TitleTextBlockStyle}" 
                                            FontSize="30" 
-                                           Foreground="{StaticResource PhoneAccentBrush}" 
+                                           Foreground="{StaticResource SystemControlBackgroundAccentBrush}" 
                                            IsHitTestVisible="False"/>
                             </StackPanel>
                         </DataTemplate>

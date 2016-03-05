@@ -3,6 +3,7 @@ using Codeco.Windows10.Models;
 using Codeco.Windows10.Services;
 using Codeco.Windows10.ViewModels;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -15,18 +16,22 @@ namespace Codeco.Windows10.Views
     /// </summary>
     public sealed partial class SettingsPage : BindablePage
     {
+        public SettingsViewModel ViewModel => DataContext as SettingsViewModel;
+
         public SettingsPage()
         {
             this.InitializeComponent();
         }
 
-        private void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+        private async void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
         {            
             var tappedItem = (sender as ToggleSwitch)?.Tag as BindableStorageFile;            
             if (tappedItem == null)
             {
                 return;
             }
+
+            ((ToggleSwitch) sender).IsEnabled = false;
 
             var context = (DataContext as SettingsViewModel);
             if (!tappedItem.IsRoamed && !context.FileGroups.First(x => x.Location == FileService.FileLocation.Local).Files.Contains(tappedItem))
@@ -37,7 +42,10 @@ namespace Codeco.Windows10.Views
             if (tappedItem.IsRoamed && !context.FileGroups.First(x => x.Location == FileService.FileLocation.Roamed).Files.Contains(tappedItem))
             {
                 context?.SyncFileCommand.Execute(tappedItem);
-            }            
+            }
+
+            await Task.Delay(333); //leave control disabled while the animation plays
+            ((ToggleSwitch) sender).IsEnabled = true;
         }        
     }
 }
