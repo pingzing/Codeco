@@ -79,6 +79,12 @@ namespace Codeco.Windows10.ViewModels
             RaiseCanGoBackChanged();
         }
 
+        public new void GoBack()
+        {
+            base.GoBack();
+            RaiseCanGoBackChanged();                        
+        }
+
         public event CanGoBackChangedHandler CanGoBackChanged;
 
         private void RaiseCanGoBackChanged()
