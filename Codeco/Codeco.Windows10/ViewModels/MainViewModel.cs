@@ -30,15 +30,15 @@ namespace Codeco.Windows10.ViewModels
         private readonly InputScope _wideNumberScope = new InputScope();
 
         private Dictionary<string, string> _codeDictionary = new Dictionary<string, string>();
-        private readonly FileService _fileService;
-        //TODO: This is only used for a debug function. Probably best to find a way to remove it.
-        public FileService FileService => _fileService;         
+        private readonly IFileService _fileService;                        
 
         private RelayCommand _addFileCommand;
-        public RelayCommand AddFileCommand => _addFileCommand ?? (_addFileCommand = new RelayCommand(AddFile));        
+        public RelayCommand AddFileCommand => _addFileCommand 
+            ?? (_addFileCommand = new RelayCommand(AddFile));        
 
-        private RelayCommand _deleteCodesCommand;
-        public RelayCommand DeleteCodesCommand => _deleteCodesCommand ?? (_deleteCodesCommand = new RelayCommand(DeleteCodes));
+        private RelayCommand _deleteActiveFileCommand;
+        public RelayCommand DeleteActiveFileCommand => _deleteActiveFileCommand 
+            ?? (_deleteActiveFileCommand = new RelayCommand(DeleteActiveFile));
 
         private RelayCommand<BindableStorageFile> _changeActiveFileCommand;
         public RelayCommand<BindableStorageFile> ChangeActiveFileCommand => _changeActiveFileCommand
@@ -53,10 +53,12 @@ namespace Codeco.Windows10.ViewModels
             ?? (_renameFileCommand = new RelayCommand<BindableStorageFile>(RenameFile));
 
         private RelayCommand _goToSettingsCommand;
-        public RelayCommand GoToSettingsCommand => _goToSettingsCommand ?? (_goToSettingsCommand = new RelayCommand(GoToSettings));
+        public RelayCommand GoToSettingsCommand => _goToSettingsCommand 
+            ?? (_goToSettingsCommand = new RelayCommand(GoToSettings));
 
         private RelayCommand _changeInputScopeCommand;
-        public RelayCommand ChangeInputScopeCommand => _changeInputScopeCommand ?? (_changeInputScopeCommand = new RelayCommand(ChangeInputScope));        
+        public RelayCommand ChangeInputScopeCommand => _changeInputScopeCommand 
+            ?? (_changeInputScopeCommand = new RelayCommand(ChangeInputScope));        
 
 
         private int _longestCode = 1;
@@ -148,7 +150,6 @@ namespace Codeco.Windows10.ViewModels
         }
 
         private InputScope _currentWideInputScope;
-
         public InputScope CurrentWideInputScope
         {
             get { return _currentWideInputScope; }
@@ -211,7 +212,7 @@ namespace Codeco.Windows10.ViewModels
 
         public MainViewModel(IFileService fileService, INavigationServiceEx navService) : base(navService)
         {
-            _fileService = (fileService as FileService);                        
+            _fileService = fileService;                      
 
             _narrowNumberScope.Names.Add(new InputScopeName(InputScopeNameValue.Number));
             _narrowDefaultScope.Names.Add(new InputScopeName(InputScopeNameValue.Default));
@@ -305,11 +306,12 @@ namespace Codeco.Windows10.ViewModels
             }              
         }
 
-        private async void DeleteCodes()
+        private void DeleteActiveFile()
         {
-            FileService.FileLocation location = _fileService.GetFileLocation(ActiveFile);
-            await _fileService.ClearFileAsync(ActiveFile.Name, location);
-            _codeDictionary = new Dictionary<string, string>();
+            if (ActiveFile != null)
+            {
+                DeleteFile(ActiveFile);
+            }
         }
 
         private void LookupCode(string newText)
@@ -357,7 +359,7 @@ namespace Codeco.Windows10.ViewModels
 
         private async void RenameFile(BindableStorageFile item)
         {
-            string newName = await GetNewName();
+            string newName = await GetNewName(item.Name);
             if (newName != null)
             {
                 await _fileService.RenameFileAsync(item, newName);                
@@ -368,9 +370,11 @@ namespace Codeco.Windows10.ViewModels
             }
         }
 
-        private async Task<string> GetNewName()
+        private async Task<string> GetNewName(string currentName)
         {
-            throw new NotImplementedException("Need to create a GetName dialog for UWP");
+            RenameFileDialog dialog = new RenameFileDialog(currentName);
+            await dialog.ShowAsync();
+            return dialog.Result;
         }
 
 
@@ -397,21 +401,13 @@ namespace Codeco.Windows10.ViewModels
 
         public async void Activate(object parameter, NavigationMode navigationMode)
         {            
-            await FileService.IsInitialized.Task;
+            await _fileService.IsInitialized.Task;
 
             FileGroups.Add(new FileCollection(Constants.ROAMED_FILES_TITLE,
                 new ObservableCollection<IBindableStorageFile>(_fileService.GetRoamedFiles()), FileService.FileLocation.Roamed));
             FileGroups.Add(new FileCollection(Constants.LOCAL_FILES_TITLE, 
                 new ObservableCollection<IBindableStorageFile>(_fileService.GetLocalFiles()), FileService.FileLocation.Local));            
         }
-
-
-        private void OnBackPressed(object sender, UniversalBackPressedEventArgs args)
-        {
-            System.Diagnostics.Debug.WriteLine("MainPageVM BackPressed!");
-            NavigationService.GoBack();
-        }
-
 
         public void Deactivating(object parameter)
         {

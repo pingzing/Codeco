@@ -114,6 +114,9 @@
     <Compile Include="Controls\PasswordDialog.xaml.cs">
       <DependentUpon>PasswordDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\RenameFileDialog.xaml.cs">
+      <DependentUpon>RenameFileDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="EncryptionManager.cs" />
     <Compile Include="FileUtilities.cs" />
     <Compile Include="Models\AddFileDialogOutput.cs" />
@@ -169,6 +172,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\PasswordDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\RenameFileDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

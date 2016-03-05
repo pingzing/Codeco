@@ -294,23 +294,19 @@
                            FontSize="{ThemeResource PivotTitleFontSize}"
                            OpticalMarginAlignment="TrimSideBearings" />
             </CommandBar.Content>
+            <AppBarButton Icon="Delete" Label="Delete active file" Command="{x:Bind ViewModel.DeleteActiveFileCommand}" />
             <AppBarButton Icon="Keyboard" Label="Input Style" Command="{x:Bind ViewModel.ChangeInputScopeCommand}" />
-            <AppBarButton Icon="Setting" Label="Settings" Command="{Binding GoToSettingsCommand}" />
-            <AppBarButton Icon="Add" Label="Add file" Command="{Binding AddFileCommand}" />
-            <CommandBar.SecondaryCommands>
-                <AppBarButton Label="Delete active file" Command="{Binding DeleteCodesCommand}" />
-            </CommandBar.SecondaryCommands>
+            <AppBarButton Icon="Setting" Label="Settings" Command="{x:Bind ViewModel.GoToSettingsCommand}" />
+            <AppBarButton Icon="Add" Label="Add file" Command="{x:Bind ViewModel.AddFileCommand}" />
         </CommandBar>
     </Page.TopAppBar>
 
     <Page.BottomAppBar>
         <CommandBar x:Name="BottomCommandBar">
+            <AppBarButton Icon="Delete" Label="Delete active file" Command="{x:Bind ViewModel.DeleteActiveFileCommand}" />
             <AppBarButton Icon="Keyboard" Label="Input Style" Command="{x:Bind ViewModel.ChangeInputScopeCommand}" />
-            <AppBarButton Icon="Setting" Label="Settings" Command="{Binding GoToSettingsCommand}" />
-            <AppBarButton Icon="Add" Label="Add file" Command="{Binding AddFileCommand}" />
-            <CommandBar.SecondaryCommands>
-                <AppBarButton Label="Delete active file" Command="{Binding DeleteCodesCommand}" />
-            </CommandBar.SecondaryCommands>
+            <AppBarButton Icon="Setting" Label="Settings" Command="{x:Bind ViewModel.GoToSettingsCommand}" />
+            <AppBarButton Icon="Add" Label="Add file" Command="{x:Bind ViewModel.AddFileCommand}" />
         </CommandBar>
     </Page.BottomAppBar>
 

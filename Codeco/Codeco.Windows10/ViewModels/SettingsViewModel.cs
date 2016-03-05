@@ -13,7 +13,7 @@ namespace Codeco.Windows10.ViewModels
 {
     public class SettingsViewModel : UniversalBaseViewModel, INavigable
     {
-        private readonly FileService _fileService;        
+        private readonly IFileService _fileService;        
         
         private static readonly AsyncLock s_lock = new AsyncLock();
 
@@ -23,10 +23,7 @@ namespace Codeco.Windows10.ViewModels
 
         private RelayCommand<BindableStorageFile> _removeFileFromSyncCommand;
         public RelayCommand<BindableStorageFile> RemoveFileFromSyncCommand => 
-            _removeFileFromSyncCommand ?? (_removeFileFromSyncCommand = new RelayCommand<BindableStorageFile>(RemoveFileFromSync));
-
-        private RelayCommand _goBackCommand;
-        public RelayCommand GoBackCommand => _goBackCommand ?? (_goBackCommand = new RelayCommand(GoBack));        
+            _removeFileFromSyncCommand ?? (_removeFileFromSyncCommand = new RelayCommand<BindableStorageFile>(RemoveFileFromSync));        
 
         private double _roamingSpaceUsed = 0;
         public double RoamingSpaceUsed
@@ -75,7 +72,7 @@ namespace Codeco.Windows10.ViewModels
 
         public SettingsViewModel(IFileService fileService, INavigationServiceEx navService) : base(navService)
         {
-            _fileService = fileService as FileService;            
+            _fileService = fileService;
         }        
 
         private async void SyncFile(BindableStorageFile file)
@@ -105,7 +102,10 @@ namespace Codeco.Windows10.ViewModels
                 var syncedFiles = FileGroups.First(x => x.Location == FileService.FileLocation.Roamed).Files;
                 for (int i = syncedFiles.Count - 1; i >= 0; i--)
                 {
-                    if (syncedFiles[i].Name == Constants.IV_FILE_NAME) continue; //want to hide this from the user...
+                    if (syncedFiles[i].Name == Constants.IV_FILE_NAME)
+                    {
+                        continue;
+                    }
                     space += await syncedFiles[i].GetFileSizeInBytes();                    
                 }
                 ulong ivFileSize = await FileUtilities.GetIVFileSize();
@@ -115,35 +115,8 @@ namespace Codeco.Windows10.ViewModels
             }            
         }                
 
-        private async Task BeforeGoingBack()
-        {            
-            foreach (var local in FileGroups.First(x => x.Location == FileService.FileLocation.Local).Files)
-            {
-                await _fileService.StopRoamingFile(local);
-            }
-            foreach (var roamed in FileGroups.First(x => x.Location == FileService.FileLocation.Roamed).Files)
-            {
-                await _fileService.RoamFile(roamed);
-            }
-        }
-
-        private async void GoBack()
-        {
-            await BeforeGoingBack();            
-            NavigationService.GoBack();                        
-        }
-
-        //This is seperate from GoBack() because the MVVM Commanding model requires async void, and the
-        //event handler style here for the hardware back button requires async Task<T> or void. So we need both!
-        private void OnBackPressed(object sender, UniversalBackPressedEventArgs args)
-        {
-            GoBack();
-        }
-
         public async void Activate(object parameter, NavigationMode navigationMode)
-        {
-            //_navigationService.BackButtonPressed += OnBackPressed;
-
+        {           
             //TODO: Rework this to not clear + add, but instead just check somehow for a changed list and add only what's changed
             FileGroups.Clear();
             FileGroups.Add(new FileCollection(Constants.ROAMED_FILES_TITLE,
@@ -161,7 +134,7 @@ namespace Codeco.Windows10.ViewModels
 
         public void Deactivated(object parameter)
         {
-            //_navigationService.BackButtonPressed -= OnBackPressed;
+            
         }
     }
 }
