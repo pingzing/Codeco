@@ -294,8 +294,9 @@
                            FontSize="{ThemeResource PivotTitleFontSize}"
                            OpticalMarginAlignment="TrimSideBearings" />
             </CommandBar.Content>
-            <AppBarButton Icon="Delete" Label="Delete active file" Command="{x:Bind ViewModel.DeleteActiveFileCommand}" />
-            <AppBarButton Icon="Keyboard" Label="Input Style" Command="{x:Bind ViewModel.ChangeInputScopeCommand}" />
+            <AppBarButton Icon="Delete" Label="Delete active file" Command="{x:Bind ViewModel.DeleteActiveFileCommand}" 
+                          IsEnabled="{x:Bind ViewModel.ActiveFile, Converter={StaticResource EmptyNullToBooleanConverter}}" />
+            <AppBarButton Icon="Keyboard" Label="Input style" Command="{x:Bind ViewModel.ChangeInputScopeCommand}" />
             <AppBarButton Icon="Setting" Label="Settings" Command="{x:Bind ViewModel.GoToSettingsCommand}" />
             <AppBarButton Icon="Add" Label="Add file" Command="{x:Bind ViewModel.AddFileCommand}" />
         </CommandBar>
@@ -303,8 +304,9 @@
 
     <Page.BottomAppBar>
         <CommandBar x:Name="BottomCommandBar">
-            <AppBarButton Icon="Delete" Label="Delete active file" Command="{x:Bind ViewModel.DeleteActiveFileCommand}" />
-            <AppBarButton Icon="Keyboard" Label="Input Style" Command="{x:Bind ViewModel.ChangeInputScopeCommand}" />
+            <AppBarButton Icon="Delete" Label="Delete active file" Command="{x:Bind ViewModel.DeleteActiveFileCommand}" 
+                          IsEnabled="{x:Bind ViewModel.ActiveFile, Converter={StaticResource EmptyNullToBooleanConverter}}" />
+            <AppBarButton Icon="Keyboard" Label="InputsStyle" Command="{x:Bind ViewModel.ChangeInputScopeCommand}" />
             <AppBarButton Icon="Setting" Label="Settings" Command="{x:Bind ViewModel.GoToSettingsCommand}" />
             <AppBarButton Icon="Add" Label="Add file" Command="{x:Bind ViewModel.AddFileCommand}" />
         </CommandBar>

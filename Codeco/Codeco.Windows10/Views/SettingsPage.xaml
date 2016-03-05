@@ -46,7 +46,7 @@
                            FontSize="{ThemeResource PivotTitleFontSize}"
                            OpticalMarginAlignment="TrimSideBearings" />
             <TextBlock Text="Settings" Style="{ThemeResource HeaderTextBlockStyle}"/>
-            <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" FontSize="20" Margin="0,10,0,20">
+            <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" FontSize="20" Margin="0,10,0,0">
                 <Run Text="synced files space:"/>
                 <Run Text="{x:Bind ViewModel.RoamingSpaceUsed, Mode=OneWay, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:0.###}'}"/>
                 <Run Text="kB /"/>

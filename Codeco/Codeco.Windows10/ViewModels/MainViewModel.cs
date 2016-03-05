@@ -18,7 +18,7 @@ using Windows.UI.Xaml.Input;
 
 namespace Codeco.Windows10.ViewModels
 {
-    public class MainViewModel : UniversalBaseViewModel, INavigable
+    public class MainViewModel : UniversalBaseViewModel
     {
         private const string ACTIVE_INPUT_PREFIX_TEXT = "Input method:";
 
@@ -399,8 +399,10 @@ namespace Codeco.Windows10.ViewModels
             }
         }
 
-        public async void Activate(object parameter, NavigationMode navigationMode)
+        public override async void Activate(object parameter, NavigationMode navigationMode)
         {            
+            base.Activate(parameter, navigationMode);
+
             await _fileService.IsInitialized.Task;
 
             FileGroups.Add(new FileCollection(Constants.ROAMED_FILES_TITLE,
@@ -409,14 +411,11 @@ namespace Codeco.Windows10.ViewModels
                 new ObservableCollection<IBindableStorageFile>(_fileService.GetLocalFiles()), FileService.FileLocation.Local));            
         }
 
-        public void Deactivating(object parameter)
-        {
-
-        }
-
-        public void Deactivated(object parameter)
-        {            
+        public override void Deactivated(object parameter)
+        {                        
             FileGroups.Clear();
+
+            base.Deactivated(parameter);
         }
     }
 }

@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Core;
+using Windows.UI.Xaml.Navigation;
+using Codeco.Windows10.Common;
 using GalaSoft.MvvmLight;
 
 namespace Codeco.Windows10.ViewModels
 {
-    public class UniversalBaseViewModel : ViewModelBase
+    public class UniversalBaseViewModel : ViewModelBase, INavigable
     {
         private readonly SystemNavigationManager _systemNavManager;
 
@@ -33,8 +35,7 @@ namespace Codeco.Windows10.ViewModels
             NavigationService = navService;
             NavigationService.CanGoBackChanged += _navigationService_CanGoBackChanged;
 
-            _systemNavManager = SystemNavigationManager.GetForCurrentView();
-            _systemNavManager.BackRequested += UniversalBaseViewModel_BackRequested;
+            _systemNavManager = SystemNavigationManager.GetForCurrentView();            
         }
 
         private void _navigationService_CanGoBackChanged(object sender, CanGoBackChangedHandlerArgs args)
@@ -50,7 +51,7 @@ namespace Codeco.Windows10.ViewModels
             }
         }
 
-        private void UniversalBaseViewModel_BackRequested(object sender, BackRequestedEventArgs e)
+        protected virtual void UniversalBaseViewModel_BackRequested(object sender, BackRequestedEventArgs e)
         {
             if(NavigationService.BackStackDepth == 0)
             {
@@ -67,6 +68,16 @@ namespace Codeco.Windows10.ViewModels
             {
                 e.Handled = true; //Swallow the event and do nothing
             }
+        }
+
+        public virtual void Activate(object parameter, NavigationMode navigationMode)
+        {
+            _systemNavManager.BackRequested += UniversalBaseViewModel_BackRequested;
+        }
+
+        public virtual void Deactivated(object parameter)
+        {
+            _systemNavManager.BackRequested -= UniversalBaseViewModel_BackRequested;
         }
     }
 }

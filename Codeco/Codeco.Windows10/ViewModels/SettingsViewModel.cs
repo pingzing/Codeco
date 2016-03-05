@@ -5,6 +5,7 @@ using System.Linq;
 using System.Collections.ObjectModel;
 using GalaSoft.MvvmLight.Command;
 using System.Threading.Tasks;
+using Windows.UI.Core;
 using Codeco.Windows10.Common;
 using Codeco.Windows10.Services;
 using Codeco.Windows10.Models;
@@ -115,8 +116,10 @@ namespace Codeco.Windows10.ViewModels
             }            
         }                
 
-        public async void Activate(object parameter, NavigationMode navigationMode)
-        {           
+        public override async void Activate(object parameter, NavigationMode navigationMode)
+        {
+            base.Activate(parameter, navigationMode);
+
             //TODO: Rework this to not clear + add, but instead just check somehow for a changed list and add only what's changed
             FileGroups.Clear();
             FileGroups.Add(new FileCollection(Constants.ROAMED_FILES_TITLE,
@@ -124,17 +127,21 @@ namespace Codeco.Windows10.ViewModels
             FileGroups.Add(new FileCollection(Constants.LOCAL_FILES_TITLE,
                 new ObservableCollection<IBindableStorageFile>(_fileService.GetLocalFiles()), FileService.FileLocation.Local));
 
-            await UpdateAvailableRoamingSpace();
+            await UpdateAvailableRoamingSpace();            
         }
 
-        public void Deactivating(object parameter)
+        protected override async void UniversalBaseViewModel_BackRequested(object sender, BackRequestedEventArgs e)
         {
-            
-        }
+            foreach (var local in FileGroups.First(x => x.Location == FileService.FileLocation.Local).Files)
+            {
+                await _fileService.StopRoamingFile(local);
+            }
+            foreach (var roamed in FileGroups.First(x => x.Location == FileService.FileLocation.Roamed).Files)
+            {
+                await _fileService.RoamFile(roamed);
+            }
 
-        public void Deactivated(object parameter)
-        {
-            
-        }
+            base.UniversalBaseViewModel_BackRequested(sender, e);
+        }   
     }
 }

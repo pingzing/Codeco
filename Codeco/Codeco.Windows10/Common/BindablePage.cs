@@ -38,15 +38,6 @@ namespace Codeco.Windows10.Common
 
             var navigableViewModel = this.DataContext as INavigable;
             navigableViewModel?.Deactivated(e.Parameter);
-        }
-
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
-        {
-            base.OnNavigatingFrom(e);
-
-            var navigable = this.DataContext as INavigable;
-
-            navigable?.Deactivating(e.Parameter);            
-        }
+        }        
     }
 }
