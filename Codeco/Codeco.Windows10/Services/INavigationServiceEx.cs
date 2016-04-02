@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using Windows.UI.Xaml.Navigation;
-using Codeco.Windows10.Common;
+﻿using Windows.UI.Xaml.Navigation;
 using GalaSoft.MvvmLight.Views;
 
-namespace Codeco.Windows10.ViewModels
+namespace Codeco.Windows10.Services
 {
     public interface INavigationServiceEx : INavigationService
     {

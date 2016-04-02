@@ -15,6 +15,8 @@ using Codeco.Windows10.Common;
 using Codeco.Windows10.Views;
 using Codeco.Windows10.Controls;
 using Windows.UI.Xaml.Input;
+using GalaSoft.MvvmLight.Messaging;
+using Windows.UI.Xaml;
 
 namespace Codeco.Windows10.ViewModels
 {
@@ -135,6 +137,7 @@ namespace Codeco.Windows10.ViewModels
         }
 
         private InputScope _currentNarrowInputScope;
+        #region CurrentNarrowInput
         public InputScope CurrentNarrowInputScope
         {
             get { return _currentNarrowInputScope; }
@@ -148,8 +151,10 @@ namespace Codeco.Windows10.ViewModels
                 }
             }
         }
+        #endregion
 
         private InputScope _currentWideInputScope;
+        #region CurrentWideInputScope
         public InputScope CurrentWideInputScope
         {
             get { return _currentWideInputScope; }
@@ -163,8 +168,10 @@ namespace Codeco.Windows10.ViewModels
                 }
             }
         }
+        #endregion
 
         private ObservableCollection<FileCollection> _fileGroups = new ObservableCollection<FileCollection>();
+        #region FileGroups
         public ObservableCollection<FileCollection> FileGroups
         {
             get { return _fileGroups; }
@@ -178,8 +185,10 @@ namespace Codeco.Windows10.ViewModels
                 RaisePropertyChanged();
             }
         }
+        #endregion
 
         private BindableStorageFile _activeFile;
+        #region ActiveFile
         public BindableStorageFile ActiveFile
         {
             get { return _activeFile; }
@@ -194,8 +203,10 @@ namespace Codeco.Windows10.ViewModels
                 RaisePropertyChanged(nameof(ActiveFile));
             }
         }
+        #endregion
 
         private string _openFileText = "none";
+        #region OpenFileText
         public string OpenFileText
         {
             get { return _openFileText; }
@@ -208,7 +219,25 @@ namespace Codeco.Windows10.ViewModels
                 _openFileText = value;
                 RaisePropertyChanged(nameof(OpenFileText));
             }
-        }                                
+        }
+        #endregion
+
+        private Visibility _shouldShowPlaceholder = Visibility.Collapsed;
+        #region HasItems
+        public Visibility ShouldShowPlaceholder
+        {
+            get { return _shouldShowPlaceholder; }
+            set
+            {
+                if(_shouldShowPlaceholder == value)
+                {
+                    return;
+                }
+                _shouldShowPlaceholder = value;
+                RaisePropertyChanged(nameof(ShouldShowPlaceholder));
+            }
+        }
+        #endregion
 
         public MainViewModel(IFileService fileService, INavigationServiceEx navService) : base(navService)
         {
@@ -236,8 +265,9 @@ namespace Codeco.Windows10.ViewModels
             {
                 await OpenFile(file);                
             }
-        }
 
+            ShouldShowPlaceholder = FileGroups.Any(x => x.Files.Any()) ? Visibility.Collapsed : Visibility.Visible;
+        }
 
         private async Task OpenFile(StorageFile file)
         {
@@ -256,8 +286,8 @@ namespace Codeco.Windows10.ViewModels
             string contents = await FileIO.ReadTextAsync(file);
             ActiveFile = await _fileService.SaveAndEncryptFileAsync(contents, output.FileName, output.Password);
             FileGroups.First(x => x.Location == FileService.FileLocation.Local).Files.Add(ActiveFile);            
-            _codeDictionary = await GetCodes(output.Password);
-        }        
+            _codeDictionary = await GetCodes(output.Password);            
+        }
 
         private async Task<AddFileDialogOutput> ShowAddFileDialog(string fileName)
         {
@@ -296,6 +326,7 @@ namespace Codeco.Windows10.ViewModels
 
                     LongestCode = codePair[0].Length > LongestCode ? codePair[0].Length : LongestCode;                    
                 }
+                ScrollViewToActivePivot();
                 return codeDict;
             }    
             catch(Exception ex)
@@ -333,7 +364,7 @@ namespace Codeco.Windows10.ViewModels
             if (password != null)
             {
                 ActiveFile = arg;
-                _codeDictionary = await GetCodes(password);                
+                _codeDictionary = await GetCodes(password);
             }
         }
 
@@ -355,6 +386,8 @@ namespace Codeco.Windows10.ViewModels
             {
                 ActiveFile = null;
             }
+
+            ShouldShowPlaceholder = FileGroups.Any(x => x.Files.Any()) ? Visibility.Collapsed : Visibility.Visible;
         }
 
         private async void RenameFile(BindableStorageFile item)
@@ -399,6 +432,11 @@ namespace Codeco.Windows10.ViewModels
             }
         }
 
+        private void ScrollViewToActivePivot()
+        {
+            Messenger.Default.Send<object>(null, Constants.SCROLL_PIVOT_MESSAGE);
+        }
+
         public override async void Activate(object parameter, NavigationMode navigationMode)
         {            
             base.Activate(parameter, navigationMode);
@@ -408,7 +446,9 @@ namespace Codeco.Windows10.ViewModels
             FileGroups.Add(new FileCollection(Constants.ROAMED_FILES_TITLE,
                 new ObservableCollection<IBindableStorageFile>(_fileService.GetRoamedFiles()), FileService.FileLocation.Roamed));
             FileGroups.Add(new FileCollection(Constants.LOCAL_FILES_TITLE, 
-                new ObservableCollection<IBindableStorageFile>(_fileService.GetLocalFiles()), FileService.FileLocation.Local));            
+                new ObservableCollection<IBindableStorageFile>(_fileService.GetLocalFiles()), FileService.FileLocation.Local));
+
+            ShouldShowPlaceholder = FileGroups.Any(x => x.Files.Any()) ? Visibility.Collapsed : Visibility.Visible;
         }
 
         public override void Deactivated(object parameter)

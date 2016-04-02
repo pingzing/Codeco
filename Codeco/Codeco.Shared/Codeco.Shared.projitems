@@ -41,9 +41,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\ServiceNotInitializedException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\DesignViewModels\MainViewModelDesign.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\DesignViewModels\SettingsViewModelDesign.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\INavigationServiceEx.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\MainViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\NavigationServiceEx.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\SettingsViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ViewModelLocator.cs" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\LightGray.png" />

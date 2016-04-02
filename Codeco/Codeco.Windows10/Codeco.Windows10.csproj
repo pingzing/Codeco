@@ -107,7 +107,6 @@
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Common\Converters\StringFormatConverter.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
-    <Compile Include="Common\UniversalBackPressedEventArgs.cs" />
     <Compile Include="Controls\AddFileDialog.xaml.cs">
       <DependentUpon>AddFileDialog.xaml</DependentUpon>
     </Compile>
@@ -141,9 +140,9 @@
     </Compile>
     <Compile Include="ViewModels\DesignViewModels\MainViewModelDesign.cs" />
     <Compile Include="ViewModels\DesignViewModels\SettingsViewModelDesign.cs" />
-    <Compile Include="ViewModels\INavigationServiceEx.cs" />
+    <Compile Include="Services\INavigationServiceEx.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
-    <Compile Include="ViewModels\NavigationServiceEx.cs" />
+    <Compile Include="Services\NavigationServiceEx.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
   </ItemGroup>

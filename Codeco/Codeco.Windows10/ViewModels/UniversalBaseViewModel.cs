@@ -7,6 +7,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml.Navigation;
 using Codeco.Windows10.Common;
 using GalaSoft.MvvmLight;
+using Codeco.Windows10.Services;
 
 namespace Codeco.Windows10.ViewModels
 {

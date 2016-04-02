@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using Codeco.Windows10.Common;
 
 using GalaSoft.MvvmLight.Views;
 
-namespace Codeco.Windows10.ViewModels
+namespace Codeco.Windows10.Services
 {
     public class NavigationServiceEx : NavigationService, INavigationServiceEx
     {                             

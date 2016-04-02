@@ -50,6 +50,65 @@
                Title="CODECO"
                DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
                Visibility="Visible">
+            <PivotItem x:Name="SavedPivotItem" Header="Saved Files">
+                <Grid>
+                    <ListView x:Name="FileListCollection"                          
+                              Margin="0 10 0 0"
+                              ItemsSource="{Binding Source={StaticResource FileViewSource}}"
+                              SelectionMode="None">
+                        <ListView.GroupStyle>
+                            <GroupStyle HidesIfEmpty="True">
+                                <GroupStyle.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" Style="{StaticResource HeaderTextBlockStyle}"
+                                                   Margin="-10 0 0 0" />
+                                    </DataTemplate>
+                                </GroupStyle.HeaderTemplate>
+                            </GroupStyle>
+                        </ListView.GroupStyle>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="models:IBindableStorageFile">
+                                <StackPanel x:Name="ContainerStackPanel"
+                                    Tapped="SavedFile_Tapped"
+                                            RightTapped="SavedFile_RightTapped"
+                                            Tag="{x:Bind Mode=OneWay }">
+                                    <FlyoutBase.AttachedFlyout>
+                                        <MenuFlyout>
+                                            <MenuFlyoutItem Text="Delete"
+                                                            Command="{Binding Main.DeleteFileCommand, Mode=OneWay, Source={StaticResource Locator}}"
+                                                            CommandParameter="{Binding ElementName=ContainerStackPanel, Path=Tag}" />
+                                            <MenuFlyoutItem Text="Rename"
+                                                            Command="{Binding Main.RenameFileCommand, Mode=OneWay, Source={StaticResource Locator}}"
+                                                            CommandParameter="{Binding ElementName=ContainerStackPanel, Path=Tag}" />
+                                        </MenuFlyout>
+                                    </FlyoutBase.AttachedFlyout>
+
+                                    <TextBlock Text="{Binding Name}"
+                                               Style="{StaticResource SubheaderTextBlockStyle}" />
+                                    <TextBlock Text="{Binding CreateDate}"
+                                               Style="{StaticResource CaptionTextBlockStyle}"
+                                               Foreground="{ThemeResource SystemControlBackgroundBaseMediumBrush}" />
+                                    <TextBlock Text="{Binding FileSize}"
+                                               Style="{StaticResource CaptionTextBlockStyle}"
+                                               Foreground="{ThemeResource SystemControlBackgroundBaseMediumBrush}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <TextBlock x:Name="ËmptyCollectionPivotBlock"
+                               Margin="0 10 0 0"
+                               Style="{StaticResource SubheaderTextBlockStyle}"
+                               Foreground="Gray"
+                               Text="Looks a little empty in here. Try adding an item!"
+                               Visibility="{x:Bind ViewModel.ShouldShowPlaceholder, Mode=OneWay}"/>
+                </Grid>
+            </PivotItem>
+
             <PivotItem x:Name="ActivePivotItem" Header="Active">
                 <ScrollViewer Margin="-16 0 -16 0" VerticalScrollBarVisibility="Auto">
                     <Grid Margin="16 0 16 0">
@@ -99,57 +158,6 @@
                         </Grid>
                     </Grid>
                 </ScrollViewer>
-            </PivotItem>
-
-            <PivotItem x:Name="SavedPivotItem" Header="Saved Files">
-                <ListView x:Name="FileListCollection"                          
-                          Margin="0 10 0 0"
-                          ItemsSource="{Binding Source={StaticResource FileViewSource}}"
-                          SelectionMode="None">
-                    <ListView.GroupStyle>
-                        <GroupStyle HidesIfEmpty="True">
-                            <GroupStyle.HeaderTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding}" Style="{StaticResource HeaderTextBlockStyle}"
-                                               Margin="-10 0 0 0" />
-                                </DataTemplate>
-                            </GroupStyle.HeaderTemplate>
-                        </GroupStyle>
-                    </ListView.GroupStyle>
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                    <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="models:IBindableStorageFile">
-                            <StackPanel x:Name="ContainerStackPanel"
-                                Tapped="SavedFile_Tapped"
-                                        RightTapped="SavedFile_RightTapped"
-                                        Tag="{x:Bind Mode=OneWay}">
-                                <FlyoutBase.AttachedFlyout>
-                                    <MenuFlyout>
-                                        <MenuFlyoutItem Text="Delete"
-                                                        Command="{Binding Main.DeleteFileCommand, Mode=OneWay, Source={StaticResource Locator}}"
-                                                        CommandParameter="{Binding ElementName=ContainerStackPanel, Path=Tag}" />
-                                        <MenuFlyoutItem Text="Rename"
-                                                        Command="{Binding Main.RenameFileCommand, Mode=OneWay, Source={StaticResource Locator}}"
-                                                        CommandParameter="{Binding ElementName=ContainerStackPanel, Path=Tag}" />
-                                    </MenuFlyout>
-                                </FlyoutBase.AttachedFlyout>
-
-                                <TextBlock Text="{Binding Name}"
-                                           Style="{StaticResource SubheaderTextBlockStyle}" />
-                                <TextBlock Text="{Binding CreateDate}"
-                                           Style="{StaticResource CaptionTextBlockStyle}"
-                                           Foreground="{ThemeResource SystemControlBackgroundBaseMediumBrush}" />
-                                <TextBlock Text="{Binding FileSize}"
-                                           Style="{StaticResource CaptionTextBlockStyle}"
-                                           Foreground="{ThemeResource SystemControlBackgroundBaseMediumBrush}" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
             </PivotItem>
         </Pivot>
 
@@ -232,54 +240,61 @@
                            Style="{ThemeResource TitleTextBlockStyle}"
                            Text="Saved Files" />
 
-                <ListView x:Name="WideFileListCollection"
-                          Grid.Row="1"
+                <Grid Grid.Row="1">
+                    <ListView x:Name="WideFileListCollection"                          
                           ItemsSource="{Binding Source={StaticResource FileViewSource}}"
                           SelectionMode="None">
-                    <ListView.GroupStyle>
-                        <GroupStyle HidesIfEmpty="True">
-                            <GroupStyle.HeaderTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding}" Style="{StaticResource HeaderTextBlockStyle}"
+                        <ListView.GroupStyle>
+                            <GroupStyle HidesIfEmpty="True">
+                                <GroupStyle.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" Style="{StaticResource HeaderTextBlockStyle}"
                                                Margin="-10 0 0 0" />
-                                </DataTemplate>
-                            </GroupStyle.HeaderTemplate>
-                        </GroupStyle>
-                    </ListView.GroupStyle>
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                    <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="models:IBindableStorageFile">
-                            <StackPanel x:Name="ContainerStackPanel"
+                                    </DataTemplate>
+                                </GroupStyle.HeaderTemplate>
+                            </GroupStyle>
+                        </ListView.GroupStyle>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="models:IBindableStorageFile">
+                                <StackPanel x:Name="ContainerStackPanel"
                                         Tapped="SavedFile_Tapped"
                                         RightTapped="SavedFile_RightTapped"
                                         Tag="{x:Bind}">
-                                <FlyoutBase.AttachedFlyout>
-                                    <MenuFlyout>
-                                        <MenuFlyoutItem Text="Delete"
+                                    <FlyoutBase.AttachedFlyout>
+                                        <MenuFlyout>
+                                            <MenuFlyoutItem Text="Delete"
                                                         Command="{Binding Main.DeleteFileCommand, Mode=OneWay, Source={StaticResource Locator}}"
                                                         CommandParameter="{Binding ElementName=ContainerStackPanel, Path=Tag}" />
-                                        <MenuFlyoutItem Text="Rename"
+                                            <MenuFlyoutItem Text="Rename"
                                                         Command="{Binding Main.RenameFileCommand, Mode=OneWay, Source={StaticResource Locator}}"
                                                         CommandParameter="{Binding ElementName=ContainerStackPanel, Path=Tag}" />
-                                    </MenuFlyout>
-                                </FlyoutBase.AttachedFlyout>
+                                        </MenuFlyout>
+                                    </FlyoutBase.AttachedFlyout>
 
-                                <TextBlock Text="{Binding Name}"
+                                    <TextBlock Text="{Binding Name}"
                                            Style="{StaticResource SubheaderTextBlockStyle}" />
-                                <TextBlock Text="{Binding CreateDate}"
+                                    <TextBlock Text="{Binding CreateDate}"
                                            Style="{StaticResource CaptionTextBlockStyle}"
                                            Foreground="{ThemeResource SystemControlBackgroundBaseMediumBrush}" />
-                                <TextBlock Text="{Binding FileSize}"
+                                    <TextBlock Text="{Binding FileSize}"
                                            Style="{StaticResource CaptionTextBlockStyle}"
                                            Foreground="{ThemeResource SystemControlBackgroundBaseMediumBrush}" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <TextBlock x:Name="ËmptyCollectionGridBlock"
+                               Margin="0 10 0 0"
+                               Style="{StaticResource SubheaderTextBlockStyle}"
+                               Foreground="Gray"
+                               Text="Looks a little empty in here. Try adding an item!"
+                               Visibility="{x:Bind ViewModel.ShouldShowPlaceholder, Mode=OneWay}"/>
+                </Grid>
             </Grid>
         </Grid>
     </Grid>
@@ -295,7 +310,7 @@
                            OpticalMarginAlignment="TrimSideBearings" />
             </CommandBar.Content>
             <AppBarButton Icon="Delete" Label="Delete active file" Command="{x:Bind ViewModel.DeleteActiveFileCommand}" 
-                          IsEnabled="{x:Bind ViewModel.ActiveFile, Converter={StaticResource EmptyNullToBooleanConverter}}" />
+                          IsEnabled="{x:Bind ViewModel.ActiveFile, Mode=OneWay, Converter={StaticResource EmptyNullToBooleanConverter}}" />
             <AppBarButton Icon="Keyboard" Label="Input style" Command="{x:Bind ViewModel.ChangeInputScopeCommand}" />
             <AppBarButton Icon="Setting" Label="Settings" Command="{x:Bind ViewModel.GoToSettingsCommand}" />
             <AppBarButton Icon="Add" Label="Add file" Command="{x:Bind ViewModel.AddFileCommand}" />
@@ -305,8 +320,8 @@
     <Page.BottomAppBar>
         <CommandBar x:Name="BottomCommandBar">
             <AppBarButton Icon="Delete" Label="Delete active file" Command="{x:Bind ViewModel.DeleteActiveFileCommand}" 
-                          IsEnabled="{x:Bind ViewModel.ActiveFile, Converter={StaticResource EmptyNullToBooleanConverter}}" />
-            <AppBarButton Icon="Keyboard" Label="InputsStyle" Command="{x:Bind ViewModel.ChangeInputScopeCommand}" />
+                          IsEnabled="{x:Bind ViewModel.ActiveFile, Mode=OneWay, Converter={StaticResource EmptyNullToBooleanConverter}}" />
+            <AppBarButton Icon="Keyboard" Label="Input style" Command="{x:Bind ViewModel.ChangeInputScopeCommand}" />
             <AppBarButton Icon="Setting" Label="Settings" Command="{x:Bind ViewModel.GoToSettingsCommand}" />
             <AppBarButton Icon="Add" Label="Add file" Command="{x:Bind ViewModel.AddFileCommand}" />
         </CommandBar>

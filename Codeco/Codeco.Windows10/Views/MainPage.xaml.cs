@@ -1,6 +1,8 @@
-﻿using Codeco.Windows10.Common;
+﻿using System;
+using Codeco.Windows10.Common;
 using Codeco.Windows10.Models;
 using Codeco.Windows10.ViewModels;
+using GalaSoft.MvvmLight.Messaging;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -18,7 +20,16 @@ namespace Codeco.Windows10.Views
         {            
             this.InitializeComponent();
             ViewModel = DataContext as MainViewModel;
-        }                               
+            Messenger.Default.Register<object>(this, Constants.SCROLL_PIVOT_MESSAGE, ScrollToMainPivot);
+        }
+
+        private void ScrollToMainPivot(object _)
+        {
+            if(MainPivot != null)
+            {
+                this.MainPivot.SelectedItem = ActivePivotItem;
+            }            
+        }
 
         private void SavedFile_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
