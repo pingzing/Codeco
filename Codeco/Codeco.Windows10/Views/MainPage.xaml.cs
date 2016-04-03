@@ -7,6 +7,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
+using Windows.UI.ViewManagement;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -20,7 +21,7 @@ namespace Codeco.Windows10.Views
         {            
             this.InitializeComponent();
             ViewModel = DataContext as MainViewModel;
-            Messenger.Default.Register<object>(this, Constants.SCROLL_PIVOT_MESSAGE, ScrollToMainPivot);
+            Messenger.Default.Register<object>(this, Constants.SCROLL_PIVOT_MESSAGE, ScrollToMainPivot);            
         }
 
         private void ScrollToMainPivot(object _)

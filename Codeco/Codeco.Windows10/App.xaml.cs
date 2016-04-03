@@ -8,6 +8,8 @@ using Codeco.Windows10.Common;
 using Codeco.Windows10.Views;
 using Codeco.Windows10.ViewModels;
 using GalaSoft.MvvmLight.Threading;
+using Windows.UI.ViewManagement;
+using Windows.Foundation;
 
 // The Universal Hub Application project template is documented at http://go.microsoft.com/fwlink/?LinkID=391955
 
@@ -86,6 +88,9 @@ namespace Codeco.Windows10
                     throw new Exception("Failed to create initial page");
                 }
             }
+
+            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(500, 450));
+
             // Ensure the current window is active
             Window.Current.Activate();
 

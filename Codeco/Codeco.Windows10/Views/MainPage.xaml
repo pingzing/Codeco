@@ -30,16 +30,18 @@
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="0" />
                     </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="MainPivot.(UIElement.Visibility)" Value="Visible" />
+                        <Setter Target="BottomCommandBar.(UIElement.Visibility)" Value="Visible" />
+                    </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Wide">
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="600" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="MainPivot.(UIElement.Visibility)" Value="Collapsed" />
                         <Setter Target="WideGrid.(UIElement.Visibility)" Value="Visible" />
                         <Setter Target="TopCommandBar.(UIElement.Visibility)" Value="Visible" />
-                        <Setter Target="BottomCommandBar.(UIElement.Visibility)" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -49,7 +51,7 @@
                x:DeferLoadStrategy="Lazy"
                Title="CODECO"
                DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
-               Visibility="Visible">
+               Visibility="Collapsed">
             <PivotItem x:Name="SavedPivotItem" Header="Saved Files">
                 <Grid>
                     <ListView x:Name="FileListCollection"                          
@@ -264,7 +266,7 @@
                                 <StackPanel x:Name="ContainerStackPanel"
                                         Tapped="SavedFile_Tapped"
                                         RightTapped="SavedFile_RightTapped"
-                                        Tag="{x:Bind}">
+                                        Tag="{x:Bind }">
                                     <FlyoutBase.AttachedFlyout>
                                         <MenuFlyout>
                                             <MenuFlyoutItem Text="Delete"
@@ -300,7 +302,7 @@
     </Grid>
 
     <Page.TopAppBar>
-        <CommandBar x:Name="TopCommandBar" Visibility="Collapsed">
+        <CommandBar x:Name="TopCommandBar" Visibility="Collapsed" x:DeferLoadStrategy="Lazy">
             <CommandBar.Content>
                 <TextBlock Text="CODECO"
                            Margin="12 14 0 0"
@@ -318,7 +320,7 @@
     </Page.TopAppBar>
 
     <Page.BottomAppBar>
-        <CommandBar x:Name="BottomCommandBar">
+        <CommandBar x:Name="BottomCommandBar" Visibility="Collapsed" x:DeferLoadStrategy="Lazy">
             <AppBarButton Icon="Delete" Label="Delete active file" Command="{x:Bind ViewModel.DeleteActiveFileCommand}" 
                           IsEnabled="{x:Bind ViewModel.ActiveFile, Mode=OneWay, Converter={StaticResource EmptyNullToBooleanConverter}}" />
             <AppBarButton Icon="Keyboard" Label="Input style" Command="{x:Bind ViewModel.ChangeInputScopeCommand}" />

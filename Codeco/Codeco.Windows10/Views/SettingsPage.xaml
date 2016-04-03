@@ -15,20 +15,22 @@
         <CollectionViewSource x:Key="FileViewSource" Source="{Binding FileGroups}" IsSourceGrouped="True" ItemsPath="Files"/>               
     </common:BindablePage.Resources>
 
-    <Grid Margin="12,14,20,0">
+    <Grid x:Name="LayoutRoot" Margin="12,14,20,0">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="Common">
                 <VisualState x:Name="Narrow">
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger/>
+                        <AdaptiveTrigger MinWindowWidth="0"/>
                     </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="SavedFilesList.Visibility" Value="Visible"/>
+                    </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Wide">
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="600"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="SavedFilesList.Visibility" Value="Collapsed"/>
                         <Setter Target="SavedFilesGrid.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                 </VisualState>
@@ -59,7 +61,8 @@
                   x:DeferLoadStrategy="Lazy"
                   Grid.Row="1"
                   ItemsSource="{Binding Source={StaticResource FileViewSource}}"                  
-                  SelectionMode="None" Visibility="Visible">
+                  SelectionMode="None" 
+                  Visibility="Collapsed">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="models:BindableStorageFile">
                     <ToggleSwitch OnContent="Syncing"                                     
@@ -122,6 +125,7 @@
                 <DataTemplate x:DataType="models:BindableStorageFile">
                     <ToggleSwitch OnContent="Syncing"                                     
                                   OffContent="Not Syncing"
+                                  Margin="10 0 0 0"
                                   Tag="{x:Bind Mode=OneWay}"
                                   Toggled="ToggleSwitch_Toggled"                                  
                                   IsOn="{Binding IsRoamed, Mode=TwoWay}">
