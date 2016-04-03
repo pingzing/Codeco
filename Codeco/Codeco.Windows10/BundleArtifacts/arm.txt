@@ -1,4 +1,0 @@
-MainPackage=C:\Users\mcali\Desktop\Repositories\Codeco\Codeco\Codeco.Windows10\bin\ARM\Release\Codeco.Windows10_2.5.1.0_ARM.appx
-SymbolPackage=C:\Users\mcali\Desktop\Repositories\Codeco\Codeco\Codeco.Windows10\AppPackages\Codeco.Windows10_2.5.1.0_Test\Codeco.Windows10_2.5.1.0_ARM.appxsym
-ResourcePack=C:\Users\mcali\Desktop\Repositories\Codeco\Codeco\Codeco.Windows10\bin\ARM\Release\Codeco.Windows10_2.5.1.0_scale-100.appx
-ResourcePack=C:\Users\mcali\Desktop\Repositories\Codeco\Codeco\Codeco.Windows10\bin\ARM\Release\Codeco.Windows10_2.5.1.0_scale-400.appx
