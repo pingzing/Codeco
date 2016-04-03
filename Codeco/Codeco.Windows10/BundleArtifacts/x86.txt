@@ -1,0 +1,2 @@
+MainPackage=C:\Users\mcali\Desktop\Repositories\Codeco\Codeco\Codeco.Windows10\bin\x86\Release\Codeco.Windows10_2.5.1.0_x86.appx
+SymbolPackage=C:\Users\mcali\Desktop\Repositories\Codeco\Codeco\Codeco.Windows10\AppPackages\Codeco.Windows10_2.5.1.0_Test\Codeco.Windows10_2.5.1.0_x86.appxsym

@@ -1,2 +1,0 @@
-MainPackage=D:\Source Code\Codeco\Codeco\Codeco.WindowsPhone\bin\Release\Codeco.WindowsPhone_2.4.0.2_AnyCPU.appx
-SymbolPackage=D:\Source Code\Codeco\Codeco\Codeco.WindowsPhone\AppPackages\Codeco.WindowsPhone_2.4.0.2_Test\Codeco.WindowsPhone_2.4.0.2_AnyCPU.appxsym
