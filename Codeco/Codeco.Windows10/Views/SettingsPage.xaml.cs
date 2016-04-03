@@ -32,6 +32,9 @@ namespace Codeco.Windows10.Views
             }
 
             ((ToggleSwitch) sender).IsEnabled = false;
+            //leave control disabled while the animation plays. Otherwise, the ToggleSwitch
+            //thumb has a tendency to get visually stuck in the wrong state.
+            await Task.Delay(333);
 
             var context = (DataContext as SettingsViewModel);
             if (!tappedItem.IsRoamed && !context.FileGroups.First(x => x.Location == FileService.FileLocation.Local).Files.Contains(tappedItem))
@@ -43,8 +46,7 @@ namespace Codeco.Windows10.Views
             {
                 context?.SyncFileCommand.Execute(tappedItem);
             }
-
-            await Task.Delay(333); //leave control disabled while the animation plays
+            
             ((ToggleSwitch) sender).IsEnabled = true;
         }        
     }
