@@ -213,3 +213,5 @@ ModelManifest.xml
 
 # Project-Specific
 *.csv
+*[Tt]humbs.db
+manual_install_readme.txt
