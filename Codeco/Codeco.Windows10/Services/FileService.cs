@@ -271,13 +271,12 @@ namespace Codeco.Windows10.Services
                     }
                 }
 
-
                 var roamingFiles = await sender.RoamingFolder.GetFilesAsync();
                 foreach (var file in roamingFiles.Where(f => f.Name != Constants.IV_FILE_NAME))
                 {
                     BindableStorageFile bsf = await BindableStorageFile.Create(file);
                     await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
-                        () => _localFiles.Add(bsf));
+                        () => _roamedFiles.Add(bsf));
                 }
             }
         }                

@@ -26,7 +26,7 @@ namespace Codeco.Windows10.ViewModels
                 if (_allowGoingBack != value)
                 {
                     _allowGoingBack = value;
-                    _navigationService_CanGoBackChanged(null, new CanGoBackChangedHandlerArgs(NavigationService.CanGoBack));
+                    NavigationService_CanGoBackChanged(null, new CanGoBackChangedHandlerArgs(NavigationService.CanGoBack));
                 }                
             }
         }
@@ -34,12 +34,12 @@ namespace Codeco.Windows10.ViewModels
         public UniversalBaseViewModel(INavigationServiceEx navService)
         {
             NavigationService = navService;
-            NavigationService.CanGoBackChanged += _navigationService_CanGoBackChanged;
+            NavigationService.CanGoBackChanged += NavigationService_CanGoBackChanged;
 
             _systemNavManager = SystemNavigationManager.GetForCurrentView();            
         }
 
-        private void _navigationService_CanGoBackChanged(object sender, CanGoBackChangedHandlerArgs args)
+        private void NavigationService_CanGoBackChanged(object sender, CanGoBackChangedHandlerArgs args)
         {
             bool newCanGoBack = args.NewCanGoBack;
             if (newCanGoBack && AllowGoingBack)
