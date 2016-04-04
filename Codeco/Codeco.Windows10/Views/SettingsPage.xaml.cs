@@ -32,6 +32,7 @@ namespace Codeco.Windows10.Views
             }
 
             ((ToggleSwitch) sender).IsEnabled = false;
+
             //leave control disabled while the animation plays. Otherwise, the ToggleSwitch
             //thumb has a tendency to get visually stuck in the wrong state.
             await Task.Delay(333);
