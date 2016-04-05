@@ -11,6 +11,14 @@
     DataContext="{Binding Source={StaticResource Locator}, Path=Settings}"
     NavigationCacheMode="Required">
 
+    <common:BindablePage.Transitions>
+        <TransitionCollection>
+            <NavigationThemeTransition>
+                <SlideNavigationTransitionInfo />
+            </NavigationThemeTransition>
+        </TransitionCollection>
+    </common:BindablePage.Transitions>
+
     <common:BindablePage.Resources>
         <CollectionViewSource x:Key="FileViewSource" Source="{Binding FileGroups}" IsSourceGrouped="True" ItemsPath="Files"/>               
     </common:BindablePage.Resources>
