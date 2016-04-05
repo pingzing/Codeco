@@ -1,9 +1,12 @@
 ﻿using Codeco.Windows10.Common;
 using System;
 using System.ComponentModel;
+using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.Storage.Streams;
 
 namespace Codeco.Windows10.Models
 {
@@ -89,7 +92,7 @@ namespace Codeco.Windows10.Models
             {
                 using (await bsf_lock.Acquire())
                 {
-                    var props = await _backingFile.GetBasicPropertiesAsync();
+                    var props = await _backingFile.GetBasicPropertiesAsync();                    
                     _fileSizeInBytes = props.Size;
                 }
             }
@@ -126,6 +129,38 @@ namespace Codeco.Windows10.Models
         {
             var handler = PropertyChanged;
             handler?.Invoke(this, new PropertyChangedEventArgs(property));
+        }
+
+        public async Task<bool> CompareAsync(IBindableStorageFile other)
+        {
+            if(other == null)
+            {
+                return false;
+            }
+            return other.CreateDate == this.CreateDate
+                && other.FileSize == this.FileSize
+                && other.Name == this.Name
+                && await EqualsOtherBackingFile(other);
+        }
+
+        private async Task<bool> EqualsOtherBackingFile(IBindableStorageFile other)
+        {
+            const int bufSize = 1024;
+            using (var thisStream = await this.BackingFile.OpenStreamForReadAsync())
+            using (var otherStream = await other.BackingFile.OpenStreamForReadAsync())
+            {
+                byte[] thisBytes = new byte[bufSize];
+                byte[] otherBytes = new byte[bufSize];
+                while((await thisStream.ReadAsync(thisBytes, 0, bufSize)) > 0 
+                    && (await otherStream.ReadAsync(otherBytes, 0, bufSize)) > 0)
+                {
+                    if(!thisBytes.SequenceEqual(otherBytes))
+                    {
+                        return false;
+                    }
+                }
+                return true;                
+            }
         }
     }
 }

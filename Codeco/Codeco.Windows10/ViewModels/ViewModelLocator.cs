@@ -31,6 +31,7 @@ namespace Codeco.Windows10.ViewModels
                 // Create design time view services and models                                    
                 SimpleIoc.Default.Register<IFileService, MockFileService>();
                 SimpleIoc.Default.Register<INavigationServiceEx, NavigationServiceEx>();
+                SimpleIoc.Default.Register<IInitializationValueService, InitializationValueService>();
                 SimpleIoc.Default.Register<SettingsViewModelDesign>();
                 SimpleIoc.Default.Register<MainViewModelDesign>();
             }
@@ -39,7 +40,9 @@ namespace Codeco.Windows10.ViewModels
                 // Create run time view services and models                          
                 NavigationServiceEx navService = InitializeNavigationService();
                 SimpleIoc.Default.Register<INavigationServiceEx>(() => navService);
-                SimpleIoc.Default.Register<IFileService, FileService>();                               
+
+                SimpleIoc.Default.Register<IFileService, FileService>();
+                SimpleIoc.Default.Register<IInitializationValueService, InitializationValueService>();
                 SimpleIoc.Default.Register<MainViewModel>();
                 SimpleIoc.Default.Register<SettingsViewModel>();
             }            

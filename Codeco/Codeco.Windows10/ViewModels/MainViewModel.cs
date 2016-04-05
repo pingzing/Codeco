@@ -250,6 +250,9 @@ namespace Codeco.Windows10.ViewModels
 
             CurrentNarrowInputScope = _narrowNumberScope;
             CurrentWideInputScope = _wideNumberScope;
+
+            FileGroups.Add(new FileCollection(Constants.ROAMED_FILES_TITLE, _fileService.RoamedFiles, FileService.FileLocation.Roamed));
+            FileGroups.Add(new FileCollection(Constants.LOCAL_FILES_TITLE, _fileService.LocalFiles, FileService.FileLocation.Local));
         }        
 
         private async void AddFile()
@@ -271,7 +274,7 @@ namespace Codeco.Windows10.ViewModels
 
         private async Task OpenFile(StorageFile file)
         {
-            bool isValid = await FileUtilities.ValidateFileAsync(file);
+            bool isValid = await _fileService.ValidateFileAsync(file);
             if (!isValid)
             {
                 MessageDialog dialog = new MessageDialog("The file you tried to open was not formatted correctly. Are you sure it's a two-column comma-delimited file?", "Unable to read file");
@@ -284,8 +287,7 @@ namespace Codeco.Windows10.ViewModels
                 return;
             }
             string contents = await FileIO.ReadTextAsync(file);
-            ActiveFile = await _fileService.SaveAndEncryptFileAsync(contents, output.FileName, output.Password);
-            FileGroups.First(x => x.Location == FileService.FileLocation.Local).Files.Add(ActiveFile);            
+            ActiveFile = await _fileService.SaveAndEncryptFileAsync(contents, output.FileName, output.Password);              
             _codeDictionary = await GetCodes(output.Password);            
         }
 
@@ -378,10 +380,7 @@ namespace Codeco.Windows10.ViewModels
         private async void DeleteFile(BindableStorageFile item)
         {
             FileService.FileLocation location = _fileService.GetFileLocation(item);
-            await _fileService.DeleteFileAsync((StorageFile)item.BackingFile, location);
-            FileGroups.First(x => x.Location == location)
-                .Files
-                .Remove(item);
+            await _fileService.DeleteFileAsync((StorageFile)item.BackingFile, location);            
             if (item == ActiveFile)
             {
                 ActiveFile = null;
@@ -440,21 +439,12 @@ namespace Codeco.Windows10.ViewModels
         public override async void Activate(object parameter, NavigationMode navigationMode)
         {            
             base.Activate(parameter, navigationMode);
-
-            await _fileService.IsInitialized.Task;
-
-            FileGroups.Add(new FileCollection(Constants.ROAMED_FILES_TITLE,
-                new ObservableCollection<IBindableStorageFile>(_fileService.GetRoamedFiles()), FileService.FileLocation.Roamed));
-            FileGroups.Add(new FileCollection(Constants.LOCAL_FILES_TITLE, 
-                new ObservableCollection<IBindableStorageFile>(_fileService.GetLocalFiles()), FileService.FileLocation.Local));
-
+            await _fileService.IsInitialized.Task;            
             ShouldShowPlaceholder = FileGroups.Any(x => x.Files.Any()) ? Visibility.Collapsed : Visibility.Visible;
         }
 
         public override void Deactivated(object parameter)
         {                        
-            FileGroups.Clear();
-
             base.Deactivated(parameter);
         }
     }

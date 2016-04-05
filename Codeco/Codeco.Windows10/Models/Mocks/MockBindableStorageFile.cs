@@ -50,6 +50,11 @@ namespace Codeco.Windows10.Models.Mocks
             }
         }
 
+        public Task<bool> CompareAsync(IBindableStorageFile other)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<ulong> GetFileSizeInBytes()
         {
             return Task.Run(() => (ulong)(50 * 1024));

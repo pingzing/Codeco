@@ -11,6 +11,7 @@ namespace Codeco.Windows10.Models
         bool IsRoamed { get; set; }
         IStorageFile BackingFile { get; set; }
         string FileSize { get; }
+        Task<bool> CompareAsync(IBindableStorageFile other);
 
         Task<ulong> GetFileSizeInBytes();
         void NameChanged();  

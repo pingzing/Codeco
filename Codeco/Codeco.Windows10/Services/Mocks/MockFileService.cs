@@ -4,11 +4,15 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Codeco.Windows10.Models;
+using System.Collections.ObjectModel;
 
 namespace Codeco.Windows10.Services.Mocks
 {
     class MockFileService : IFileService
     {
+        public ObservableCollection<IBindableStorageFile> LocalFiles { get; }
+        public ObservableCollection<IBindableStorageFile> RoamedFiles { get; }
+
         public TaskCompletionSource<bool> IsInitialized
         {
             get
@@ -72,6 +76,11 @@ namespace Codeco.Windows10.Services.Mocks
         }
 
         public Task StopRoamingFile(IBindableStorageFile file)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> ValidateFileAsync(StorageFile file)
         {
             throw new NotImplementedException();
         }

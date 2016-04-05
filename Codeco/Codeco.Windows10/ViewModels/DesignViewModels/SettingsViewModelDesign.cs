@@ -8,7 +8,7 @@ namespace Codeco.Windows10.ViewModels.DesignViewModels
 {
     public class SettingsViewModelDesign : SettingsViewModel
     {
-        public SettingsViewModelDesign(IFileService fileService, INavigationServiceEx navService) : base(fileService, navService)
+        public SettingsViewModelDesign(IFileService fileService, INavigationServiceEx navService, IInitializationValueService ivService) : base(fileService, navService, ivService)
         {
             ObservableCollection<IBindableStorageFile> localFiles = new ObservableCollection<IBindableStorageFile>
             {

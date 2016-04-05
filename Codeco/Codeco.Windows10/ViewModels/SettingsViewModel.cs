@@ -14,7 +14,8 @@ namespace Codeco.Windows10.ViewModels
 {
     public class SettingsViewModel : UniversalBaseViewModel, INavigable
     {
-        private readonly IFileService _fileService;        
+        private readonly IFileService _fileService;
+        private readonly IInitializationValueService _ivService;
         
         private static readonly AsyncLock s_lock = new AsyncLock();
 
@@ -71,77 +72,52 @@ namespace Codeco.Windows10.ViewModels
             }
         }        
 
-        public SettingsViewModel(IFileService fileService, INavigationServiceEx navService) : base(navService)
+        public SettingsViewModel(IFileService fileService, INavigationServiceEx navService, IInitializationValueService ivService) : base(navService)
         {
             _fileService = fileService;
+            _ivService = ivService;
+
+            FileGroups.Add(new FileCollection(Constants.ROAMED_FILES_TITLE, _fileService.RoamedFiles, FileService.FileLocation.Roamed));
+            FileGroups.Add(new FileCollection(Constants.LOCAL_FILES_TITLE, _fileService.LocalFiles, FileService.FileLocation.Local));
         }        
 
         private async void SyncFile(BindableStorageFile file)
-        {            
-            FileGroups.First(x => x.Location == FileService.FileLocation.Local).Files.Remove(file);
-            FileGroups.First(x => x.Location == FileService.FileLocation.Roamed).Files.Add(file);            
+        {
+            await _fileService.RoamFile(file);            
             await UpdateAvailableRoamingSpace();            
         }
 
         private async void RemoveFileFromSync(BindableStorageFile file)
         {
-            FileGroups.First(x => x.Location == FileService.FileLocation.Roamed).Files.Remove(file);
-            FileGroups.First(x => x.Location == FileService.FileLocation.Local).Files.Add(file);            
+            await _fileService.StopRoamingFile(file);            
             await UpdateAvailableRoamingSpace();            
         }
 
         private async Task UpdateAvailableRoamingSpace()
-        {
-            using (await s_lock.Acquire())
+        {            
+            ulong space = 0;
+            if (FileGroups.All(x => x.Location != FileService.FileLocation.Roamed))
             {
-
-                ulong space = 0;
-                if (FileGroups.All(x => x.Location != FileService.FileLocation.Roamed))
+                return;
+            }
+            var syncedFiles = FileGroups.First(x => x.Location == FileService.FileLocation.Roamed).Files;
+            for (int i = syncedFiles.Count - 1; i >= 0; i--)
+            {
+                if (syncedFiles[i].Name == Constants.IV_FILE_NAME)
                 {
-                    return;
+                    continue;
                 }
-                var syncedFiles = FileGroups.First(x => x.Location == FileService.FileLocation.Roamed).Files;
-                for (int i = syncedFiles.Count - 1; i >= 0; i--)
-                {
-                    if (syncedFiles[i].Name == Constants.IV_FILE_NAME)
-                    {
-                        continue;
-                    }
-                    space += await syncedFiles[i].GetFileSizeInBytes();                    
-                }
-                ulong ivFileSize = await FileUtilities.GetIVFileSize();
-                space += ivFileSize;
-                RoamingSpaceUsed = (double)space / 1024;
-                RoamingSpaceFree = (100 - ((double)ivFileSize / 1024));
-            }            
+                space += await syncedFiles[i].GetFileSizeInBytes();                    
+            }
+            ulong ivFileSize = await _ivService.GetIVFileSize();
+            space += ivFileSize;
+            RoamingSpaceUsed = (double)space / 1024;                            
         }                
 
         public override async void Activate(object parameter, NavigationMode navigationMode)
         {
-            base.Activate(parameter, navigationMode);
-
-            //TODO: Rework this to not clear + add, but instead just check somehow for a changed list and add only what's changed
-            FileGroups.Clear();
-            FileGroups.Add(new FileCollection(Constants.ROAMED_FILES_TITLE,
-                new ObservableCollection<IBindableStorageFile>(_fileService.GetRoamedFiles()), FileService.FileLocation.Roamed));
-            FileGroups.Add(new FileCollection(Constants.LOCAL_FILES_TITLE,
-                new ObservableCollection<IBindableStorageFile>(_fileService.GetLocalFiles()), FileService.FileLocation.Local));
-
+            base.Activate(parameter, navigationMode);                        
             await UpdateAvailableRoamingSpace();            
-        }
-
-        protected override async void UniversalBaseViewModel_BackRequested(object sender, BackRequestedEventArgs e)
-        {
-            foreach (var local in FileGroups.First(x => x.Location == FileService.FileLocation.Local).Files)
-            {
-                await _fileService.StopRoamingFile(local);
-            }
-            foreach (var roamed in FileGroups.First(x => x.Location == FileService.FileLocation.Roamed).Files)
-            {
-                await _fileService.RoamFile(roamed);
-            }
-
-            base.UniversalBaseViewModel_BackRequested(sender, e);
-        }   
+        } 
     }
 }
