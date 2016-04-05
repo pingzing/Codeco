@@ -1,5 +1,6 @@
 ﻿using Codeco.Windows10.Common;
 using Codeco.Windows10.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -39,15 +40,20 @@ namespace Codeco.Windows10.Services
             using (await f_lock.Acquire())
             {
                 if (!LocalFiles.Contains(file))
-                {
+                {                    
                     //Backing values
-                    await MoveFileToLocalAsync((StorageFile)file.BackingFile);
+                    string oldPath = ToParentFolderString(file.BackingFile);
+                    string value = await _ivService.GetValue(oldPath, FileLocation.Roamed);
+                    await _ivService.Remove(oldPath, FileLocation.Roamed);
+
+                    await file.BackingFile.MoveAsync(_localFolder, file.BackingFile.Name, NameCollisionOption.GenerateUniqueName);
+
+                    await _ivService.Add(ToParentFolderString(file.BackingFile), value, FileLocation.Local);
                     RoamedFiles.Remove(file);
 
                     //UI                
                     file.IsRoamed = false;
-
-                    LocalFiles.Add(file);
+                    LocalFiles.Add(file);                    
                 }
             }
         }
@@ -59,13 +65,19 @@ namespace Codeco.Windows10.Services
                 if (!RoamedFiles.Contains(file))
                 {
                     //Backing values
-                    await MoveFileToRoamingAsync((StorageFile)file.BackingFile);
+                    string oldPath = ToParentFolderString(file.BackingFile);
+                    string value = await _ivService.GetValue(oldPath, FileLocation.Local);
+                    await _ivService.Remove(oldPath, FileLocation.Local);
+
+                    await file.BackingFile.MoveAsync(_roamingFolder, file.BackingFile.Name, NameCollisionOption.GenerateUniqueName);
+
+                    await _ivService.Add(ToParentFolderString(file.BackingFile), value, FileLocation.Roamed);
                     LocalFiles.Remove(file);
 
                     //UI
                     file.IsRoamed = true;
 
-                    RoamedFiles.Add(file);
+                    RoamedFiles.Add(file);                    
                 }
             }
         }
@@ -129,7 +141,7 @@ namespace Codeco.Windows10.Services
                 BindableStorageFile bsf = await BindableStorageFile.Create(savedFile);
                 LocalFiles.Add(bsf);
                                 
-                await _ivService.AddKeyPair(ToParentFolderString(bsf.BackingFile), iv);                
+                await _ivService.Add(ToParentFolderString(bsf.BackingFile), iv, FileLocation.Local);                
 
                 return bsf;
             }
@@ -152,7 +164,7 @@ namespace Codeco.Windows10.Services
                     return null;
                 }
                                 
-                string iv = await _ivService.GetValue(ToParentFolderString(file.BackingFile));
+                string iv = await _ivService.GetValue(ToParentFolderString(file.BackingFile), location);
                 try
                 {
                     return EncryptionManager.Decrypt(encryptedContents, password, iv);
@@ -165,7 +177,7 @@ namespace Codeco.Windows10.Services
             }
         }
 
-        public async Task DeleteFileAsync(StorageFile backingFile, FileLocation location)
+        public async Task DeleteFileAsync(IStorageFile backingFile, FileLocation location)
         {
             if (!_initialized)
             {
@@ -177,9 +189,16 @@ namespace Codeco.Windows10.Services
                 string fileName = backingFile.Name;                
                 var collectionToSearch = location == FileLocation.Local ? LocalFiles : RoamedFiles;
                 collectionToSearch.Remove(collectionToSearch.Single(x => x.BackingFile == backingFile));
-                await DeleteFileAsync(backingFile);
-                                
-                await _ivService.RemoveKeyPair(ToParentFolderString(backingFile));                
+                try
+                {
+                    await backingFile.DeleteAsync(StorageDeleteOption.PermanentDelete);                    
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Failed to delete file: " + ex);                    
+                }
+
+                await _ivService.Remove(ToParentFolderString(backingFile), location);                
             }
         }
 
@@ -196,49 +215,15 @@ namespace Codeco.Windows10.Services
                 string oldPath = ToParentFolderString(file.BackingFile);
                 await RenameFileAsync((StorageFile)file.BackingFile, newName);
                 file.NameChanged();
+
+                FileLocation location = file.IsRoamed ? FileLocation.Roamed : FileLocation.Local;
                                 
-                string iv = await _ivService.GetValue(oldPath);
-                await _ivService.RemoveKeyPair(oldPath);
-                await _ivService.AddKeyPair(ToParentFolderString(file.BackingFile), iv);
+                string iv = await _ivService.GetValue(oldPath, location);
+                await _ivService.Remove(oldPath, location);
+                await _ivService.Add(ToParentFolderString(file.BackingFile), iv, location);
             }
         }       
-
-        public async Task MoveFileToRoamingAsync(StorageFile backingFile)
-        {            
-            string oldPath = ToParentFolderString(backingFile);
-            string value = await _ivService.GetValue(oldPath);
-            await _ivService.RemoveKeyPair(oldPath);
-
-            await backingFile.MoveAsync(_roamingFolder, backingFile.Name, NameCollisionOption.GenerateUniqueName);
-
-            await _ivService.AddKeyPair(ToParentFolderString(backingFile), value);
-        }
-
-        public async Task MoveFileToLocalAsync(StorageFile backingFile)
-        {
-            string oldPath = ToParentFolderString(backingFile);
-            string value = await _ivService.GetValue(oldPath);
-            await _ivService.RemoveKeyPair(oldPath);
-
-            await backingFile.MoveAsync(_localFolder, backingFile.Name, NameCollisionOption.GenerateUniqueName);
-
-            await _ivService.AddKeyPair(ToParentFolderString(backingFile), value);
-        }
-
-        private static async Task<bool> DeleteFileAsync(StorageFile file)
-        {
-            try
-            {
-                await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Failed to delete file: " + ex);
-                return false;
-            }
-        }
-
+           
         /// <summary>
         /// Ensures that the given file conforms to the formatting constraints (two-column csv)
         /// </summary>
@@ -281,33 +266,38 @@ namespace Codeco.Windows10.Services
         {
             await backingFile.RenameAsync(newName, NameCollisionOption.GenerateUniqueName);
         }
-
-        //TODO: Fix this to actually update lists in the various views somehow. Maybe each view should be responsible for subscribing to it?
+        
         private async void OnRoamingDataChanged(ApplicationData sender, object args)
         {
             using (await f_lock.Acquire())
-            {
-                foreach (var file in LocalFiles)
+            {                
+                var roamingFiles = await Task.WhenAll((await sender.RoamingFolder.GetFilesAsync())
+                    .Where(f => f.Name != Constants.IV_FILE_NAME)
+                    .Select(async x => await BindableStorageFile.Create(x)));
+
+                var newDictionary = (await sender.RoamingFolder.GetFilesAsync()).First(f => f.Name == Constants.IV_FILE_NAME);
+                await newDictionary.CopyAsync(_roamingFolder, Constants.IV_FILE_NAME, NameCollisionOption.ReplaceExisting);
+
+                //Remove no-longer-synced-files              
+                foreach(var file in RoamedFiles)
                 {
-                    if (file.IsRoamed)
+                    if(! await ContainsBindableStorageFile(file, roamingFiles))
                     {
-                        await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
-                            () => LocalFiles.Remove(file));
+                        await DeleteFileAsync(file.BackingFile, FileLocation.Roamed);
                     }
                 }
 
-                var roamingFiles = await sender.RoamingFolder.GetFilesAsync();
                 foreach (var file in roamingFiles.Where(f => f.Name != Constants.IV_FILE_NAME))
-                {
-                    BindableStorageFile bsf = await BindableStorageFile.Create(file);
-                    if (!(await ContainsBindableStorageFile(bsf, RoamedFiles)))
+                {                    
+                    if (!(await ContainsBindableStorageFile(file, RoamedFiles)))
                     {
+                        file.IsRoamed = true;                        
                         await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
-                            () => RoamedFiles.Add(bsf));
+                            () => RoamedFiles.Add(file));
                     }
-                }
+                }                
             }
-        }
+        }       
 
         private async Task<bool> ContainsBindableStorageFile(IBindableStorageFile element, IEnumerable<IBindableStorageFile> collection)
         {
@@ -323,7 +313,19 @@ namespace Codeco.Windows10.Services
 
         private string ToParentFolderString(IStorageFile backingFile)
         {
-            return Path.Combine(Directory.GetParent(backingFile.Path).Name + backingFile.Name);
+            return Directory.GetParent(backingFile.Path).Name + "/" + backingFile.Name;
+        }
+
+        public async Task ClearAllData()
+        {            
+            foreach(var item in await _localFolder.GetFilesAsync())
+            {
+                await item.DeleteAsync();
+            }
+            foreach (var item in await _roamingFolder.GetFilesAsync())
+            {
+                await item.DeleteAsync();
+            }            
         }
     }
 }

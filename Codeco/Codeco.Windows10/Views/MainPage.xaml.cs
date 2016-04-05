@@ -21,7 +21,17 @@ namespace Codeco.Windows10.Views
         {            
             this.InitializeComponent();
             ViewModel = DataContext as MainViewModel;
-            Messenger.Default.Register<object>(this, Constants.SCROLL_PIVOT_MESSAGE, ScrollToMainPivot);            
+            Messenger.Default.Register<object>(this, Constants.SCROLL_PIVOT_MESSAGE, ScrollToMainPivot);
+#if DEBUG
+            if (ClearAllWideButton != null)
+            {
+                ClearAllWideButton.Visibility = Visibility.Visible;
+            }
+            if (ClearAllNarrowButton != null)
+            {
+                ClearAllNarrowButton.Visibility = Visibility.Visible;
+            }
+#endif
         }
 
         private void ScrollToMainPivot(object _)
@@ -52,6 +62,11 @@ namespace Codeco.Windows10.Views
 
             var context = (DataContext as MainViewModel);
             context?.ChangeActiveFileCommand.Execute(tappedFile);
-        }                
+        }
+
+        private async void Deubg_ClearAllTapped(object sender, TappedRoutedEventArgs e)
+        {
+            await ViewModel.ClearAllFiles();
+        }
     }
 }

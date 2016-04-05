@@ -84,5 +84,15 @@ namespace Codeco.Windows10.Services.Mocks
         {
             throw new NotImplementedException();
         }
+
+        public Task ClearAllData()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteFileAsync(IStorageFile backingFile, FileService.FileLocation location)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

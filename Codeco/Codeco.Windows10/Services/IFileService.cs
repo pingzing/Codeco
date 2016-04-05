@@ -25,9 +25,11 @@ namespace Codeco.Windows10.Services
         /// <returns>If successful, returns the created StorageFile.</returns>
         Task<BindableStorageFile> SaveAndEncryptFileAsync(string contents, string fileName, string password);
         Task<string> RetrieveFileContentsAsync(string fileName, string password, FileService.FileLocation location);        
-        Task DeleteFileAsync(StorageFile backingFile, FileService.FileLocation location);
+        Task DeleteFileAsync(IStorageFile backingFile, FileService.FileLocation location);
         Task RenameFileAsync(IBindableStorageFile file, string newName);        
         FileService.FileLocation GetFileLocation(BindableStorageFile file);
         Task<bool> ValidateFileAsync(StorageFile file);
+
+        Task ClearAllData();
     }
 }

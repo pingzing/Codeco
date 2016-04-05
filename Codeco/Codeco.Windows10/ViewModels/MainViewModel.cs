@@ -267,9 +267,7 @@ namespace Codeco.Windows10.ViewModels
             if (file != null)
             {
                 await OpenFile(file);                
-            }
-
-            ShouldShowPlaceholder = FileGroups.Any(x => x.Files.Any()) ? Visibility.Collapsed : Visibility.Visible;
+            }            
         }
 
         private async Task OpenFile(StorageFile file)
@@ -287,7 +285,8 @@ namespace Codeco.Windows10.ViewModels
                 return;
             }
             string contents = await FileIO.ReadTextAsync(file);
-            ActiveFile = await _fileService.SaveAndEncryptFileAsync(contents, output.FileName, output.Password);              
+            ActiveFile = await _fileService.SaveAndEncryptFileAsync(contents, output.FileName, output.Password);
+            ShouldShowPlaceholder = FileGroups.Any(x => x.Files.Any()) ? Visibility.Collapsed : Visibility.Visible;
             _codeDictionary = await GetCodes(output.Password);            
         }
 
@@ -446,6 +445,11 @@ namespace Codeco.Windows10.ViewModels
         public override void Deactivated(object parameter)
         {                        
             base.Deactivated(parameter);
+        }
+
+        public async Task ClearAllFiles()
+        {
+            await _fileService.ClearAllData();
         }
     }
 }

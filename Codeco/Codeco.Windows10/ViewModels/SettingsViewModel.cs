@@ -109,7 +109,7 @@ namespace Codeco.Windows10.ViewModels
                 }
                 space += await syncedFiles[i].GetFileSizeInBytes();                    
             }
-            ulong ivFileSize = await _ivService.GetIVFileSize();
+            ulong ivFileSize = await _ivService.GetIVFileSize(FileService.FileLocation.Roamed);
             space += ivFileSize;
             RoamingSpaceUsed = (double)space / 1024;                            
         }                

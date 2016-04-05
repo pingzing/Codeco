@@ -318,6 +318,7 @@
                            FontSize="{ThemeResource PivotTitleFontSize}"
                            OpticalMarginAlignment="TrimSideBearings" />
             </CommandBar.Content>
+            <AppBarButton x:Name="ClearAllWideButton" Icon="Cancel" Label="DEBUG: Clear all data" Foreground="Red" Visibility="Collapsed" Tapped="Deubg_ClearAllTapped"/>
             <AppBarButton Icon="Delete" Label="Delete active file" Command="{x:Bind ViewModel.DeleteActiveFileCommand}" 
                           IsEnabled="{x:Bind ViewModel.ActiveFile, Mode=OneWay, Converter={StaticResource EmptyNullToBooleanConverter}}" />
             <AppBarButton Icon="Keyboard" Label="Input style" Command="{x:Bind ViewModel.ChangeInputScopeCommand}" />
@@ -328,6 +329,7 @@
 
     <Page.BottomAppBar>
         <CommandBar x:Name="BottomCommandBar" Visibility="Collapsed" x:DeferLoadStrategy="Lazy">
+            <AppBarButton x:Name="ClearAllNarrowButton" Icon="Cancel" Label="DEBUG: Clear all data" Foreground="Red" Visibility="Collapsed" Tapped="Deubg_ClearAllTapped"/>
             <AppBarButton Icon="Delete" Label="Delete active file" Command="{x:Bind ViewModel.DeleteActiveFileCommand}" 
                           IsEnabled="{x:Bind ViewModel.ActiveFile, Mode=OneWay, Converter={StaticResource EmptyNullToBooleanConverter}}" />
             <AppBarButton Icon="Keyboard" Label="Input style" Command="{x:Bind ViewModel.ChangeInputScopeCommand}" />

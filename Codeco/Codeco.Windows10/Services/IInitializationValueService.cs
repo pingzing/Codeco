@@ -8,11 +8,12 @@ namespace Codeco.Windows10.Services
 {
     public interface IInitializationValueService
     {
-        Task AddKeyPair(string fileName, string iv);
-        Task RemoveKeyPair(string key);
-        Task<string> GetValue(string key);
+        Task Add(string fileName, string iv, FileService.FileLocation location);
+        Task Remove(string key, FileService.FileLocation location);
+        Task<string> GetValue(string key, FileService.FileLocation location);
+        Task<bool> ContainsKey(string key, FileService.FileLocation location);
         Task LoadFromStorage();
-        Task<ulong> GetIVFileSize();
-        Task SaveToStorage();
+        Task<ulong> GetIVFileSize(FileService.FileLocation location);
+        Task SaveToStorage(FileService.FileLocation location);
     }
 }
