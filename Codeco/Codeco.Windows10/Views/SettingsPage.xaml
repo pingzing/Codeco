@@ -15,7 +15,7 @@
     <common:BindablePage.Transitions>
         <TransitionCollection>
             <NavigationThemeTransition>
-                <SlideNavigationTransitionInfo />
+                <EntranceNavigationTransitionInfo/>
             </NavigationThemeTransition>
         </TransitionCollection>
     </common:BindablePage.Transitions>
@@ -50,6 +50,12 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition FromVerticalOffset="200" IsStaggeringEnabled="True"/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+
         <StackPanel Grid.Row="0">
             <TextBlock Text="CODECO"                           
                            FontFamily="{ThemeResource PivotTitleFontFamily}"
@@ -68,6 +74,7 @@
 
         <ListView x:Name="SavedFilesList"
                   x:DeferLoadStrategy="Lazy"
+                  Margin="-10 0 0 0"
                   Grid.Row="1"
                   ItemsSource="{Binding Source={StaticResource FileViewSource}}"                  
                   SelectionMode="None" 
@@ -106,6 +113,11 @@
                     </GroupStyle.HeaderTemplate>
                 </GroupStyle>
             </ListView.GroupStyle>
+            <ListView.ItemContainerTransitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition FromVerticalOffset="200" IsStaggeringEnabled="True"/>
+                </TransitionCollection>
+            </ListView.ItemContainerTransitions>
         </ListView>
         
         <GridView x:Name="SavedFilesGrid"
