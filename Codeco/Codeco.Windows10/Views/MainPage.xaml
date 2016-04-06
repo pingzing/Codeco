@@ -28,6 +28,11 @@
                         Holding="ContainerStackPanel_Holding">
                 <FlyoutBase.AttachedFlyout>
                     <MenuFlyout>
+                        <MenuFlyout.MenuFlyoutPresenterStyle>
+                            <Style TargetType="MenuFlyoutPresenter">
+                                <Setter Property="Background" Value="{ThemeResource SystemAccentColorLow}"/>
+                            </Style>
+                        </MenuFlyout.MenuFlyoutPresenterStyle>
                         <MenuFlyoutItem Text="Delete"
                                         Command="{Binding Main.DeleteFileCommand, Mode=OneWay, Source={StaticResource Locator}}"
                                         CommandParameter="{x:Bind Mode=OneWay}"/>
@@ -38,13 +43,16 @@
                 </FlyoutBase.AttachedFlyout>
 
                 <TextBlock Text="{x:Bind Name, Mode=OneWay}"
-                           Style="{StaticResource SubheaderTextBlockStyle}" />
+                           Style="{StaticResource SubheaderTextBlockStyle}"
+                           Pivot.SlideInAnimationGroup="GroupTwo"/>
                 <TextBlock Text="{x:Bind CreateDate, Mode=OneWay}"
                            Style="{StaticResource CaptionTextBlockStyle}"
-                           Foreground="{ThemeResource SystemControlBackgroundBaseMediumBrush}" />
+                           Foreground="{ThemeResource SystemControlBackgroundBaseMediumBrush}"
+                           Pivot.SlideInAnimationGroup="GroupTwo"/>
                 <TextBlock Text="{x:Bind FileSize, Mode=OneWay}"
                            Style="{StaticResource CaptionTextBlockStyle}"
-                           Foreground="{ThemeResource SystemControlBackgroundBaseMediumBrush}" />
+                           Foreground="{ThemeResource SystemControlBackgroundBaseMediumBrush}"
+                           Pivot.SlideInAnimationGroup="GroupThree"/>
             </StackPanel>
         </DataTemplate>
 
@@ -91,10 +99,11 @@
                                 <GroupStyle.HeaderTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding}"                                            
-                                           Style="{StaticResource TitleTextBlockStyle}" 
-                                           FontSize="30" 
-                                           Foreground="{StaticResource SystemControlBackgroundAccentBrush}" 
-                                           IsHitTestVisible="False"/>
+                                                   Style="{StaticResource TitleTextBlockStyle}" 
+                                                   FontSize="30" 
+                                                   Foreground="{StaticResource SystemControlBackgroundAccentBrush}" 
+                                                   IsHitTestVisible="False"
+                                                   Pivot.SlideInAnimationGroup="GroupOne"/>
                                     </DataTemplate>
                                 </GroupStyle.HeaderTemplate>
                             </GroupStyle>
@@ -105,12 +114,13 @@
                             </Style>
                         </ListView.ItemContainerStyle>
                     </ListView>
-                    <TextBlock x:Name="ËmptyCollectionPivotBlock"
+                    <TextBlock x:Name="EmptyCollectionPivotBlock"
                                Margin="0 10 0 0"
                                Style="{StaticResource SubheaderTextBlockStyle}"
                                Foreground="Gray"
                                Text="Looks a little empty in here. Try adding an item!"
-                               Visibility="{x:Bind ViewModel.ShouldShowPlaceholder, Mode=OneWay}"/>
+                               Visibility="{x:Bind ViewModel.ShouldShowPlaceholder, Mode=OneWay}"
+                               Pivot.SlideInAnimationGroup="GroupTwo"/>
                 </Grid>
             </PivotItem>
 
