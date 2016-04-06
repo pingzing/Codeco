@@ -31,11 +31,7 @@ namespace Codeco.Windows10.Views
                 return;
             }
 
-            ((ToggleSwitch) sender).IsEnabled = false;
-
-            //leave control disabled while the animation plays. Otherwise, the ToggleSwitch
-            //thumb has a tendency to get visually stuck in the wrong state.
-            await Task.Delay(333);
+            ((ToggleSwitch) sender).IsEnabled = false;                        
 
             var context = (DataContext as SettingsViewModel);
             if (!tappedItem.IsRoamed && !context.FileGroups.First(x => x.Location == FileService.FileLocation.Local).Files.Contains(tappedItem))
@@ -47,7 +43,11 @@ namespace Codeco.Windows10.Views
             {
                 context?.SyncFileCommand.Execute(tappedItem);
             }
-            
+
+            //leave control disabled while the animation plays. Otherwise, the ToggleSwitch
+            //thumb has a tendency to get visually stuck in the wrong state.
+            await Task.Delay(333);
+
             ((ToggleSwitch) sender).IsEnabled = true;
         }        
     }

@@ -14,8 +14,7 @@ namespace Codeco.Windows10.Views
 {
     public sealed partial class MainPage : BindablePage
     {
-        private static bool _isFlyoutOpen = false;
-        private static bool _listeningToFlyoutState = false;
+        private static bool _isFlyoutOpen = false;        
 
         public MainViewModel ViewModel { get; }
 
@@ -77,18 +76,30 @@ namespace Codeco.Windows10.Views
         {
             if (item != null)
             {
-                MenuFlyout flyout = FlyoutBase.GetAttachedFlyout(item) as MenuFlyout;
-                if (!_listeningToFlyoutState)
+                MenuFlyout flyout = FlyoutBase.GetAttachedFlyout(item) as MenuFlyout;                
                 {
-                    flyout.Opened += (s, e) => _isFlyoutOpen = true; 
-                    flyout.Closed += (s, e) => _isFlyoutOpen = false;
-                    _listeningToFlyoutState = true;
+                    flyout.Opened += Flyout_Opened;
+                    flyout.Closed += Flyout_Closed;
                 }
                 if (!_isFlyoutOpen)
                 {                    
                     flyout?.ShowAt(this, position);                                        
                 }
             }
+        }
+ 
+        private void Flyout_Opened(object sender, object e)
+        {
+            _isFlyoutOpen = true;            
+        }
+
+        private void Flyout_Closed(object sender, object e)
+        {
+            _isFlyoutOpen = false;
+            MenuFlyout flyout = sender as MenuFlyout;
+            flyout.Opened -= Flyout_Opened;
+            flyout.Closed -= Flyout_Closed;
+
         }
     }
 }
