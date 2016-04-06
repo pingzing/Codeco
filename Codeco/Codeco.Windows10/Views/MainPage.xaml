@@ -35,10 +35,12 @@
                         </MenuFlyout.MenuFlyoutPresenterStyle>
                         <MenuFlyoutItem Text="Delete"
                                         Command="{Binding Main.DeleteFileCommand, Mode=OneWay, Source={StaticResource Locator}}"
-                                        CommandParameter="{x:Bind Mode=OneWay}"/>
+                                        CommandParameter="{x:Bind Mode=OneWay}"
+                                        Foreground="White"/>
                         <MenuFlyoutItem Text="Rename"
                                         Command="{Binding Main.RenameFileCommand, Mode=OneWay, Source={StaticResource Locator}}"
-                                        CommandParameter="{x:Bind Mode=OneWay}" />
+                                        CommandParameter="{x:Bind Mode=OneWay}"
+                                        Foreground="White"/>
                     </MenuFlyout>
                 </FlyoutBase.AttachedFlyout>
 

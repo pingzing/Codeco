@@ -15,7 +15,7 @@
             <converters:FilenameToColorConverter x:Key="FilenameToColorConverter" />
             <converters:EmptyNullToBooleanConverter x:Key="EmptyNullToBooleanConverter"/>
 
-            <SolidColorBrush x:Key="SystemAccentColorLow"/> <!--Set at runtime-->
+            <SolidColorBrush x:Key="SystemAccentColorLow" Opacity="0.7"/> <!--Color set at runtime-->
 
         </ResourceDictionary>
     </Application.Resources>

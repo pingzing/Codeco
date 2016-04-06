@@ -1,5 +1,4 @@
-﻿using System;
-using Codeco.Windows10.Common;
+﻿using Codeco.Windows10.Common;
 using Codeco.Windows10.Models;
 using Codeco.Windows10.ViewModels;
 using GalaSoft.MvvmLight.Messaging;
@@ -81,13 +80,13 @@ namespace Codeco.Windows10.Views
                 MenuFlyout flyout = FlyoutBase.GetAttachedFlyout(item) as MenuFlyout;
                 if (!_listeningToFlyoutState)
                 {
-                    flyout.Opened += (s, e) => _isFlyoutOpen = true;
+                    flyout.Opened += (s, e) => _isFlyoutOpen = true; 
                     flyout.Closed += (s, e) => _isFlyoutOpen = false;
                     _listeningToFlyoutState = true;
                 }
                 if (!_isFlyoutOpen)
-                {
-                    flyout?.ShowAt(this, position);
+                {                    
+                    flyout?.ShowAt(this, position);                                        
                 }
             }
         }
