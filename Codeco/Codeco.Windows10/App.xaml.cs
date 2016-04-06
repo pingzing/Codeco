@@ -10,6 +10,8 @@ using Codeco.Windows10.ViewModels;
 using GalaSoft.MvvmLight.Threading;
 using Windows.UI.ViewManagement;
 using Windows.Foundation;
+using Windows.UI.Xaml.Media;
+using Windows.UI;
 
 // The Universal Hub Application project template is documented at http://go.microsoft.com/fwlink/?LinkID=391955
 
@@ -25,8 +27,8 @@ namespace Codeco.Windows10
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
         public App()
-        {
-            this.InitializeComponent();
+        {            
+            this.InitializeComponent();            
             this.Suspending += this.OnSuspending;            
             this.UnhandledException += App_UnhandledException;                         
         }
@@ -45,6 +47,8 @@ namespace Codeco.Windows10
         protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {            
             Frame rootFrame = Window.Current.Content as Frame;
+
+            SetupRuntimeResources();
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
@@ -89,12 +93,22 @@ namespace Codeco.Windows10
                 }
             }
 
-            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(500, 450));
+            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(500, 450));            
 
             // Ensure the current window is active
             Window.Current.Activate();
 
-            DispatcherHelper.Initialize();
+            DispatcherHelper.Initialize();            
+        }
+
+        private void SetupRuntimeResources()
+        {
+            Color accCol = (Color)Current.Resources["SystemAccentColor"];
+            accCol.B = (byte)(accCol.B * 0.6);
+            accCol.R = (byte)(accCol.R * 0.6);
+            accCol.G = (byte)(accCol.G * 0.6);
+            SolidColorBrush darkAccentColor = new SolidColorBrush(accCol);
+            Current.Resources["SystemAccentColorLow"] = darkAccentColor;
         }
 
         protected override void OnActivated(IActivatedEventArgs args)
