@@ -17,6 +17,7 @@ using Codeco.Windows10.Controls;
 using Windows.UI.Xaml.Input;
 using GalaSoft.MvvmLight.Messaging;
 using Windows.UI.Xaml;
+using Windows.ApplicationModel.DataTransfer;
 
 namespace Codeco.Windows10.ViewModels
 {
@@ -60,8 +61,11 @@ namespace Codeco.Windows10.ViewModels
 
         private RelayCommand _changeInputScopeCommand;
         public RelayCommand ChangeInputScopeCommand => _changeInputScopeCommand 
-            ?? (_changeInputScopeCommand = new RelayCommand(ChangeInputScope));        
+            ?? (_changeInputScopeCommand = new RelayCommand(ChangeInputScope));
 
+        private RelayCommand _copyCodeTextCommand;
+        public RelayCommand CopyCodeTextCommand => _copyCodeTextCommand 
+            ?? (_copyCodeTextCommand = new RelayCommand(CopyCodeText));
 
         private int _longestCode = 1;
         #region LongestCode Property
@@ -93,9 +97,12 @@ namespace Codeco.Windows10.ViewModels
                 }
                 _codeText = value;
                 RaisePropertyChanged(nameof(CodeText));
+                RaisePropertyChanged(nameof(IsCopyButtonEnabled));
             }
         }
         #endregion
+
+        public bool IsCopyButtonEnabled => !String.IsNullOrWhiteSpace(CodeText);
 
         private string _inputText = "";
         #region InputText Property
@@ -428,6 +435,14 @@ namespace Codeco.Windows10.ViewModels
                 CurrentNarrowInputScope = _narrowDefaultScope;
                 CurrentWideInputScope = _wideDefaultScope;
             }
+        }
+
+        private void CopyCodeText()
+        {
+            DataPackage package = new DataPackage();
+            package.RequestedOperation = DataPackageOperation.Copy;
+            package.SetText(CodeText);
+            Clipboard.SetContent(package);
         }
 
         private void ScrollViewToActivePivot()

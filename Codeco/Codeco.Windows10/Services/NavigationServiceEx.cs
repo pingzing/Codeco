@@ -16,22 +16,13 @@ namespace Codeco.Windows10.Services
                 return frame.BackStackDepth;
             }
         }
-
-        private bool _oldCanGoBack = false;        
+      
         public bool CanGoBack
         {
             get
             {               
-                var frame = (Frame) Window.Current.Content;
-
-                if (_oldCanGoBack != frame.CanGoBack)
-                {
-                                                        
-                }
-                _oldCanGoBack = frame.CanGoBack;
-
+                var frame = (Frame) Window.Current.Content;            
                 return frame.CanGoBack;
-
             }
         }
 

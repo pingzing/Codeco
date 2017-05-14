@@ -42,13 +42,13 @@ namespace Codeco.Windows10.Services
                 if (!LocalFiles.Contains(file))
                 {                    
                     //Backing values
-                    string oldPath = ToParentFolderString(file.BackingFile);
+                    string oldPath = GetParentFolder(file.BackingFile);
                     string value = await _ivService.GetValue(oldPath, FileLocation.Roamed);
                     await _ivService.Remove(oldPath, FileLocation.Roamed);
 
                     await file.BackingFile.MoveAsync(_localFolder, file.BackingFile.Name, NameCollisionOption.GenerateUniqueName);
 
-                    await _ivService.Add(ToParentFolderString(file.BackingFile), value, FileLocation.Local);
+                    await _ivService.Add(GetParentFolder(file.BackingFile), value, FileLocation.Local);
                     RoamedFiles.Remove(file);
 
                     //UI                
@@ -65,13 +65,13 @@ namespace Codeco.Windows10.Services
                 if (!RoamedFiles.Contains(file))
                 {
                     //Backing values
-                    string oldPath = ToParentFolderString(file.BackingFile);
+                    string oldPath = GetParentFolder(file.BackingFile);
                     string value = await _ivService.GetValue(oldPath, FileLocation.Local);
                     await _ivService.Remove(oldPath, FileLocation.Local);
 
                     await file.BackingFile.MoveAsync(_roamingFolder, file.BackingFile.Name, NameCollisionOption.GenerateUniqueName);
 
-                    await _ivService.Add(ToParentFolderString(file.BackingFile), value, FileLocation.Roamed);
+                    await _ivService.Add(GetParentFolder(file.BackingFile), value, FileLocation.Roamed);
                     LocalFiles.Remove(file);
 
                     //UI
@@ -141,7 +141,7 @@ namespace Codeco.Windows10.Services
                 BindableStorageFile bsf = await BindableStorageFile.Create(savedFile);
                 LocalFiles.Add(bsf);
                                 
-                await _ivService.Add(ToParentFolderString(bsf.BackingFile), iv, FileLocation.Local);                
+                await _ivService.Add(GetParentFolder(bsf.BackingFile), iv, FileLocation.Local);                
 
                 return bsf;
             }
@@ -164,7 +164,7 @@ namespace Codeco.Windows10.Services
                     return null;
                 }
                                 
-                string iv = await _ivService.GetValue(ToParentFolderString(file.BackingFile), location);
+                string iv = await _ivService.GetValue(GetParentFolder(file.BackingFile), location);
                 try
                 {
                     return EncryptionManager.Decrypt(encryptedContents, password, iv);
@@ -198,7 +198,7 @@ namespace Codeco.Windows10.Services
                     Debug.WriteLine("Failed to delete file: " + ex);                    
                 }
 
-                await _ivService.Remove(ToParentFolderString(backingFile), location);                
+                await _ivService.Remove(GetParentFolder(backingFile), location);                
             }
         }
 
@@ -212,15 +212,15 @@ namespace Codeco.Windows10.Services
             using (await f_lock.Acquire())
             {
                 string oldName = file.BackingFile.Name;
-                string oldPath = ToParentFolderString(file.BackingFile);
-                await RenameFileAsync((StorageFile)file.BackingFile, newName);
+                string oldPath = GetParentFolder(file.BackingFile);
+                await file.BackingFile.RenameAsync(newName, NameCollisionOption.GenerateUniqueName);
                 file.NameChanged();
 
                 FileLocation location = file.IsRoamed ? FileLocation.Roamed : FileLocation.Local;
                                 
                 string iv = await _ivService.GetValue(oldPath, location);
                 await _ivService.Remove(oldPath, location);
-                await _ivService.Add(ToParentFolderString(file.BackingFile), iv, location);
+                await _ivService.Add(GetParentFolder(file.BackingFile), iv, location);
             }
         }       
            
@@ -260,11 +260,6 @@ namespace Codeco.Windows10.Services
                 RoamingFiles = (await _roamingFolder.GetFilesAsync()).Where(x => x.Name[0] != '_')
             };
             return allFiles;
-        }
-
-        private static async Task RenameFileAsync(StorageFile backingFile, string newName)
-        {
-            await backingFile.RenameAsync(newName, NameCollisionOption.GenerateUniqueName);
         }
         
         private async void OnRoamingDataChanged(ApplicationData sender, object args)
@@ -311,7 +306,7 @@ namespace Codeco.Windows10.Services
             return false;
         }
 
-        private string ToParentFolderString(IStorageFile backingFile)
+        private string GetParentFolder(IStorageFile backingFile)
         {
             return Directory.GetParent(backingFile.Path).Name + "/" + backingFile.Name;
         }
