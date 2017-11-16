@@ -310,7 +310,7 @@ namespace Codeco.Windows10.ViewModels
             await errorDialog.ShowAsync();
         }
 
-        private async Task<Dictionary<string, string>> GetCodes(string password)
+        public async Task<Dictionary<string, string>> GetCodes(string password)
         {
             Dictionary<string, string> codeDict = new Dictionary<string, string>();
             FileService.FileLocation location = _fileService.GetFileLocation(ActiveFile);
@@ -450,16 +450,16 @@ namespace Codeco.Windows10.ViewModels
             Messenger.Default.Send<object>(null, Constants.SCROLL_PIVOT_MESSAGE);
         }
 
-        public override async void Activate(object parameter, NavigationMode navigationMode)
+        public override async Task ActivateAsync(object parameter, NavigationMode navigationMode)
         {            
-            base.Activate(parameter, navigationMode);
+            await base.ActivateAsync(parameter, navigationMode);
             await _fileService.IsInitialized.Task;            
             ShouldShowPlaceholder = FileGroups.Any(x => x.Files.Any()) ? Visibility.Collapsed : Visibility.Visible;
         }
 
-        public override void Deactivated(object parameter)
+        public override async Task DeactivatedAsync(object parameter)
         {                        
-            base.Deactivated(parameter);
+            await base.DeactivatedAsync(parameter);
         }
 
         public async Task ClearAllFiles()

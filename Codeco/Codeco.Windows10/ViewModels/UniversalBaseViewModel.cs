@@ -71,14 +71,14 @@ namespace Codeco.Windows10.ViewModels
             }
         }
 
-        public virtual void Activate(object parameter, NavigationMode navigationMode)
+        public virtual async Task ActivateAsync(object parameter, NavigationMode navigationMode)
         {
-            _systemNavManager.BackRequested += UniversalBaseViewModel_BackRequested;
+            _systemNavManager.BackRequested += UniversalBaseViewModel_BackRequested;            
         }
 
-        public virtual void Deactivated(object parameter)
+        public virtual async Task DeactivatedAsync(object parameter)
         {
-            _systemNavManager.BackRequested -= UniversalBaseViewModel_BackRequested;
+            _systemNavManager.BackRequested -= UniversalBaseViewModel_BackRequested;            
         }
     }
 }

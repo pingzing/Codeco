@@ -114,10 +114,15 @@ namespace Codeco.Windows10.ViewModels
             RoamingSpaceUsed = (double)space / 1024;                            
         }                
 
-        public override async void Activate(object parameter, NavigationMode navigationMode)
+        public override async Task ActivateAsync(object parameter, NavigationMode navigationMode)
         {
-            base.Activate(parameter, navigationMode);                        
+            await base.ActivateAsync(parameter, navigationMode);                        
             await UpdateAvailableRoamingSpace();            
-        } 
+        }
+
+        public override Task DeactivatedAsync(object parameter)
+        {
+            return base.DeactivatedAsync(parameter);
+        }
     }
 }

@@ -12,20 +12,22 @@ using Windows.UI.ViewManagement;
 using Windows.Foundation;
 using Windows.UI.Xaml.Media;
 using Windows.UI;
+using Windows.Foundation.Metadata;
+using Microsoft.Practices.ServiceLocation;
+using Codeco.Windows10.Extensions;
+using Codeco.Windows10.Models;
+using Windows.UI.Xaml.Navigation;
+using Windows.ApplicationModel.DataTransfer;
+using System.Threading.Tasks;
 
 // The Universal Hub Application project template is documented at http://go.microsoft.com/fwlink/?LinkID=391955
 
 namespace Codeco.Windows10
-{
-    /// <summary>
-    /// Provides application-specific behavior to supplement the default Application class.
-    /// </summary>
+{    
     public sealed partial class App : Application
-    {        
-        /// <summary>
-        /// Initializes the singleton instance of the <see cref="App"/> class. This is the first line of authored code
-        /// executed, and as such is the logical equivalent of main() or WinMain().
-        /// </summary>
+    {
+        private bool _isUIOpen = false;
+
         public App()
         {            
             this.InitializeComponent();            
@@ -46,39 +48,40 @@ namespace Codeco.Windows10
         /// <param name="e">Details about the launch request and process.</param>
         protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {            
-            Frame rootFrame = Window.Current.Content as Frame;
-
-            SetupRuntimeResources();
-
-            // Do not repeat app initialization when the Window already has content,
-            // just ensure that the window is active
-            if (rootFrame == null)
+            // Don't init the window if we're running from the command line.
+            if (ApiInformation.IsEnumNamedValuePresent(typeof(ActivationKind).FullName, "CommandLineLaunch"))
             {
-                // Create a Frame to act as the navigation context and navigate to the first page
+                if (e.Kind == ActivationKind.CommandLineLaunch)
+                {
+                    return;
+                }
+            }
+
+            Frame rootFrame = Window.Current.Content as Frame;
+            SetupRuntimeResources();            
+            if (rootFrame == null)
+            {              
                 rootFrame = new Frame();
-
-                //Associate the frame with a SuspensionManager key                                
+                
                 SuspensionManager.RegisterFrame(rootFrame, "AppFrame");
-
-                // TODO: change this value to a cache size that is appropriate for your application
+                
                 rootFrame.CacheSize = 1;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
-                {
-                    // Restore the saved session state only when appropriate
+                {                    
                     try
                     {
                         await SuspensionManager.RestoreAsync();
                     }
                     catch (SuspensionManagerException)
                     {
-                        // Something went wrong restoring state.
-                        // Assume there is no state and continue
+                        Debug.WriteLine("Failed to restore suspension state.");
                     }
                 }                 
 
                 // Place the frame in the current Window
-                Window.Current.Content = rootFrame;                
+                Window.Current.Content = rootFrame;
+                _isUIOpen = true;
             }
 
             if (rootFrame.Content == null)
@@ -94,10 +97,8 @@ namespace Codeco.Windows10
             }
 
             ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(500, 450));            
-
-            // Ensure the current window is active
+            
             Window.Current.Activate();
-
             DispatcherHelper.Initialize();            
         }
 
@@ -111,9 +112,67 @@ namespace Codeco.Windows10
             Current.Resources["SystemAccentColorLow"] = darkAccentColor;
         }
 
-        protected override void OnActivated(IActivatedEventArgs args)
+        protected override async void OnActivated(IActivatedEventArgs args)
         {            
-            base.OnActivated(args);          
+            base.OnActivated(args);
+
+            if (ApiInformation.IsEnumNamedValuePresent(typeof(ActivationKind).FullName, "CommandLineLaunch"))
+            {
+                if (args.Kind == ActivationKind.CommandLineLaunch)
+                {
+                    var cmdArgs = args as CommandLineActivatedEventArgs;
+                    var cmdOperation = cmdArgs.Operation;
+                    cmdOperation.ExitCode = 1; // set to failure by default, only 0 on success
+
+                    using (Deferral deferral = cmdArgs.Operation.GetDeferral())
+                    {
+                        var (title, password, inputCode, _) = cmdOperation.Arguments
+                            .Substring(0, cmdOperation.Arguments.Length - 1) // .Arguments seems to add a trailing space for no good reason
+                            .Split(new[] { ',' });
+
+                        if (String.IsNullOrWhiteSpace(title) || String.IsNullOrWhiteSpace(password) || String.IsNullOrWhiteSpace(inputCode))
+                        {
+                            return;
+                        }
+                        
+                        if (await FindAndCopy(title, password, inputCode))
+                        {
+                            cmdOperation.ExitCode = 0;
+                        }
+                    }
+
+                    Current.Exit();
+                }
+            }
+        }
+
+        private async Task<bool> FindAndCopy(string title, string password, string inputCode)
+        {
+            var mainVm = ServiceLocator.Current.GetInstance<MainViewModel>();
+            await mainVm.ActivateAsync(null, NavigationMode.New);
+
+            foreach (var group in mainVm.FileGroups)
+            {
+                foreach (var file in group.Files)
+                {
+                    if (file.Name == title)
+                    {
+                        mainVm.ActiveFile = (BindableStorageFile)file;
+                        var codes = await mainVm.GetCodes(password);
+                        if (codes.TryGetValue(inputCode, out string code))
+                        {
+                            DataPackage package = new DataPackage();
+                            package.RequestedOperation = DataPackageOperation.Copy;
+                            package.SetText(code);
+                            Clipboard.SetContent(package);
+                            Clipboard.Flush();
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
 
         /// <summary>

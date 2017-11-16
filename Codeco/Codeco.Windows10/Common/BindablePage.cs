@@ -20,7 +20,7 @@ namespace Codeco.Windows10.Common
             if (Frame.Content == this)
             {
                 var navigableViewModel = this.DataContext as INavigable;
-                navigableViewModel?.Activate(e, NavigationMode.Refresh);
+                navigableViewModel?.ActivateAsync(e, NavigationMode.Refresh);
             }
         }
 
@@ -29,7 +29,7 @@ namespace Codeco.Windows10.Common
             base.OnNavigatedTo(e);
 
             var navigableViewModel = this.DataContext as INavigable;
-            navigableViewModel?.Activate(e.Parameter, e.NavigationMode);
+            navigableViewModel?.ActivateAsync(e.Parameter, e.NavigationMode);
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -37,7 +37,7 @@ namespace Codeco.Windows10.Common
             base.OnNavigatedFrom(e);
 
             var navigableViewModel = this.DataContext as INavigable;
-            navigableViewModel?.Deactivated(e.Parameter);
+            navigableViewModel?.DeactivatedAsync(e.Parameter);
         }        
     }
 }
