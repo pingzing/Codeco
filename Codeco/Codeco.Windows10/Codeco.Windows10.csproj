@@ -222,7 +222,12 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\Codeco.Encryption\Codeco.Encryption.csproj">
+      <Project>{b344c5ab-fa18-45d9-b630-b0f4a7fa8dc1}</Project>
+      <Name>Codeco.Encryption</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
