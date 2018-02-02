@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Application xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:mvvm="clr-namespace:Codeco.CrossPlatform.Mvvm;assembly=Codeco.CrossPlatform"
+             x:Class="Codeco.CrossPlatform.App">
+    <Application.Resources>
+
+        <mvvm:ViewModelLocator x:Key="Locator" x:Name="ViewModelLocator" />
+        <!-- Application resource dictionary -->
+
+    </Application.Resources>
+</Application>
