@@ -151,7 +151,7 @@
     <Compile Include="Controls\RenameFileDialog.xaml.cs">
       <DependentUpon>RenameFileDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="EncryptionManager.cs" />
+    <Compile Include="LegacyEncryptionManager.cs" />
     <Compile Include="Models\AddFileDialogOutput.cs" />
     <Compile Include="Models\BindableStorageFile.cs" />
     <Compile Include="Models\IBindableStorageFile.cs" />

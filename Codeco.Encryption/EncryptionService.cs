@@ -9,7 +9,7 @@ namespace Codeco.Encryption
 
     public class EncryptionService : IEncryptionService
     {
-        public (string encryptedData, string initializationVector) Encrypt(string data, string password)
+        public (string encryptedData, string salt, string initializationVector) Encrypt(string data, string password)
         {
             if (String.IsNullOrEmpty(data))
             {
@@ -21,10 +21,14 @@ namespace Codeco.Encryption
             }
 
             byte[] encryptedBytes = null; // This will be filled in after the write operations are complete.
-            byte[] ivToReturn = null; // This will be filled in below, and returned at the end.
+            byte[] saltToReturn = null; // This will be filled in below, and returned at the end.
+            byte[] ivToReturn = null;
             using (Aes aes = Aes.Create())
-            {                
-                aes.Key = Encoding.UTF8.GetBytes(password);                
+            {
+                (byte[] key, byte[] salt) = GetKeyAndSaltFromPassword(password, aes.KeySize);
+                saltToReturn = salt;
+                ivToReturn = aes.IV;
+                aes.Key = key;
 
                 ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
                 using (MemoryStream memoryStream = new MemoryStream())
@@ -36,16 +40,16 @@ namespace Codeco.Encryption
                             writer.Write(data);
                         }
                     }
-                    encryptedBytes = memoryStream.ToArray();
-                    ivToReturn = aes.IV;
+                    encryptedBytes = memoryStream.ToArray();                    
                 }
             }
             string encryptedByteString = Convert.ToBase64String(encryptedBytes);
+            string saltString = Convert.ToBase64String(saltToReturn);
             string ivString = Convert.ToBase64String(ivToReturn);
-            return (encryptedByteString, ivString);
+            return (encryptedByteString, saltString, ivString);
         }
 
-        public string Decrypt(string encryptedData, string password, string initializationVector)
+        public string Decrypt(string encryptedData, string password, string salt, string initializationVector)
         {
             if (String.IsNullOrEmpty(encryptedData))
             {
@@ -55,19 +59,19 @@ namespace Codeco.Encryption
             {
                 throw new ArgumentException("The password for decrypting data must not be null, or an empty string.", nameof(password));
             }
-            if (String.IsNullOrEmpty(initializationVector))
+            if (String.IsNullOrEmpty(salt))
             {
-                throw new ArgumentException("The initialization vectory must not be null, or an empty string.", nameof(initializationVector));
+                throw new ArgumentException("The salt must not be null, or an empty string.", nameof(salt));
             }
 
             byte[] encryptedBytes = Convert.FromBase64String(encryptedData);
-            byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
-            byte[] ivBytes = Convert.FromBase64String(initializationVector);
 
             string decryptedString = null; // Will be filled in below.
             using (Aes aes = Aes.Create())
             {
-                aes.Key = passwordBytes;
+                (byte[] key, _) = GetKeyAndSaltFromPassword(password, aes.KeySize, salt);
+                byte[] ivBytes = Convert.FromBase64String(initializationVector);
+                aes.Key = key;
                 aes.IV = ivBytes;
 
                 ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
@@ -84,6 +88,27 @@ namespace Codeco.Encryption
             }
 
             return decryptedString;
+        }
+
+        private (byte[] key, byte[] salt) GetKeyAndSaltFromPassword(string password, int keyLength, string salt = null)
+        {
+            using (RandomNumberGenerator csrng = RandomNumberGenerator.Create())
+            {
+                byte[] saltBytes = new byte[64];
+                if (salt == null)
+                {                    
+                    csrng.GetBytes(saltBytes);
+                }
+                else
+                {
+                    saltBytes = Convert.FromBase64String(salt);
+                }
+                using (Rfc2898DeriveBytes generator = new Rfc2898DeriveBytes(password, saltBytes, 10000))
+                {
+                    byte[] key = generator.GetBytes(keyLength);
+                    return (key, saltBytes);
+                }
+            }
         }
     }
 }

@@ -131,9 +131,9 @@ namespace Codeco.Windows10.Services
                     throw new ArgumentException("File contents cannot be null.");
                 }
 
-                //string iv = Guid.NewGuid().ToString("N"); // OLD IV code.
+                string iv = Guid.NewGuid().ToString("N"); // OLD IV code.
 
-                (string encryptedContents, string iv) = EncryptionManager.Encrypt(contents, password);
+                string encryptedContents = LegacyEncryptionManager.Encrypt(contents, password, iv);
                 var savedFile = await _localFolder.CreateFileAsync(fileName, CreationCollisionOption.GenerateUniqueName);
                 await FileIO.WriteTextAsync(savedFile, encryptedContents);
                 string savedFileName = savedFile.Name;
@@ -167,7 +167,7 @@ namespace Codeco.Windows10.Services
                 string iv = await _ivService.GetValue(GetParentFolder(file.BackingFile), location);
                 try
                 {
-                    return EncryptionManager.Decrypt(encryptedContents, password, iv);
+                    return LegacyEncryptionManager.Decrypt(encryptedContents, password, iv);
                 }
                 catch (Exception ex)
                 {
