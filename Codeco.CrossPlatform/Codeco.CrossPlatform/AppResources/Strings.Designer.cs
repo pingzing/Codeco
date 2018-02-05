@@ -10,8 +10,9 @@
 
 namespace Codeco.CrossPlatform.AppResources {
     using System;
-    
-    
+    using System.Reflection;
+
+
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -39,7 +40,7 @@ namespace Codeco.CrossPlatform.AppResources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Codeco.CrossPlatform.AppResources.Strings", typeof(Strings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Codeco.CrossPlatform.AppResources.Strings", typeof(Strings).GetTypeInfo().Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

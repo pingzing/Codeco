@@ -1,14 +1,79 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Codeco.CrossPlatform.Views.MainPage"
              
+             Title="Tab Page"
              BindingContext="{Binding Source={StaticResource Locator}, Path=MainPage}">
-    <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
-    </ContentPage.Content>
-</ContentPage>
+    <ContentPage x:Name="SavedFilesTab" Title="Saved Files">
+        <Grid>
+            <ListView x:Name="FilesList">
+                
+            </ListView>
+        </Grid>
+    </ContentPage>
+    
+    <ContentPage x:Name="ActiveFileTab" Title="Active">
+        <ScrollView VerticalOptions="Center">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!--Row 0-->
+                <Label x:Name="KeyIconLabel" 
+                       Grid.Row="0" Grid.Column="0"
+                       Text="🔑"
+                       FontSize="30"
+                       HorizontalOptions="CenterAndExpand"/>
+                <Label x:Name="KeyLabel" 
+                       Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                       Style="{DynamicResource SubtitleStyle}"
+                       HorizontalOptions="CenterAndExpand"
+                       Text="{Binding CodeText, Mode=OneWay}"/>
+                <Label x:Name="CopyEffectText"
+                       Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                       FontAttributes="Bold"
+                       HorizontalOptions="End"
+                       VerticalOptions="End"
+                       Text="Copied!"/>
+
+                <!--Row 1-->
+                <Button x:Name="CopyButton"
+                        Grid.Row="1" Grid.Column="1"
+                        BackgroundColor="Blue"
+                        Command="{Binding CopyCodeTextCommand}"
+                        IsEnabled="{Binding IsCopyButtonEnabled, Mode=OneWay}"
+                        Text="Copy"
+                        VerticalOptions="End"/>
+                
+                <!--Row 2-->
+                <Label x:Name="InputBoxHeader"
+                       Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"                       
+                       Text="Input"/>
+
+                <!--Row 3-->
+                <Entry x:Name="InputBox"
+                       Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                       Keyboard="{Binding CurrentInputKeyboard.Keyboard, Mode=OneWay}"
+                       Text="{Binding InputText, Mode=TwoWay}"/>
+                
+                <!--Row 4-->
+
+                <Picker x:Name="CurrentKeyboardBox"
+                        Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"                        
+                        ItemsSource="{Binding AvailableKeyboards}"
+                        ItemDisplayBinding="{Binding Name}"/>
+
+            </Grid>
+        </ScrollView>
+    </ContentPage>
+</TabbedPage>

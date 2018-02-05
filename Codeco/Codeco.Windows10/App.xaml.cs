@@ -13,19 +13,11 @@ using Windows.Foundation;
 using Windows.UI.Xaml.Media;
 using Windows.UI;
 
-// The Universal Hub Application project template is documented at http://go.microsoft.com/fwlink/?LinkID=391955
 
 namespace Codeco.Windows10
-{
-    /// <summary>
-    /// Provides application-specific behavior to supplement the default Application class.
-    /// </summary>
+{    
     public sealed partial class App : Application
-    {        
-        /// <summary>
-        /// Initializes the singleton instance of the <see cref="App"/> class. This is the first line of authored code
-        /// executed, and as such is the logical equivalent of main() or WinMain().
-        /// </summary>
+    {                
         public App()
         {            
             this.InitializeComponent();            
@@ -33,34 +25,26 @@ namespace Codeco.Windows10
             this.UnhandledException += App_UnhandledException;                         
         }
          
-        private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        private void App_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
         {
             Debugger.Break();            
         }
-
-        /// <summary>
-        /// Invoked when the application is launched normally by the end user.  Other entry points
-        /// will be used when the application is launched to open a specific file, to display
-        /// search results, and so forth.
-        /// </summary>
-        /// <param name="e">Details about the launch request and process.</param>
+        
         protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {            
             Frame rootFrame = Window.Current.Content as Frame;
 
             SetupRuntimeResources();
-
-            // Do not repeat app initialization when the Window already has content,
-            // just ensure that the window is active
+            
             if (rootFrame == null)
-            {
-                // Create a Frame to act as the navigation context and navigate to the first page
+            {                
                 rootFrame = new Frame();
 
-                //Associate the frame with a SuspensionManager key                                
+                //Associate the frame with a SuspensionManager key
                 SuspensionManager.RegisterFrame(rootFrame, "AppFrame");
 
-                // TODO: change this value to a cache size that is appropriate for your application
+                Xamarin.Forms.Forms.Init(e);
+                
                 rootFrame.CacheSize = 1;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
@@ -82,12 +66,8 @@ namespace Codeco.Windows10
             }
 
             if (rootFrame.Content == null)
-            {                
-                // When the navigation stack isn't restored navigate to the first page,
-                // configuring the new page by passing required information as a navigation
-                // parameter
-
-                if (!rootFrame.Navigate(typeof(MainPage), e.Arguments))
+            {                                
+                if (!rootFrame.Navigate(typeof(MainXamarinPage), e.Arguments))
                 {
                     throw new Exception("Failed to create initial page");
                 }
@@ -115,12 +95,7 @@ namespace Codeco.Windows10
         {            
             base.OnActivated(args);          
         }
-
-        /// <summary>
-        /// Invoked when application execution is being suspended.  Application state is saved
-        /// without knowing whether the application will be terminated or resumed with the contents
-        /// of memory still intact.
-        /// </summary>
+        
         private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();

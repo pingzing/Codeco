@@ -11,8 +11,8 @@
     <AssemblyName>Codeco.Windows10</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion>10.0.10586.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion>10.0.16299.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -21,6 +21,7 @@
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
     <PackageCertificateThumbprint>82F54A56F9A9FFCD40611BC70CAE9D8FC3A794F0</PackageCertificateThumbprint>
+    <RuntimeIdentifiers>win10-arm;win10-arm-aot;win10-x86;win10-x86-aot;win10-x64;win10-x64-aot</RuntimeIdentifiers>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -127,7 +128,6 @@
     </Content>
     <None Include="Codeco.Windows10_StoreKey.pfx" />
     <None Include="Codeco.Windows10_TemporaryKey.pfx" />
-    <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">
@@ -170,6 +170,9 @@
     <Compile Include="Services\IFileService.cs" />
     <Compile Include="Services\Mocks\MockFileService.cs" />
     <Compile Include="Services\ServiceNotInitializedException.cs" />
+    <Compile Include="Views\MainXamarinPage.xaml.cs">
+      <DependentUpon>MainXamarinPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
@@ -217,16 +220,44 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\MainXamarinPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SettingsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Codeco.CrossPlatform\Codeco.CrossPlatform\Codeco.CrossPlatform.csproj">
+      <Project>{399367d2-1733-4d4a-8274-36c4f3ef3901}</Project>
+      <Name>Codeco.CrossPlatform</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Codeco.Encryption\Codeco.Encryption.csproj">
       <Project>{b344c5ab-fa18-45d9-b630-b0f4a7fa8dc1}</Project>
       <Name>Codeco.Encryption</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
+      <Version>6.0.6</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
+      <Version>1.1.0</Version>
+    </PackageReference>
+    <PackageReference Include="MvvmLight">
+      <Version>5.2.0</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>8.0.2</Version>
+    </PackageReference>
+    <PackageReference Include="System.ValueTuple">
+      <Version>4.4.0</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Forms">
+      <Version>2.5.0.122203</Version>
+    </PackageReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

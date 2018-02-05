@@ -10,9 +10,9 @@ using Xamarin.Forms.Xaml;
 namespace Codeco.CrossPlatform.Views
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class MainPage : TabbedPage
+	public partial class SettingsPage : ContentPage
 	{
-		public MainPage ()
+		public SettingsPage ()
 		{
 			InitializeComponent ();
 		}

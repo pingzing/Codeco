@@ -8,7 +8,9 @@ using System.Text;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
+#if !DEBUG
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
+#endif
 namespace Codeco.CrossPlatform
 {
     public partial class App : Application
@@ -22,7 +24,8 @@ namespace Codeco.CrossPlatform
             MainNavigationHost = new NavigationHost();
             Locator = (ViewModelLocator)Current.Resources["Locator"];
 
-            MainPage = new MainPage();
+            MainPage = MainNavigationHost;
+            MainNavigationHost.NavigateToAsync(new MainPage(), false);
         }
 
         protected override void OnStart ()

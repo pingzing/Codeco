@@ -10,7 +10,7 @@ namespace Codeco.CrossPlatform.XamlExtensions
 {
     [ContentProperty("Text")]
     public class LocalizeExtension : IMarkupExtension
-    {        
+    {
         private readonly CultureInfo _ci;
 
         public string Text { get; set; }

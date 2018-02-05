@@ -4,9 +4,8 @@
              xmlns:mvvm="clr-namespace:Codeco.CrossPlatform.Mvvm;assembly=Codeco.CrossPlatform"
              x:Class="Codeco.CrossPlatform.App">
     <Application.Resources>
-
-        <mvvm:ViewModelLocator x:Key="Locator" x:Name="ViewModelLocator" />
-        <!-- Application resource dictionary -->
-
+        <ResourceDictionary>
+            <mvvm:ViewModelLocator x:Key="Locator" x:Name="ViewModelLocator" />
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
