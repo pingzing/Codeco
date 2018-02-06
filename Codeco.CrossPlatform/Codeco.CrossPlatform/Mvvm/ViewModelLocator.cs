@@ -4,6 +4,7 @@ using Xamarin.Forms;
 using Codeco.CrossPlatform.Services.DependencyInterfaces;
 using Codeco.CrossPlatform.ViewModels;
 using Codeco.CrossPlatform.Views;
+using Acr.UserDialogs;
 
 namespace Codeco.CrossPlatform.Mvvm
 {
@@ -15,10 +16,15 @@ namespace Codeco.CrossPlatform.Mvvm
     public class ViewModelLocator
     {
         public ViewModelLocator()
-        {            
+        {
             //Register (and initialize, if necessary) your services here
+            IAppFolderService appFolderService = DependencyService.Get<IAppFolderService>();
+            SimpleIoc.Default.Register<IAppFolderService>(() => appFolderService);
+
             SimpleIoc.Default.Register<INavigationService>(InitializeNavigationService);
             SimpleIoc.Default.Register<ILocalizeService>(() => DependencyService.Get<ILocalizeService>());
+            SimpleIoc.Default.Register<IUserDialogs>(() => UserDialogs.Instance);
+            SimpleIoc.Default.Register<IFileService>(() => new FileService(appFolderService));
 
             //Register your ViewModels here
             SimpleIoc.Default.Register<MainViewModel>();

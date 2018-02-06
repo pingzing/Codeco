@@ -6,14 +6,18 @@
              Title="Tab Page"
              BindingContext="{Binding Source={StaticResource Locator}, Path=MainPage}">
     <ContentPage x:Name="SavedFilesTab" Title="Saved Files">
+        <ContentPage.ToolbarItems>
+            <ToolbarItem Text="Add" Command="{Binding AddFileCommand}"/>
+        </ContentPage.ToolbarItems>
         <Grid>
             <ListView x:Name="FilesList">
                 
             </ListView>
         </Grid>
     </ContentPage>
-    
+
     <ContentPage x:Name="ActiveFileTab" Title="Active">
+
         <ScrollView VerticalOptions="Center">
             <Grid>
                 <Grid.RowDefinitions>

@@ -6,6 +6,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
+using Acr.UserDialogs;
 
 namespace Codeco.CrossPlatform.Droid
 {
@@ -19,6 +20,7 @@ namespace Codeco.CrossPlatform.Droid
 
             base.OnCreate(bundle);
 
+            UserDialogs.Init(this);
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App());
         }

@@ -12,7 +12,7 @@ using Windows.UI.ViewManagement;
 using Windows.Foundation;
 using Windows.UI.Xaml.Media;
 using Windows.UI;
-
+using Codeco.Windows10.Services.DependencyServices;
 
 namespace Codeco.Windows10
 {    
@@ -44,6 +44,7 @@ namespace Codeco.Windows10
                 SuspensionManager.RegisterFrame(rootFrame, "AppFrame");
 
                 Xamarin.Forms.Forms.Init(e);
+                Xamarin.Forms.DependencyService.Register<AppFolderService>();
                 
                 rootFrame.CacheSize = 1;
 
