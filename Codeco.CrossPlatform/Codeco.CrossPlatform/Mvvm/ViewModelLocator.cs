@@ -24,7 +24,11 @@ namespace Codeco.CrossPlatform.Mvvm
             SimpleIoc.Default.Register<INavigationService>(InitializeNavigationService);
             SimpleIoc.Default.Register<ILocalizeService>(() => DependencyService.Get<ILocalizeService>());
             SimpleIoc.Default.Register<IUserDialogs>(() => UserDialogs.Instance);
-            SimpleIoc.Default.Register<IFileService>(() => new FileService(appFolderService));
+
+            IFileService fileService = new FileService(appFolderService);
+            SimpleIoc.Default.Register<IFileService>(() => fileService);
+
+            SimpleIoc.Default.Register<IUserFileService>(() => new UserFileService(appFolderService, fileService));
 
             //Register your ViewModels here
             SimpleIoc.Default.Register<MainViewModel>();

@@ -15,9 +15,9 @@ namespace Codeco.Windows10.Services.DependencyServices
             return Windows.Storage.ApplicationData.Current.LocalFolder.Path;
         }
 
-        public async Task<SafeFileHandle> UWPOpenOrCreateSafeFileHandle(string fileName)
-        {
-            var file = await Windows.Storage.ApplicationData.Current.LocalFolder.CreateFileAsync(fileName);
+        public async Task<SafeFileHandle> UWPOpenOrCreateSafeFileHandle(string filePath)
+        {            
+            var file = await Windows.Storage.ApplicationData.Current.LocalFolder.CreateFileAsync(filePath);
             return file.CreateSafeFileHandle();
         }
     }

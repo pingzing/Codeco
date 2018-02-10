@@ -16,7 +16,7 @@ namespace Codeco.CrossPlatform.ViewModels
     public class MainViewModel : NavigableViewModelBase
     {
         private readonly IUserDialogs _userDialogs;
-        private readonly IFileService _fileService;
+        private readonly IUserFileService _userFileService;
 
         private readonly NamedKeyboard _defaultKeyboard = new NamedKeyboard(Keyboard.Default, "Default");
         private readonly NamedKeyboard _numericKeyboard = new NamedKeyboard(Keyboard.Numeric, "Numeric");
@@ -67,11 +67,11 @@ namespace Codeco.CrossPlatform.ViewModels
 
         public MainViewModel(INavigationService navService,
                              IUserDialogs userDialogs,
-                             IFileService fileService) 
+                             IUserFileService userFileService) 
             : base(navService)
         {
             _userDialogs = userDialogs;
-            _fileService = fileService;
+            _userFileService = userFileService;
 
             _currentInputKeyboard = _defaultKeyboard;
             AvailableKeyboards.Add(_defaultKeyboard);
@@ -127,7 +127,7 @@ namespace Codeco.CrossPlatform.ViewModels
         private async void AddFile()
         {
             Random rand = new Random();
-            await _fileService.CreateFileAsync($"test-{rand.Next()}.txt");
+            await _userFileService.CreateUserFileAsync($"test-{rand.Next()}.txt");
         }
 
         private void CopyCodeText()
