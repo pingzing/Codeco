@@ -44,7 +44,10 @@ namespace Codeco.Windows10
                 SuspensionManager.RegisterFrame(rootFrame, "AppFrame");
 
                 Xamarin.Forms.Forms.Init(e);
+
+                //Dependency services
                 Xamarin.Forms.DependencyService.Register<AppFolderService>();
+                Xamarin.Forms.DependencyService.Register<NativeFileServiceFacade>();
                 
                 rootFrame.CacheSize = 1;
 

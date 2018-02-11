@@ -1,58 +1,65 @@
 ﻿using Codeco.CrossPlatform.Services.DependencyInterfaces;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace Codeco.CrossPlatform.Services
 {
     public class FileService : IFileService
     {
-        private readonly IAppFolderService _appFolderService;
+        private readonly INativeFileServiceFacade _nativeFileService;
 
-        public FileService(IAppFolderService appFolderService)
+        public FileService(INativeFileServiceFacade nativeFileService)
         {
-            _appFolderService = appFolderService;
+            _nativeFileService = nativeFileService;
         }
 
-        public async Task CreateFileAsync(string fileName)
+        public async Task CreateFileAsync(string relativeFileName)
         {
-            FileStream fileStream = null;
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) // Since we're in a Xamarin Forms project, we can infer that this is UWP
+            using (var fileStream = await _nativeFileService.OpenOrCreateFileAsync(relativeFileName))
             {
-                var fileHandle = await _appFolderService.UWPOpenOrCreateSafeFileHandle(fileName);
-                using (fileStream = new FileStream(fileHandle, FileAccess.ReadWrite, 4096, false))
-                {
-                    // Don't do anything with the filestream--it's already created the file.
-                }
+                // Just let it close, it's already been created.
             }
-            else
+
+        }
+
+        public async Task WriteBytesAsync(string relativeFileName, byte[] data)
+        {
+            using (var fileStream = await _nativeFileService.OpenOrCreateFileAsync(relativeFileName))
             {
-                using (fileStream = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None, 1, true))
-                {
-                    // Don't do anything with the filestream--it's already created the file.
-                }
+                await fileStream.WriteAsync(data, 0, data.Length);
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="absoluteFolderPath"></param>
+        /// <param name="relativeFolderPath"></param>
         /// <returns></returns>
-        public DirectoryInfo CreateFolder(string absoluteFolderPath)
+        public DirectoryInfo CreateFolder(string relativeFolderPath)
         {
             try
             {
-                DirectoryInfo createdDir = Directory.CreateDirectory(absoluteFolderPath);
+                DirectoryInfo createdDir = Directory.CreateDirectory(relativeFolderPath);
                 return createdDir;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Failed to create folder at {absoluteFolderPath}. Reason: {ex.Message}");
+                Debug.WriteLine($"Failed to create folder at {relativeFolderPath}. Reason: {ex.Message}");
                 return null;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="relativeFolderPath"></param>
+        /// <returns></returns>
+        public Task<List<string>> GetFilesInFolder(string relativeFolderPath)
+        {
+            return _nativeFileService.GetFilesAsync(relativeFolderPath);
         }
 
     }

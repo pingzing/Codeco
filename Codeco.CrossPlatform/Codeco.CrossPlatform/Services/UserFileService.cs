@@ -1,8 +1,13 @@
-﻿using Codeco.CrossPlatform.Services.DependencyInterfaces;
+﻿using Codeco.CrossPlatform.Extensions.Reactive;
+using Codeco.CrossPlatform.Models;
+using Codeco.CrossPlatform.Models.FileSystem;
+using Codeco.CrossPlatform.Services.DependencyInterfaces;
+using DynamicData;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,9 +15,7 @@ namespace Codeco.CrossPlatform.Services
 {
     public class UserFileService : IUserFileService
     {
-        private const string UserFilesFolderName = "CodecoFiles";
-        private const string LocalFilesFolderName = "Local";
-        private const string RoamedFilesFolderNamed = "Roamed";
+        private const string UserFilesFolderName = "CodecoFiles";        
         private readonly string _fullUserFilesFolderPath;
 
         private readonly IAppFolderService _appFolderService;
@@ -25,17 +28,29 @@ namespace Codeco.CrossPlatform.Services
 
             _fullUserFilesFolderPath = Path.Combine(_appFolderService.GetAppFolderPath(), UserFilesFolderName);
 
-            CreateUserFolder(LocalFilesFolderName);
-            CreateUserFolder(RoamedFilesFolderNamed);
+            string localFolderName = FileLocation.Local.FolderName();
+            string roamedFolderName = FileLocation.Roamed.FolderName();
 
-            FileSystemWatcher watcher = new FileSystemWatcher(_fullUserFilesFolderPath);
-            watcher.Changed += Changed;
-            watcher.Created += Created;
-            watcher.Deleted += Deleted;
-            watcher.Renamed += Renamed;
+            CreateUserFolder(localFolderName);
+            CreateUserFolder(roamedFolderName);
 
-            watcher.EnableRaisingEvents = true;
 
+            var localFolderWatcher = ObserveFolderChanges(Path.Combine(_fullUserFilesFolderPath, localFolderName));
+            localFolderWatcher.Subscribe(x => Debug.WriteLine($"LocalFolder Observed a change to: {x.Name}. ChangeType: {x.ChangeType}"));
+
+            var roamedFolderWatcher = ObserveFolderChanges(Path.Combine(_fullUserFilesFolderPath, roamedFolderName));
+            roamedFolderWatcher.Subscribe(x => Debug.WriteLine($"RoamedFolder Observed a change to: {x.Name}. ChangeType: {x.ChangeType}"));
+        }        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fileName">A file name only, not a path.</param>
+        /// <returns></returns>
+        public Task CreateUserFileAsync(string fileName, FileLocation fileLocation)
+        {
+            string absoluteFilePath = Path.Combine(UserFilesFolderName, fileLocation.FolderName(), fileName);
+            return _fileService.CreateFileAsync(absoluteFilePath);
         }
 
         /// <summary>
@@ -43,40 +58,65 @@ namespace Codeco.CrossPlatform.Services
         /// </summary>
         /// <param name="fileName">A file name only, not a path.</param>
         /// <returns></returns>
-        public Task CreateUserFileAsync(string fileName)
+        public Task CreateUserFileAsync(string fileName, FileLocation fileLocation, byte[] data)
         {
-            return _fileService.CreateFileAsync(fileName);
+            string absoluteFilePath = Path.Combine(UserFilesFolderName, fileLocation.FolderName(), fileName);
+            return _fileService.CreateFileAsync(absoluteFilePath);
         }
 
         /// <summary>
-        /// 
+        /// Creates a folder for user files under the CodecoFiles folder 
+        /// (which is itself at the application root).
         /// </summary>
-        /// <param name="relativeFolderPath">Path of the folder to create, relative to the app root.</param>
-        /// <returns></returns>
-        public void CreateUserFolder(string relativeFolderPath)
+        /// <param name="relativeFolderPath">Path of the folder to create, relative to 
+        /// the AppRoot/CoedcoFiles/ folder.</param>
+        /// <returns>The <see cref="DirectoryInfo"/> of the created folder, or null.</returns>
+        public DirectoryInfo CreateUserFolder(string relativeFolderPath)
         {
             string absoluteFolderPath = Path.Combine(_fullUserFilesFolderPath, relativeFolderPath);
-            _fileService.CreateFolder(absoluteFolderPath);
+            return _fileService.CreateFolder(absoluteFolderPath);
+        }        
+
+        private IObservable<FileChangedEvent> ObserveFolderChanges(string folder)
+        {
+            return Observable.Using(
+                () => new FileSystemWatcher(folder) { EnableRaisingEvents = true },
+                fsWatcher => CreateFileSystemWatcherSources(fsWatcher)
+                    .Merge()
+                    .GroupBy(ev => new { ev.FullPath, ev.ChangeType })
+                    .SelectMany(fileEvents => fileEvents));
         }
 
-        private void Changed(object sender, FileSystemEventArgs e)
+        private IObservable<FileChangedEvent>[] CreateFileSystemWatcherSources(FileSystemWatcher fileWatcher)
         {
-            Debug.WriteLine($"CHANGED: ChangeType: {e.ChangeType}, Name: {e.Name}");
+            return new[] {
+                Observable.FromEventPattern<FileSystemEventArgs>(fileWatcher, nameof(FileSystemWatcher.Changed))
+                    .Select(ev => new FileChangedEvent(ev.EventArgs))
+                    // FileChanges seem to fire multiple events. Ignore them from the same file for 30ms after the first change. That seems to be good enough to block duplicates.
+                    .DistinctUntilTimeout(TimeSpan.FromMilliseconds(30), new FileChangedEqualityComparer()),
+
+                Observable.FromEventPattern<FileSystemEventArgs>(fileWatcher, nameof(FileSystemWatcher.Created))
+                    .Select(ev => new FileChangedEvent(ev.EventArgs)),
+
+                Observable.FromEventPattern<FileSystemEventArgs>(fileWatcher, nameof(FileSystemWatcher.Deleted))
+                    .Select(ev => new FileChangedEvent(ev.EventArgs)),
+
+                Observable.FromEventPattern<RenamedEventArgs>(fileWatcher, nameof(FileSystemWatcher.Renamed))
+                    .Select(ev => new FileChangedEvent(ev.EventArgs))
+            };
         }
 
-        private void Created(object sender, FileSystemEventArgs e)
+        private class FileChangedEqualityComparer : IEqualityComparer<FileChangedEvent>
         {
-            Debug.WriteLine($"CREATED: ChangeType: {e.ChangeType}, {e.Name}");
-        }
+            public bool Equals(FileChangedEvent x, FileChangedEvent y)
+            {
+                return x.ChangeType == y.ChangeType && x.FullPath == y.FullPath;
+            }
 
-        private void Deleted(object sender, FileSystemEventArgs e)
-        {
-            Debug.WriteLine($"DELETED: ChangeType: {e.ChangeType}, {e.Name}");
-        }
-
-        private void Renamed(object sender, RenamedEventArgs e)
-        {
-            Debug.WriteLine($"RENAMED: ChangeType: {e.ChangeType}, {e.Name}");
+            public int GetHashCode(FileChangedEvent obj)
+            {
+                return obj.ChangeType.GetHashCode() ^ obj.FullPath?.GetHashCode() ?? 7 * 7;
+            }
         }
     }
 }

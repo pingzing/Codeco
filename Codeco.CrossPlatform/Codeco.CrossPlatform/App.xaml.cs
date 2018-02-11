@@ -2,6 +2,7 @@
 using Codeco.CrossPlatform.Views;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -24,7 +25,8 @@ namespace Codeco.CrossPlatform
             MainNavigationHost = new NavigationHost();
             Locator = (ViewModelLocator)Current.Resources["Locator"];
 
-            MainPage = MainNavigationHost;
+            MainPage = MainNavigationHost;            
+
             MainNavigationHost.NavigateToAsync(new MainPage(), false);
         }
 

@@ -3,6 +3,7 @@ using Codeco.CrossPlatform.Models;
 using Codeco.CrossPlatform.Mvvm;
 using Codeco.CrossPlatform.Services;
 using GalaSoft.MvvmLight.Command;
+using Plugin.FilePicker;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -41,8 +42,8 @@ namespace Codeco.CrossPlatform.ViewModels
         public NamedKeyboard CurrentInputKeyboard
         {
             get => _currentInputKeyboard;
-            set => Set(ref _currentInputKeyboard, value);            
-        }        
+            set => Set(ref _currentInputKeyboard, value);
+        }
 
         private string _inputText;
         public string InputText
@@ -53,7 +54,7 @@ namespace Codeco.CrossPlatform.ViewModels
                 if (Set(ref _inputText, value))
                 {
                     LookupValue(_inputText);
-                }                
+                }
             }
         }
 
@@ -65,9 +66,12 @@ namespace Codeco.CrossPlatform.ViewModels
         private RelayCommand _addFileCommand;
         public RelayCommand AddFileCommand => _addFileCommand ?? (_addFileCommand = new RelayCommand(AddFile));
 
+        private RelayCommand _debugAddFolderCommand;
+        public RelayCommand DebugAddFolderCommand => _debugAddFolderCommand ?? (_debugAddFolderCommand = new RelayCommand(DebugAddFolder));
+
         public MainViewModel(INavigationService navService,
                              IUserDialogs userDialogs,
-                             IUserFileService userFileService) 
+                             IUserFileService userFileService)
             : base(navService)
         {
             _userDialogs = userDialogs;
@@ -110,14 +114,15 @@ namespace Codeco.CrossPlatform.ViewModels
                 Message = "Password",
                 OkText = "Ok",
                 Title = "Enter password",
-                OnTextChanged = args => {
+                OnTextChanged = args =>
+                {
                     args.IsValid = !String.IsNullOrWhiteSpace(args.Value);
                 },
-                
+
             });
 
             if (result.Ok)
-            {                
+            {
                 return result.Value;
             }
 
@@ -126,8 +131,22 @@ namespace Codeco.CrossPlatform.ViewModels
 
         private async void AddFile()
         {
+            var pickedFile = await CrossFilePicker.Current.PickFile();
+            if (pickedFile == null)
+            {
+                return;
+            }
+
+            //todo: do validation
+            //bool isValid = _userFileService.ValidateFile(pickedFile.DataArray);
+
+            await _userFileService.CreateUserFileAsync(pickedFile.FileName, FileLocation.Local, pickedFile.DataArray);
+        }
+
+        private void DebugAddFolder()
+        {
             Random rand = new Random();
-            await _userFileService.CreateUserFileAsync($"test-{rand.Next()}.txt");
+            _userFileService.CreateUserFolder($"testFolder-{rand.Next()}");
         }
 
         private void CopyCodeText()

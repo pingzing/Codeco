@@ -19,14 +19,17 @@ namespace Codeco.CrossPlatform.Mvvm
         {
             //Register (and initialize, if necessary) your services here
             IAppFolderService appFolderService = DependencyService.Get<IAppFolderService>();
-            SimpleIoc.Default.Register<IAppFolderService>(() => appFolderService);
+            SimpleIoc.Default.Register(() => appFolderService);
 
-            SimpleIoc.Default.Register<INavigationService>(InitializeNavigationService);
-            SimpleIoc.Default.Register<ILocalizeService>(() => DependencyService.Get<ILocalizeService>());
-            SimpleIoc.Default.Register<IUserDialogs>(() => UserDialogs.Instance);
+            INativeFileServiceFacade crossplatFileService = DependencyService.Get<INativeFileServiceFacade>();
+            SimpleIoc.Default.Register(() => crossplatFileService);
 
-            IFileService fileService = new FileService(appFolderService);
-            SimpleIoc.Default.Register<IFileService>(() => fileService);
+            SimpleIoc.Default.Register(InitializeNavigationService);
+            SimpleIoc.Default.Register(() => DependencyService.Get<ILocalizeService>());
+            SimpleIoc.Default.Register(() => UserDialogs.Instance);
+
+            IFileService fileService = new FileService(crossplatFileService);
+            SimpleIoc.Default.Register(() => fileService);
 
             SimpleIoc.Default.Register<IUserFileService>(() => new UserFileService(appFolderService, fileService));
 

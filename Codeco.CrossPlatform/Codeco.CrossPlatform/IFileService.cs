@@ -7,5 +7,6 @@ namespace Codeco.CrossPlatform.Services
     {
         Task CreateFileAsync(string fileName);
         DirectoryInfo CreateFolder(string absoluteFolderPath);
+        Task WriteBytesAsync(string relativeFileName, byte[] data);
     }
 }

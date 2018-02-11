@@ -21,7 +21,9 @@ namespace Codeco.CrossPlatform.Droid
             base.OnCreate(bundle);
 
             UserDialogs.Init(this);
-            global::Xamarin.Forms.Forms.Init(this, bundle);
+
+            global::Xamarin.Forms.Forms.Init(this, bundle);            
+
             LoadApplication(new App());
         }
     }
