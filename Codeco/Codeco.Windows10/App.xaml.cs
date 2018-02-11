@@ -13,6 +13,9 @@ using Windows.Foundation;
 using Windows.UI.Xaml.Media;
 using Windows.UI;
 using Codeco.Windows10.Services.DependencyServices;
+using System.Reflection;
+using System.Collections.Generic;
+using Rg.Plugins.Popup.Windows;
 
 namespace Codeco.Windows10
 {    
@@ -43,11 +46,16 @@ namespace Codeco.Windows10
                 //Associate the frame with a SuspensionManager key
                 SuspensionManager.RegisterFrame(rootFrame, "AppFrame");
 
-                Xamarin.Forms.Forms.Init(e);
+                Rg.Plugins.Popup.Popup.Init();
+                List<Assembly> assembliesToLoad = new List<Assembly>();
+                assembliesToLoad.AddRange(Rg.Plugins.Popup.Popup.GetExtraAssemblies());
+
+                Xamarin.Forms.Forms.Init(e, assembliesToLoad);
 
                 //Dependency services
                 Xamarin.Forms.DependencyService.Register<AppFolderService>();
                 Xamarin.Forms.DependencyService.Register<NativeFileServiceFacade>();
+                Xamarin.Forms.DependencyService.Register<AccentColorService>();
                 
                 rootFrame.CacheSize = 1;
 

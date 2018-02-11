@@ -1,4 +1,5 @@
 ﻿using Codeco.CrossPlatform.Mvvm;
+using Codeco.CrossPlatform.Services.DependencyInterfaces;
 using Codeco.CrossPlatform.Views;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,21 @@ namespace Codeco.CrossPlatform
             MainPage = MainNavigationHost;            
 
             MainNavigationHost.NavigateToAsync(new MainPage(), false);
+
+            SetupAccentColorMonitoring();
+        }
+
+        private void SetupAccentColorMonitoring()
+        {
+            var accentColorervice = DependencyService.Get<IAccentColorService>();
+            accentColorervice.PlatformAccentColor.Subscribe(
+                newColor => 
+                {
+                    Device.BeginInvokeOnMainThread(
+                        () => Resources["AccentColor"] = newColor
+                    );
+                }
+            );            
         }
 
         protected override void OnStart ()

@@ -5,6 +5,7 @@ using Codeco.CrossPlatform.Services.DependencyInterfaces;
 using Codeco.CrossPlatform.ViewModels;
 using Codeco.CrossPlatform.Views;
 using Acr.UserDialogs;
+using Rg.Plugins.Popup.Services;
 
 namespace Codeco.CrossPlatform.Mvvm
 {
@@ -24,6 +25,7 @@ namespace Codeco.CrossPlatform.Mvvm
             INativeFileServiceFacade crossplatFileService = DependencyService.Get<INativeFileServiceFacade>();
             SimpleIoc.Default.Register(() => crossplatFileService);
 
+            SimpleIoc.Default.Register(() => PopupNavigation.Instance);
             SimpleIoc.Default.Register(InitializeNavigationService);
             SimpleIoc.Default.Register(() => DependencyService.Get<ILocalizeService>());
             SimpleIoc.Default.Register(() => UserDialogs.Instance);

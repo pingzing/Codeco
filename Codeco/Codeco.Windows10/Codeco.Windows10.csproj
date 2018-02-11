@@ -914,6 +914,7 @@
     <Compile Include="Models\Mocks\MockBindableStorageFile.cs" />
     <Compile Include="Models\Mocks\MockStorageFile.cs" />
     <Compile Include="Models\SavedFiles.cs" />
+    <Compile Include="Services\DependencyServices\AccentColorService.cs" />
     <Compile Include="Services\DependencyServices\NativeFileServiceFacade.cs" />
     <Compile Include="Services\DependencyServices\AppFolderService.cs" />
     <Compile Include="Services\IInitializationValueService.cs" />
@@ -1012,6 +1013,9 @@
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>8.0.2</Version>
+    </PackageReference>
+    <PackageReference Include="Rg.Plugins.Popup">
+      <Version>1.1.4.135-beta</Version>
     </PackageReference>
     <PackageReference Include="System.Collections.Immutable">
       <Version>1.4.0</Version>

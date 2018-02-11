@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<popup:PopupPage xmlns="http://xamarin.com/schemas/2014/forms" 
+                 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                 xmlns:popup="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+                 x:Class="Codeco.CrossPlatform.Controls.AddFileView"
+                 
+                 HasSystemPadding="True"
+                 CloseWhenBackgroundIsClicked="True">
+    
+    <Frame BackgroundColor="Black"
+           OutlineColor="{DynamicResource AccentColor}"           
+           Padding="20,20,20,20" 
+           HorizontalOptions="CenterAndExpand" 
+           VerticalOptions="Center" 
+           WidthRequest="300">
+        <Frame.CornerRadius>
+            <OnPlatform x:TypeArguments="x:Single">
+                <On Platform="iOS, Android" Value="5"/>
+                <On Platform="UWP" Value="0"/>
+            </OnPlatform>
+        </Frame.CornerRadius>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Label x:Name="MessageLabel"
+                   Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                   Style="{DynamicResource BodyStyle}"
+                   Text="{Binding Message}"/>
+
+
+            <Entry x:Name="FileNameEntry"
+                   Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                   Placeholder="File name"
+                   Text="{Binding FileNameText, Mode=TwoWay}"/>
+            <Entry x:Name="PasswordEntry"
+                   Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                   IsPassword="True"
+                   Placeholder="Password"
+                   Text="{Binding PasswordText, Mode=TwoWay}"/>
+
+            <Button x:Name="OkButton"
+                    Grid.Row="3"
+                    Command="{Binding OkCommand}"
+                    IsEnabled="{Binding IsOkEnabled}"
+                    Text="Add file">
+                <!--Windows guidelines put dialog box OK buttons on the left, whereas
+                    Android/iOS put them on the right.-->        
+                <Grid.Column>
+                    <OnPlatform x:TypeArguments="x:Int32">
+                        <On Platform="iOS, Android" Value="1"/>
+                        <On Platform="UWP" Value="0"/>
+                    </OnPlatform>
+                </Grid.Column>
+            </Button>
+
+            <Button x:Name="CancelButton"
+                    Grid.Row="3"
+                    Command="{Binding CancelCommand}"
+                    Text="Cancel">
+                <!--Windows guidelines put dialog box OK buttons on the left, whereas
+                    Android/iOS put them on the right.-->
+                <Grid.Column>
+                    <OnPlatform x:TypeArguments="x:Int32">
+                        <On Platform="iOS, Android" Value="0"/>
+                        <On Platform="UWP" Value="1"/>
+                    </OnPlatform>
+                </Grid.Column>
+            </Button>
+        </Grid>
+    </Frame>
+
+</popup:PopupPage>

@@ -69,7 +69,7 @@ namespace Codeco.CrossPlatform.Mvvm
         public async Task NavigateToAsync(Page destination, bool animated = true)
         {
             await this.PushAsync(destination, animated);
-        }
+        }        
 
         public async Task GoBackAsync(bool animated = true)
         {

@@ -1,9 +1,11 @@
 ﻿using Acr.UserDialogs;
+using Codeco.CrossPlatform.Controls;
 using Codeco.CrossPlatform.Models;
 using Codeco.CrossPlatform.Mvvm;
 using Codeco.CrossPlatform.Services;
 using GalaSoft.MvvmLight.Command;
 using Plugin.FilePicker;
+using Rg.Plugins.Popup.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -18,6 +20,7 @@ namespace Codeco.CrossPlatform.ViewModels
     {
         private readonly IUserDialogs _userDialogs;
         private readonly IUserFileService _userFileService;
+        private readonly IPopupNavigation _popupNavigation;
 
         private readonly NamedKeyboard _defaultKeyboard = new NamedKeyboard(Keyboard.Default, "Default");
         private readonly NamedKeyboard _numericKeyboard = new NamedKeyboard(Keyboard.Numeric, "Numeric");
@@ -71,11 +74,13 @@ namespace Codeco.CrossPlatform.ViewModels
 
         public MainViewModel(INavigationService navService,
                              IUserDialogs userDialogs,
-                             IUserFileService userFileService)
+                             IUserFileService userFileService,
+                             IPopupNavigation popupNavigation)
             : base(navService)
         {
             _userDialogs = userDialogs;
             _userFileService = userFileService;
+            _popupNavigation = popupNavigation;
 
             _currentInputKeyboard = _defaultKeyboard;
             AvailableKeyboards.Add(_defaultKeyboard);
@@ -138,7 +143,20 @@ namespace Codeco.CrossPlatform.ViewModels
             }
 
             //todo: do validation
-            //bool isValid = _userFileService.ValidateFile(pickedFile.DataArray);
+            bool isValid = await _userFileService.ValidateFileAsync(pickedFile.DataArray);
+            if (!isValid)
+            {
+                await _userDialogs.AlertAsync(new AlertConfig
+                {
+                    Message = "The file you tried to add was not in a format Codeco understands. It will not be added.",
+                    OkText = "Ok",
+                    Title = "Invalid file"
+                });
+                return;
+            }
+
+            // Get a password and filename from the user, and encrypt the file.      
+            await _popupNavigation.PushAsync(new AddFileView());
 
             await _userFileService.CreateUserFileAsync(pickedFile.FileName, FileLocation.Local, pickedFile.DataArray);
         }

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -75,7 +76,27 @@ namespace Codeco.CrossPlatform.Services
         {
             string absoluteFolderPath = Path.Combine(_fullUserFilesFolderPath, relativeFolderPath);
             return _fileService.CreateFolder(absoluteFolderPath);
-        }        
+        }
+
+        public async Task<bool> ValidateFileAsync(byte[] dataArray)
+        {
+            using (var stream = new StreamReader(new MemoryStream(dataArray)))
+            {
+                IList<string> lines = (await stream.ReadToEndAsync())
+                    .Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries) // split into lines
+                    .Where(x => !String.IsNullOrWhiteSpace(x)) // filter out empty lines                    
+                    .ToList();
+
+                if (lines.Count == 0)
+                {
+                    return false;
+                }
+
+                // Split by separator, and ensure only 2 columns
+                return lines.Select(x => x.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    .All(splitStrings => splitStrings.Length == 2);
+            }
+        }
 
         private IObservable<FileChangedEvent> ObserveFolderChanges(string folder)
         {
@@ -104,7 +125,7 @@ namespace Codeco.CrossPlatform.Services
                 Observable.FromEventPattern<RenamedEventArgs>(fileWatcher, nameof(FileSystemWatcher.Renamed))
                     .Select(ev => new FileChangedEvent(ev.EventArgs))
             };
-        }
+        }        
 
         private class FileChangedEqualityComparer : IEqualityComparer<FileChangedEvent>
         {
