@@ -17,11 +17,22 @@ namespace Codeco.CrossPlatform
 {
     public partial class App : Application
     {
+        // Guard against resuming reinitializing on Android.
+        private static bool _initialized = false;
+
         public ViewModelLocator Locator { get; }
         public NavigationHost MainNavigationHost { get; set; }
 
         public App ()
-        {
+        {            
+            if (_initialized)
+            {
+                // TODO: Maybe call OnResume in Android doesn't do it for us.
+                return;
+            }
+
+            _initialized = true;
+
             InitializeComponent();
             MainNavigationHost = new NavigationHost();
             Locator = (ViewModelLocator)Current.Resources["Locator"];

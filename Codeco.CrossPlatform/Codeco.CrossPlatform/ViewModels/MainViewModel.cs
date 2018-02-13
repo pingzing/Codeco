@@ -5,6 +5,7 @@ using Codeco.CrossPlatform.Mvvm;
 using Codeco.CrossPlatform.Services;
 using GalaSoft.MvvmLight.Command;
 using Plugin.FilePicker;
+using Plugin.FilePicker.Abstractions;
 using Rg.Plugins.Popup.Contracts;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ namespace Codeco.CrossPlatform.ViewModels
         private readonly IUserDialogs _userDialogs;
         private readonly IUserFileService _userFileService;
         private readonly IPopupNavigation _popupNavigation;
+        private readonly IFilePicker _filePicker;
 
         private readonly NamedKeyboard _defaultKeyboard = new NamedKeyboard(Keyboard.Default, "Default");
         private readonly NamedKeyboard _numericKeyboard = new NamedKeyboard(Keyboard.Numeric, "Numeric");
@@ -75,12 +77,14 @@ namespace Codeco.CrossPlatform.ViewModels
         public MainViewModel(INavigationService navService,
                              IUserDialogs userDialogs,
                              IUserFileService userFileService,
-                             IPopupNavigation popupNavigation)
+                             IPopupNavigation popupNavigation,
+                             IFilePicker filePicker)
             : base(navService)
         {
             _userDialogs = userDialogs;
             _userFileService = userFileService;
             _popupNavigation = popupNavigation;
+            _filePicker = filePicker;
 
             _currentInputKeyboard = _defaultKeyboard;
             AvailableKeyboards.Add(_defaultKeyboard);
@@ -136,7 +140,7 @@ namespace Codeco.CrossPlatform.ViewModels
 
         private async void AddFile()
         {
-            var pickedFile = await CrossFilePicker.Current.PickFile();
+            var pickedFile = await _filePicker.PickFile();
             if (pickedFile == null)
             {
                 return;

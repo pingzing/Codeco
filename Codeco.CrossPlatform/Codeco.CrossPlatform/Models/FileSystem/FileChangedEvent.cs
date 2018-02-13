@@ -25,5 +25,19 @@ namespace Codeco.CrossPlatform.Models.FileSystem
             RenamedOldPath = renamedEvent.OldFullPath;
             RenamedOldName = renamedEvent.OldName;
         }
+
+        public FileChangedEvent(string fullPath, string name, WatcherChangeTypes type)
+        {
+            FullPath = fullPath;
+            Name = name;
+            ChangeType = type;
+        }
+
+        public FileChangedEvent(string fullPath, string name, WatcherChangeTypes type, string oldFullPath, string oldName) 
+            : this(fullPath, name, type)
+        {
+            RenamedOldPath = oldFullPath;
+            RenamedOldName = oldName;
+        }
     }
 }
