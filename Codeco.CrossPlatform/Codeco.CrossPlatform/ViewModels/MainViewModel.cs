@@ -2,6 +2,7 @@
 using Codeco.CrossPlatform.Models;
 using Codeco.CrossPlatform.Mvvm;
 using Codeco.CrossPlatform.Services;
+using Codeco.Encryption;
 using GalaSoft.MvvmLight.Command;
 using Plugin.FilePicker;
 using Plugin.FilePicker.Abstractions;
@@ -9,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
+using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -19,6 +21,7 @@ namespace Codeco.CrossPlatform.ViewModels
         private readonly IUserDialogs _userDialogs;
         private readonly IUserFileService _userFileService;        
         private readonly IFilePicker _filePicker;
+        private readonly IEncryptionService _encryptionService;
 
         private readonly NamedKeyboard _defaultKeyboard = new NamedKeyboard(Keyboard.Default, "Default");
         private readonly NamedKeyboard _numericKeyboard = new NamedKeyboard(Keyboard.Numeric, "Numeric");
@@ -73,12 +76,14 @@ namespace Codeco.CrossPlatform.ViewModels
         public MainViewModel(INavigationService navService,
                              IUserDialogs userDialogs,
                              IUserFileService userFileService,
-                             IFilePicker filePicker)
+                             IFilePicker filePicker,
+                             IEncryptionService encryptionService)
             : base(navService)
         {
             _userDialogs = userDialogs;
             _userFileService = userFileService;
             _filePicker = filePicker;
+            _encryptionService = encryptionService;
 
             _currentInputKeyboard = _defaultKeyboard;
             AvailableKeyboards.Add(_defaultKeyboard);
@@ -151,6 +156,7 @@ namespace Codeco.CrossPlatform.ViewModels
                 });
                 return;
             }
+            string pickedFileDataString = Encoding.UTF8.GetString(pickedFile.DataArray);
             
             var filePopupResult = await _navigationService.ShowPopupViewModelAsync<AddFileViewModel, (string, string)>();
             if (filePopupResult.PopupChoice != Popups.PopupChoice.Ok)
@@ -161,6 +167,7 @@ namespace Codeco.CrossPlatform.ViewModels
             var (pickedFileName, pickedPassword) = filePopupResult.Result;
 
             //TODO: Encrypt the file contents
+            var (encryptedData, salt, iv) = _encryptionService.Encrypt(pickedFileDataString, pickedPassword);
 
             await _userFileService.CreateUserFileAsync(pickedFileName, FileLocation.Local, pickedFile.DataArray);
         }

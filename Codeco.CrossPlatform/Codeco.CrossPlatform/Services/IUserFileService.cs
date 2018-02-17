@@ -9,6 +9,7 @@ namespace Codeco.CrossPlatform.Services
         Task CreateUserFileAsync(string fileName, FileLocation fileLocation);
         DirectoryInfo CreateUserFolder(string relativeFolderPath);
         Task CreateUserFileAsync(string fileName, FileLocation fileLocation, byte[] data);
+        Task CreateUserFileAsync(string fileName, FileLocation fileLocation, string data);
         Task<bool> ValidateFileAsync(byte[] dataArray);
     }
 }

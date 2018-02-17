@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Codeco.CrossPlatform.Models.FileSystem;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -6,6 +7,14 @@ namespace Codeco.CrossPlatform.Services.DependencyInterfaces
 {
     public interface INativeFileServiceFacade
     {
+        /// <summary>
+        /// Creates a file for the given path, relative to the application data root. In the event of a filename collision,
+        /// a substitute name will be chosen.
+        /// </summary>
+        /// <param name="relativeFilePath">The filepath, relative to the application data root.</param>
+        /// <returns>The name of the created file, and an open filestream pointed to it.</returns>
+        Task<CreateFileResult> CreateFileAsync(string relativeFilePath);
+
         /// <summary>
         /// Creates (or opens, if exists) a FileStream for the file at the given path, relative to the application data root.
         /// </summary>

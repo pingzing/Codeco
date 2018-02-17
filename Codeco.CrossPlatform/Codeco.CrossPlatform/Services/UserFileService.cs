@@ -69,6 +69,12 @@ namespace Codeco.CrossPlatform.Services
             return _fileService.CreateFileAsync(absoluteFilePath);
         }
 
+        public Task CreateUserFileAsync(string fileName, FileLocation fileLocation, string data)
+        {
+            string absoluteFilePath = Path.Combine(UserFilesFolderName, fileLocation.FolderName(), fileName);
+            return _fileService.CreateFileAsync(absoluteFilePath);
+        }
+
         /// <summary>
         /// Creates a folder for user files under the CodecoFiles folder 
         /// (which is itself at the application root).

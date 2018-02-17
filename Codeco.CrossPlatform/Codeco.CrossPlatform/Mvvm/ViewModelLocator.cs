@@ -9,6 +9,7 @@ using Rg.Plugins.Popup.Services;
 using Rg.Plugins.Popup.Contracts;
 using Plugin.FilePicker.Abstractions;
 using Codeco.CrossPlatform.Popups;
+using Codeco.Encryption;
 
 namespace Codeco.CrossPlatform.Mvvm
 {
@@ -32,6 +33,7 @@ namespace Codeco.CrossPlatform.Mvvm
             SimpleIoc.Default.Register<IFileSystemWatcherService>(() => DependencyService.Get<IFileSystemWatcherService>());
             SimpleIoc.Default.Register<IUserFileService, UserFileService>();
             SimpleIoc.Default.Register<IFilePicker>(() => Plugin.FilePicker.CrossFilePicker.Current);
+            SimpleIoc.Default.Register<IEncryptionService, EncryptionService>();
 
             //Register your ViewModels here
             SimpleIoc.Default.Register<MainViewModel>();
@@ -48,7 +50,7 @@ namespace Codeco.CrossPlatform.Mvvm
         {
             var popupHost = new PopupHost(SimpleIoc.Default.GetInstance<IPopupNavigation>());
 
-            NavigationService navService = new NavigationService(((App)Application.Current).MainNavigationHost, 
+            NavigationService navService = new NavigationService(((App)Application.Current).MainNavigationHost,
                 popupHost)
                 .Configure(typeof(MainViewModel), typeof(MainPage))
                 .Configure(typeof(AddFileViewModel), typeof(AddFileView));
