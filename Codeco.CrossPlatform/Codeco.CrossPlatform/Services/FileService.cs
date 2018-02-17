@@ -1,4 +1,5 @@
-﻿using Codeco.CrossPlatform.Services.DependencyInterfaces;
+﻿using Codeco.CrossPlatform.Models.FileSystem;
+using Codeco.CrossPlatform.Services.DependencyInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -24,12 +25,15 @@ namespace Codeco.CrossPlatform.Services
             }
         }
 
-        public async Task CreateFileAsync(string relativeFileName)
+        public async Task<CreateFileResult> CreateFileAsync(string relativeFileName)
         {
-            using (var fileStream = await _nativeFileService.CreateFileAsync(relativeFileName))
+            var createdFile = await _nativeFileService.CreateFileAsync(relativeFileName);
+            if (createdFile == null || createdFile.Stream == null)
             {
-
+                return null;
             }
+
+            return createdFile;
         }
 
         public async Task WriteBytesAsync(string relativeFileName, byte[] data)
@@ -67,7 +71,6 @@ namespace Codeco.CrossPlatform.Services
         public Task<List<string>> GetFilesInFolder(string relativeFolderPath)
         {
             return _nativeFileService.GetFilesAsync(relativeFolderPath);
-        }
-
+        }        
     }
 }

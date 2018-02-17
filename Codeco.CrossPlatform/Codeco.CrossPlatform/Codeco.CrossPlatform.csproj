@@ -70,5 +70,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\FilePicker-Plugin-for-Xamarin-and-Windows\src\Plugin.FilePicker\Plugin.FilePicker\Plugin.FilePicker.csproj" />
+    <ProjectReference Include="..\..\Codeco.Encryption\Codeco.Encryption.csproj" />
   </ItemGroup>
 </Project>

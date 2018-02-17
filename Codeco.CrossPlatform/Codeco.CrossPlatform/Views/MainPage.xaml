@@ -12,7 +12,15 @@
             <ToolbarItem Icon="{extensions:ImageExtension plus.png}" Text="Add" Command="{Binding AddFileCommand}"/>
         </ContentPage.ToolbarItems>
         <Grid>
-            <ListView x:Name="FilesList">
+            <ListView x:Name="FilesList"
+                      ItemsSource="{Binding Files}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Label Text="{Binding Name}"/>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
                 
             </ListView>
         </Grid>

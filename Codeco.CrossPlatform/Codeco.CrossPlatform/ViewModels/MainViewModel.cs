@@ -3,6 +3,7 @@ using Codeco.CrossPlatform.Models;
 using Codeco.CrossPlatform.Mvvm;
 using Codeco.CrossPlatform.Services;
 using Codeco.Encryption;
+using DynamicData;
 using GalaSoft.MvvmLight.Command;
 using Plugin.FilePicker;
 using Plugin.FilePicker.Abstractions;
@@ -12,14 +13,16 @@ using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reactive.Linq;
 using Xamarin.Forms;
+using Codeco.CrossPlatform.Extensions;
 
 namespace Codeco.CrossPlatform.ViewModels
 {
     public class MainViewModel : NavigableViewModelBase
     {
         private readonly IUserDialogs _userDialogs;
-        private readonly IUserFileService _userFileService;        
+        private readonly IUserFileService _userFileService;
         private readonly IFilePicker _filePicker;
         private readonly IEncryptionService _encryptionService;
 
@@ -64,6 +67,9 @@ namespace Codeco.CrossPlatform.ViewModels
 
         public ObservableCollection<NamedKeyboard> AvailableKeyboards = new ObservableCollection<NamedKeyboard>();
 
+        private ReadOnlyObservableCollection<SimpleFileInfo> _files;
+        public ReadOnlyObservableCollection<SimpleFileInfo> Files => _files;
+
         private RelayCommand _copyCodeTextCommand;
         public RelayCommand CopyCodeTextCommand => _copyCodeTextCommand ?? (_copyCodeTextCommand = new RelayCommand(CopyCodeText));
 
@@ -87,12 +93,20 @@ namespace Codeco.CrossPlatform.ViewModels
 
             _currentInputKeyboard = _defaultKeyboard;
             AvailableKeyboards.Add(_defaultKeyboard);
-            AvailableKeyboards.Add(_numericKeyboard);
+            AvailableKeyboards.Add(_numericKeyboard);            
         }
 
         public override async Task Activated(NavigationType navType)
         {
-            await Task.CompletedTask;
+            if (_files == null)
+            {
+                _userFileService.FilesList
+                         .Connect()
+                         .Bind(out _files)
+                         .Subscribe();
+
+                RaisePropertyChanged(nameof(Files));
+            }
         }
 
         public override Task Deactivated()
@@ -139,7 +153,7 @@ namespace Codeco.CrossPlatform.ViewModels
 
         private async void AddFile()
         {
-            var pickedFile = await CrossFilePicker.Current.PickFile();            
+            var pickedFile = await CrossFilePicker.Current.PickFile();
             if (pickedFile == null)
             {
                 return;
@@ -157,7 +171,7 @@ namespace Codeco.CrossPlatform.ViewModels
                 return;
             }
             string pickedFileDataString = Encoding.UTF8.GetString(pickedFile.DataArray);
-            
+
             var filePopupResult = await _navigationService.ShowPopupViewModelAsync<AddFileViewModel, (string, string)>();
             if (filePopupResult.PopupChoice != Popups.PopupChoice.Ok)
             {
@@ -165,11 +179,10 @@ namespace Codeco.CrossPlatform.ViewModels
             }
 
             var (pickedFileName, pickedPassword) = filePopupResult.Result;
-
-            //TODO: Encrypt the file contents
             var (encryptedData, salt, iv) = _encryptionService.Encrypt(pickedFileDataString, pickedPassword);
+            //TODO: Save the salt and the IV somewhere.
 
-            await _userFileService.CreateUserFileAsync(pickedFileName, FileLocation.Local, pickedFile.DataArray);
+            await _userFileService.CreateUserFileAsync(pickedFileName, FileLocation.Local, encryptedData);
         }
 
         private void DebugAddFolder()

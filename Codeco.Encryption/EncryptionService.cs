@@ -25,7 +25,7 @@ namespace Codeco.Encryption
             byte[] ivToReturn = null;
             using (Aes aes = Aes.Create())
             {
-                (byte[] key, byte[] salt) = GetKeyAndSaltFromPassword(password, aes.KeySize);
+                (byte[] key, byte[] salt) = GetKeyAndSaltFromPassword(password, aes.Key.Length);
                 saltToReturn = salt;
                 ivToReturn = aes.IV;
                 aes.Key = key;
