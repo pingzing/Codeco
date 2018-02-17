@@ -55,7 +55,7 @@ namespace Codeco.Windows10
                 //Dependency services
                 Xamarin.Forms.DependencyService.Register<AppFolderService>();
                 Xamarin.Forms.DependencyService.Register<NativeFileServiceFacade>();
-                Xamarin.Forms.DependencyService.Register<AccentColorService>();
+                Xamarin.Forms.DependencyService.Register<PlatformColorService>();
                 Xamarin.Forms.DependencyService.Register<FileSystemWatcherService>();
                 
                 rootFrame.CacheSize = 1;

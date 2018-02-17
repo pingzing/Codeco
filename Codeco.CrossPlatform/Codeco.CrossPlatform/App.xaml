@@ -7,8 +7,10 @@
         <ResourceDictionary>
             <mvvm:ViewModelLocator x:Key="Locator" x:Name="ViewModelLocator" />
             
-            <!--This is updated via an Observable, and should be used only with DynamicResource.-->
+            <!--These are updated via Observables, and should be used only with DynamicResource.-->
             <Color x:Key="AccentColor"/>
+            <Color x:Key="ForegroundColor"/>
+            <Color x:Key="BackgroundColor"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

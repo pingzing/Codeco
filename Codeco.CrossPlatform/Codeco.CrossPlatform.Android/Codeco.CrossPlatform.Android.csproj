@@ -51,7 +51,7 @@
       <Version>7.0.1</Version>
     </PackageReference>
     <PackageReference Include="Rg.Plugins.Popup">
-      <Version>1.1.4.135-beta</Version>
+      <Version>1.1.4.145-pre</Version>
     </PackageReference>
     <PackageReference Include="Xam.Plugin.Iconize.SimpleLineIcons">
       <Version>2.0.0.37-beta</Version>
@@ -62,12 +62,9 @@
     <PackageReference Include="Xamarin.Android.Support.v4" Version="25.4.0.2" />
     <PackageReference Include="Xamarin.Android.Support.v7.CardView" Version="25.4.0.2" />
     <PackageReference Include="Xamarin.Android.Support.v7.MediaRouter" Version="25.4.0.2" />
-    <PackageReference Include="Xamarin.Plugin.FilePicker">
-      <Version>2.0.8-beta</Version>
-    </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DependencyServices\AccentColorService.cs" />
+    <Compile Include="DependencyServices\PlatformColorService.cs" />
     <Compile Include="DependencyServices\AppFolderService.cs" />
     <Compile Include="DependencyServices\FileSystemWatcherService.cs" />
     <Compile Include="DependencyServices\NativeFileServiceFacade.cs" />
@@ -81,13 +78,237 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-hdpi\icon.png" />
-    <AndroidResource Include="Resources\drawable-xhdpi\icon.png" />
-    <AndroidResource Include="Resources\drawable-xxhdpi\icon.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>
+    <AndroidResource Include="Resources\drawable-xhdpi\anchor.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\badge.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\bag.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ban.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\basket.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\bell.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\briefcase.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\bubble.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\bubbles.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\bulb.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\calculator.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\calender.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\camera.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\camrecorder.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\chart.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\check.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\chemistry.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\clock.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\close.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\compass.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\crop.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\cup.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\cursor.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\diamond.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\direction.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\directions.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\disc.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\dislike.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\doc.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\docs.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\drawar.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\drop.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\earphones.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\emotsmile.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\energy.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\envolope.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\equalizer.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\event.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\exclamation.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\eye.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\eyeglass.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\feed.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\film.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\fire.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\flag.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\folder.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\frame.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ghost.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\globe.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\graduation.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\graph.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\grid.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\handbag.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\heart.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\home.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\hourglass.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\icon.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\info.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\key.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\layers.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\like.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\link.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\list.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\lock.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\login.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\logout.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\loop.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\magnet.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\magnifier.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\map.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\menu.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\microphone.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\minus.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\mouse.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\mustache.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\note.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\notebook.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\options.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\organization.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\paypal.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\pencil.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\people.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\phone.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\picture.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\pin.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\plane.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\playlist.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\plus.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\power.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\present.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\printer.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\puzzle.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\question.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\refresh.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\reload.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\rocket.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\settings.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\share.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\shield.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\shuffle.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\speech.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\speedometer.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\star.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\support.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\tag.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\target.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\trash.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\trophy.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\umbrella.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\user.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\vector.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\wallet.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\wrench.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\anchor.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\badge.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\bag.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ban.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\basket.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\bell.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\briefcase.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\bubble.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\bubbles.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\bulb.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\calculator.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\calender.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\camera.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\camrecorder.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\chart.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\check.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\chemistry.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\clock.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\close.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\compass.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\crop.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\cup.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\cursor.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\diamond.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\direction.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\directions.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\disc.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\dislike.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\doc.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\docs.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\drawar.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\drop.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\earphones.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\emotsmile.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\energy.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\envolope.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\equalizer.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\event.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\exclamation.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\eye.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\eyeglass.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\feed.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\film.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\fire.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\flag.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\folder.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\frame.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ghost.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\globe.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\graduation.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\graph.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\grid.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\handbag.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\heart.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\home.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\hourglass.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\icon.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\info.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\key.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\layers.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\like.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\link.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\list.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\lock.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\login.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\logout.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\loop.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\magnet.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\magnifier.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\map.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\menu.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\microphone.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\minus.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\mouse.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\mustache.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\note.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\notebook.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\options.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\organization.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\paypal.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\pencil.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\people.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\phone.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\picture.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\pin.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\plane.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\playlist.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\plus.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\power.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\present.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\printer.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\puzzle.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\question.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\refresh.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\reload.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\rocket.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\settings.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\share.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\shield.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\shuffle.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\speech.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\speedometer.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\star.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\support.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\tag.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\target.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\trash.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\trophy.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\umbrella.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\user.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\vector.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\wallet.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\wrench.png" />
     <AndroidResource Include="Resources\layout\Tabbar.axml" />
     <AndroidResource Include="Resources\layout\Toolbar.axml" />
     <AndroidResource Include="Resources\values\styles.xml">
@@ -95,2281 +316,1611 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\FilePicker-Plugin-for-Xamarin-and-Windows\src\Plugin.FilePicker\Plugin.FilePicker.Android\Plugin.FilePicker.Android.csproj">
+      <Project>{56a56f17-7de1-4ca1-9617-bf32e971ac84}</Project>
+      <Name>Plugin.FilePicker.Android</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Codeco.CrossPlatform\Codeco.CrossPlatform.csproj">
-      <Project>{ED2EFBBF-DE11-4221-BC59-B3A822E87C9B}</Project>
+      <Project>{399367d2-1733-4d4a-8274-36c4f3ef3901}</Project>
       <Name>Codeco.CrossPlatform</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icon.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\anchor.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\action-redo.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\badge.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\action-undo.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\bag.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\anchor.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\ban.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\arrow-down-circle.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\basket.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\arrow-down.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\bell.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\arrow-left-circle.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\briefcase.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\arrow-left.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\bubble.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\arrow-right-circle.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\bubbles.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\arrow-right.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\bulb.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\arrow-up-circle.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\calculator.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\arrow-up.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\calender.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\badge.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\camera.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\bag.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\camrecorder.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\ban.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\chart.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\basket-loaded.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\check.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\basket.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\chemistry.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\bell.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\clock.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\book-open.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\close.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\briefcase.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\compass.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\bubble.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\crop.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\bubbles.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\cup.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\bulb.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\cursor.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\calculator.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\diamond.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\calender.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\direction.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\call-end.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\directions.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\call-in.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\disc.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\call-out.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\dislike.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\camera.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\doc.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\camrecorder.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\docs.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\chart.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\drawar.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\check.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\drop.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\chemistry.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\earphones.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\clock.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\emotsmile.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\close.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\energy.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\cloud-download.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\envolope.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\cloud-upload.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\equalizer.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\compass.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\event.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\control-end.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\exclamation.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\control-forward.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\eye.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\control-pause.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\eyeglass.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\control-play.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\feed.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\control-rewind.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\film.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\control-start.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\fire.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\credit-card.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\flag.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\crop.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\folder.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\cup.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\frame.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\cursor-move.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\ghost.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\cursor.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\globe.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\diamond.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\graduation.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\direction.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\graph.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\directions.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\grid.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\disc.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\handbag.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\dislike.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\heart.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\doc.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\home.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\docs.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\hourglass.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\drawar.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\info.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\drop.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\key.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\earphones-alt.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\layers.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\earphones.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\like.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\emotsmile.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\link.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\energy.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\list.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\envelope-open.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\lock.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\envolope-letter.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\login.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\envolope.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\logout.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\equalizer.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\loop.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\event.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\magnet.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\exclamation.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\magnifier.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\eye.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\map.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\eyeglass.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\menu.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\feed.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\microphone.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\film.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\minus.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\fire.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\mouse.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\flag.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\mustache.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\folder-alt.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\note.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\folder.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\notebook.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\frame.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\options.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\game-controller.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\organization.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\ghost.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\paypal.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\globe-alt.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\pencil.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\globe.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\people.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\graduation.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\phone.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\graph.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\picture.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\grid.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\pin.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\handbag.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\plane.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\heart.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\playlist.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\home.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\plus.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\hourglass.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\power.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\info.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\present.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\key.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\printer.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\layers.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\puzzle.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\like.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\question.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\link.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\refresh.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\list.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\reload.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\location-pin.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\rocket.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\lock-open.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\settings.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\lock.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\share.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\login.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\shield.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\logout.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\shuffle.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\loop.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\speech.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\magic-wand.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\speedometer.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\magnet.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\star.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\magnifier-add.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\support.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\magnifier-remove.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\tag.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\magnifier.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\target.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\map.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\trash.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\menu.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\trophy.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\microphone.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\umbrella.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\minus.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\user.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\mouse.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\vector.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\music-tone-alt.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\wallet.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\music-tone.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\wrench.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\mustache.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\arrow_down.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\note.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\arrow_down_circle.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\notebook.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\arrow_left.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\options-vertical.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\arrow_left_circle.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\options.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\arrow_right.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\organization.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\arrow_right_circle.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\paper-clip.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\arrow_up.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\paper-plane.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\arrow_up_circle.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\paypal.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\basket_loaded.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\pencil.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\book_open.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\people.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\call_end.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\phone.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\call_in.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\picture.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\call_out.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\pie-chart.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\cloud_download.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\pin.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\cloud_upload.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\plane.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\control_end.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\playlist.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\control_forward.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\plus.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\control_pause.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\power.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\control_play.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\present.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\control_rewind.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\printer.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\control_start.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\puzzle.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\credit_card.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\question.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\cursor_move.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\refresh.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\earphones_alt.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\reload.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\envelope_open.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\rocket.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\envolope_letter.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\screen-desktop.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\folder_alt.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\screen-smartphone.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\game_controller.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\screen-tablet.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\globe_alt.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\settings.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\location_pin.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\share-alt.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\lock_open.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\share.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\magic_wand.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\shield.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\magnifier_add.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\shuffle.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\magnifier_remove.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\size-actual.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\music_tone.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\size-fullscreen.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\music_tone_alt.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\social-behance.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\options_vertical.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\social-dribbble.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\paper_clip.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\social-dropbox.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\paper_plane.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\social-facebook.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\pie_chart.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\social-foursqare.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\screen_desktop.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\social-github.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\screen_smartphone.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\social-google.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\screen_tablet.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\social-instagram.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\share_alt.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\social-linkedin.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\size_actual.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\social-pintarest.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\size_fullscreen.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\social-reddit.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\social_behance.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\social-skype.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\social_dribbble.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\social-soundcloud.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\social_dropbox.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\social-spotify.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\social_facebook.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\social-steam.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\social_foursqare.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\social-stumbleupon.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\social_github.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\social-tumblr.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\social_google.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\social-twitter.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\social_instagram.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\social-vkontakte.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\social_linkedin.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\social-youtube.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\social_pintarest.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\speech.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\social_reddit.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\speedometer.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\social_skype.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\star.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\social_soundcloud.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\support.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\social_spotify.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\symble-female.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\social_steam.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\symbol-male.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\social_stumbleupon.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\tag.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\social_tumblr.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\target.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\social_twitter.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\trash.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\social_vkontakte.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\trophy.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\social_youtube.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\umbrella.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\symble_female.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\user-female.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\symbol_male.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\user-follow.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\user_female.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\user-following.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\user_follow.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\user-unfollow.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\user_following.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\user.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\user_unfollow.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\vector.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\volume_1.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\volume-1.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\volume_2.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\volume-2.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\volume_off.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\volume-off.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\action_redo.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\wallet.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\action_undo.png" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\icons\wrench.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\action_redo.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\action-redo.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\action_undo.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\action-undo.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\arrow_down.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\anchor.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\arrow_down_circle.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\arrow-down-circle.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\arrow_left.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\arrow-down.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\arrow_left_circle.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\arrow-left-circle.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\arrow_right.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\arrow-left.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\arrow_right_circle.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\arrow-right-circle.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\arrow_up.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\arrow-right.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\arrow_up_circle.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\arrow-up-circle.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\basket_loaded.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\arrow-up.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\book_open.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\badge.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\call_end.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\bag.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\call_in.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\ban.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\call_out.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\basket-loaded.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\cloud_download.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\basket.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\cloud_upload.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\bell.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\control_end.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\book-open.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\control_forward.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\briefcase.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\control_pause.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\bubble.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\control_play.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\bubbles.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\control_rewind.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\bulb.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\control_start.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\calculator.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\credit_card.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\calender.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\cursor_move.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\call-end.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\earphones_alt.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\call-in.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\envelope_open.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\call-out.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\envolope_letter.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\camera.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\folder_alt.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\camrecorder.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\game_controller.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\chart.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\globe_alt.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\check.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\location_pin.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\chemistry.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\lock_open.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\clock.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\magic_wand.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\close.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\magnifier_add.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\cloud-download.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\magnifier_remove.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\cloud-upload.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\music_tone.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\compass.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\music_tone_alt.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\control-end.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\options_vertical.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\control-forward.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\paper_clip.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\control-pause.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\paper_plane.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\control-play.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\pie_chart.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\control-rewind.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\screen_desktop.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\control-start.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\screen_smartphone.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\credit-card.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\screen_tablet.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\crop.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\share_alt.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\cup.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\size_actual.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\cursor-move.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\size_fullscreen.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\cursor.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\social_behance.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\diamond.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\social_dribbble.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\direction.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\social_dropbox.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\directions.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\social_facebook.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\disc.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\social_foursqare.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\dislike.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\social_github.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\doc.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\social_google.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\docs.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\social_instagram.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\drawar.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\social_linkedin.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\drop.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\social_pintarest.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\earphones-alt.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\social_reddit.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\earphones.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\social_skype.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\emotsmile.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\social_soundcloud.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\energy.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\social_spotify.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\envelope-open.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\social_steam.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\envolope-letter.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\social_stumbleupon.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\envolope.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\social_tumblr.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\equalizer.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\social_twitter.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\event.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\social_vkontakte.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\exclamation.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\social_youtube.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\eye.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\symble_female.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\eyeglass.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\symbol_male.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\feed.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\user_female.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\film.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\user_follow.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\fire.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\user_following.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\flag.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\user_unfollow.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\folder-alt.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\volume_1.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\folder.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\volume_2.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\frame.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\volume_off.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\game-controller.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\action_redo.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\ghost.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\action_undo.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\globe-alt.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\arrow_down.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\globe.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\arrow_down_circle.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\graduation.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\arrow_left.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\graph.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\arrow_left_circle.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\grid.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\arrow_right.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\handbag.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\arrow_right_circle.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\heart.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\arrow_up.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\home.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\arrow_up_circle.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\hourglass.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\basket_loaded.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\info.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\book_open.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\key.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\call_end.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\layers.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\call_in.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\like.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\call_out.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\link.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\cloud_download.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\list.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\cloud_upload.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\location-pin.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\control_end.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\lock-open.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\control_forward.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\lock.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\control_pause.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\login.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\control_play.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\logout.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\control_rewind.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\loop.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\control_start.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\magic-wand.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\credit_card.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\magnet.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\cursor_move.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\magnifier-add.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\earphones_alt.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\magnifier-remove.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\envelope_open.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\magnifier.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\envolope_letter.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\map.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\folder_alt.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\menu.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\game_controller.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\microphone.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\globe_alt.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\minus.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\location_pin.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\mouse.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\lock_open.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\music-tone-alt.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\magic_wand.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\music-tone.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\magnifier_add.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\mustache.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\magnifier_remove.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\note.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\music_tone.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\notebook.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\music_tone_alt.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\options-vertical.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\options_vertical.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\options.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\paper_clip.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\organization.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\paper_plane.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\paper-clip.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\pie_chart.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\paper-plane.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\screen_desktop.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\paypal.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\screen_smartphone.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\pencil.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\screen_tablet.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\people.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\share_alt.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\phone.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\size_actual.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\picture.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\size_fullscreen.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\pie-chart.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\social_behance.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\pin.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\social_dribbble.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\plane.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\social_dropbox.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\playlist.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\social_facebook.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\plus.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\social_foursqare.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\power.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\social_github.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\present.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\social_google.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\printer.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\social_instagram.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\puzzle.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\social_linkedin.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\question.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\social_pintarest.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\refresh.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\social_reddit.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\reload.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\social_skype.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\rocket.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\social_soundcloud.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\screen-desktop.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\social_spotify.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\screen-smartphone.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\social_steam.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\screen-tablet.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\social_stumbleupon.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\settings.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\social_tumblr.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\share-alt.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\social_twitter.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\share.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\social_vkontakte.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\shield.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\social_youtube.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\shuffle.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\symble_female.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\size-actual.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\symbol_male.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\size-fullscreen.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\user_female.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\social-behance.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\user_follow.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\social-dribbble.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\user_following.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\social-dropbox.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\user_unfollow.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\social-facebook.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\volume_1.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\social-foursqare.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\volume_2.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\social-github.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\volume_off.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\social-google.png" />
+    <AndroidResource Include="Resources\drawable\action_undo.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\social-instagram.png" />
+    <AndroidResource Include="Resources\drawable\anchor.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\social-linkedin.png" />
+    <AndroidResource Include="Resources\drawable\arrow_down.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\social-pintarest.png" />
+    <AndroidResource Include="Resources\drawable\arrow_down_circle.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\social-reddit.png" />
+    <AndroidResource Include="Resources\drawable\arrow_left.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\social-skype.png" />
+    <AndroidResource Include="Resources\drawable\arrow_left_circle.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\social-soundcloud.png" />
+    <AndroidResource Include="Resources\drawable\arrow_right.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\social-spotify.png" />
+    <AndroidResource Include="Resources\drawable\arrow_right_circle.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\social-steam.png" />
+    <AndroidResource Include="Resources\drawable\arrow_up.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\social-stumbleupon.png" />
+    <AndroidResource Include="Resources\drawable\arrow_up_circle.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\social-tumblr.png" />
+    <AndroidResource Include="Resources\drawable\badge.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\social-twitter.png" />
+    <AndroidResource Include="Resources\drawable\bag.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\social-vkontakte.png" />
+    <AndroidResource Include="Resources\drawable\ban.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\social-youtube.png" />
+    <AndroidResource Include="Resources\drawable\basket.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\speech.png" />
+    <AndroidResource Include="Resources\drawable\basket_loaded.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\speedometer.png" />
+    <AndroidResource Include="Resources\drawable\bell.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\star.png" />
+    <AndroidResource Include="Resources\drawable\book_open.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\support.png" />
+    <AndroidResource Include="Resources\drawable\briefcase.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\symble-female.png" />
+    <AndroidResource Include="Resources\drawable\bubble.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\symbol-male.png" />
+    <AndroidResource Include="Resources\drawable\bubbles.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\tag.png" />
+    <AndroidResource Include="Resources\drawable\bulb.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\target.png" />
+    <AndroidResource Include="Resources\drawable\calculator.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\trash.png" />
+    <AndroidResource Include="Resources\drawable\calender.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\trophy.png" />
+    <AndroidResource Include="Resources\drawable\call_end.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\umbrella.png" />
+    <AndroidResource Include="Resources\drawable\call_in.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\user-female.png" />
+    <AndroidResource Include="Resources\drawable\call_out.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\user-follow.png" />
+    <AndroidResource Include="Resources\drawable\camera.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\user-following.png" />
+    <AndroidResource Include="Resources\drawable\camrecorder.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\user-unfollow.png" />
+    <AndroidResource Include="Resources\drawable\chart.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\user.png" />
+    <AndroidResource Include="Resources\drawable\check.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\vector.png" />
+    <AndroidResource Include="Resources\drawable\chemistry.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\volume-1.png" />
+    <AndroidResource Include="Resources\drawable\clock.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\volume-2.png" />
+    <AndroidResource Include="Resources\drawable\close.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\volume-off.png" />
+    <AndroidResource Include="Resources\drawable\cloud_download.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\wallet.png" />
+    <AndroidResource Include="Resources\drawable\cloud_upload.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-hdpi\icons\wrench.png" />
+    <AndroidResource Include="Resources\drawable\compass.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\action-redo.png" />
+    <AndroidResource Include="Resources\drawable\control_end.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\action-undo.png" />
+    <AndroidResource Include="Resources\drawable\control_forward.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\anchor.png" />
+    <AndroidResource Include="Resources\drawable\control_pause.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\arrow-down-circle.png" />
+    <AndroidResource Include="Resources\drawable\control_play.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\arrow-down.png" />
+    <AndroidResource Include="Resources\drawable\control_rewind.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\arrow-left-circle.png" />
+    <AndroidResource Include="Resources\drawable\control_start.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\arrow-left.png" />
+    <AndroidResource Include="Resources\drawable\credit_card.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\arrow-right-circle.png" />
+    <AndroidResource Include="Resources\drawable\crop.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\arrow-right.png" />
+    <AndroidResource Include="Resources\drawable\cup.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\arrow-up-circle.png" />
+    <AndroidResource Include="Resources\drawable\cursor.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\arrow-up.png" />
+    <AndroidResource Include="Resources\drawable\cursor_move.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\badge.png" />
+    <AndroidResource Include="Resources\drawable\diamond.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\bag.png" />
+    <AndroidResource Include="Resources\drawable\direction.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\ban.png" />
+    <AndroidResource Include="Resources\drawable\directions.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\basket-loaded.png" />
+    <AndroidResource Include="Resources\drawable\disc.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\basket.png" />
+    <AndroidResource Include="Resources\drawable\dislike.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\bell.png" />
+    <AndroidResource Include="Resources\drawable\doc.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\book-open.png" />
+    <AndroidResource Include="Resources\drawable\docs.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\briefcase.png" />
+    <AndroidResource Include="Resources\drawable\drawar.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\bubble.png" />
+    <AndroidResource Include="Resources\drawable\drop.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\bubbles.png" />
+    <AndroidResource Include="Resources\drawable\earphones.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\bulb.png" />
+    <AndroidResource Include="Resources\drawable\earphones_alt.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\calculator.png" />
+    <AndroidResource Include="Resources\drawable\emotsmile.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\calender.png" />
+    <AndroidResource Include="Resources\drawable\energy.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\call-end.png" />
+    <AndroidResource Include="Resources\drawable\envelope_open.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\call-in.png" />
+    <AndroidResource Include="Resources\drawable\envolope.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\call-out.png" />
+    <AndroidResource Include="Resources\drawable\envolope_letter.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\camera.png" />
+    <AndroidResource Include="Resources\drawable\equalizer.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\camrecorder.png" />
+    <AndroidResource Include="Resources\drawable\event.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\chart.png" />
+    <AndroidResource Include="Resources\drawable\exclamation.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\check.png" />
+    <AndroidResource Include="Resources\drawable\eye.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\chemistry.png" />
+    <AndroidResource Include="Resources\drawable\eyeglass.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\clock.png" />
+    <AndroidResource Include="Resources\drawable\feed.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\close.png" />
+    <AndroidResource Include="Resources\drawable\film.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\cloud-download.png" />
+    <AndroidResource Include="Resources\drawable\fire.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\cloud-upload.png" />
+    <AndroidResource Include="Resources\drawable\flag.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\compass.png" />
+    <AndroidResource Include="Resources\drawable\folder.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\control-end.png" />
+    <AndroidResource Include="Resources\drawable\folder_alt.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\control-forward.png" />
+    <AndroidResource Include="Resources\drawable\frame.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\control-pause.png" />
+    <AndroidResource Include="Resources\drawable\game_controller.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\control-play.png" />
+    <AndroidResource Include="Resources\drawable\ghost.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\control-rewind.png" />
+    <AndroidResource Include="Resources\drawable\globe.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\control-start.png" />
+    <AndroidResource Include="Resources\drawable\globe_alt.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\credit-card.png" />
+    <AndroidResource Include="Resources\drawable\graduation.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\crop.png" />
+    <AndroidResource Include="Resources\drawable\graph.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\cup.png" />
+    <AndroidResource Include="Resources\drawable\grid.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\cursor-move.png" />
+    <AndroidResource Include="Resources\drawable\handbag.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\cursor.png" />
+    <AndroidResource Include="Resources\drawable\heart.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\diamond.png" />
+    <AndroidResource Include="Resources\drawable\home.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\direction.png" />
+    <AndroidResource Include="Resources\drawable\hourglass.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\directions.png" />
+    <AndroidResource Include="Resources\drawable\info.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\disc.png" />
+    <AndroidResource Include="Resources\drawable\key.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\dislike.png" />
+    <AndroidResource Include="Resources\drawable\layers.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\doc.png" />
+    <AndroidResource Include="Resources\drawable\like.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\docs.png" />
+    <AndroidResource Include="Resources\drawable\link.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\drawar.png" />
+    <AndroidResource Include="Resources\drawable\list.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\drop.png" />
+    <AndroidResource Include="Resources\drawable\location_pin.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\earphones-alt.png" />
+    <AndroidResource Include="Resources\drawable\lock.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\earphones.png" />
+    <AndroidResource Include="Resources\drawable\lock_open.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\emotsmile.png" />
+    <AndroidResource Include="Resources\drawable\login.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\energy.png" />
+    <AndroidResource Include="Resources\drawable\logout.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\envelope-open.png" />
+    <AndroidResource Include="Resources\drawable\loop.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\envolope-letter.png" />
+    <AndroidResource Include="Resources\drawable\magic_wand.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\envolope.png" />
+    <AndroidResource Include="Resources\drawable\magnet.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\equalizer.png" />
+    <AndroidResource Include="Resources\drawable\magnifier.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\event.png" />
+    <AndroidResource Include="Resources\drawable\magnifier_add.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\exclamation.png" />
+    <AndroidResource Include="Resources\drawable\magnifier_remove.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\eye.png" />
+    <AndroidResource Include="Resources\drawable\map.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\eyeglass.png" />
+    <AndroidResource Include="Resources\drawable\menu.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\feed.png" />
+    <AndroidResource Include="Resources\drawable\microphone.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\film.png" />
+    <AndroidResource Include="Resources\drawable\minus.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\fire.png" />
+    <AndroidResource Include="Resources\drawable\mouse.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\flag.png" />
+    <AndroidResource Include="Resources\drawable\music_tone.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\folder-alt.png" />
+    <AndroidResource Include="Resources\drawable\music_tone_alt.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\folder.png" />
+    <AndroidResource Include="Resources\drawable\mustache.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\frame.png" />
+    <AndroidResource Include="Resources\drawable\note.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\game-controller.png" />
+    <AndroidResource Include="Resources\drawable\notebook.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\ghost.png" />
+    <AndroidResource Include="Resources\drawable\options.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\globe-alt.png" />
+    <AndroidResource Include="Resources\drawable\options_vertical.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\globe.png" />
+    <AndroidResource Include="Resources\drawable\organization.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\graduation.png" />
+    <AndroidResource Include="Resources\drawable\paper_clip.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\graph.png" />
+    <AndroidResource Include="Resources\drawable\paper_plane.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\grid.png" />
+    <AndroidResource Include="Resources\drawable\paypal.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\handbag.png" />
+    <AndroidResource Include="Resources\drawable\pencil.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\heart.png" />
+    <AndroidResource Include="Resources\drawable\people.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\home.png" />
+    <AndroidResource Include="Resources\drawable\phone.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\hourglass.png" />
+    <AndroidResource Include="Resources\drawable\picture.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\info.png" />
+    <AndroidResource Include="Resources\drawable\pie_chart.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\key.png" />
+    <AndroidResource Include="Resources\drawable\pin.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\layers.png" />
+    <AndroidResource Include="Resources\drawable\plane.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\like.png" />
+    <AndroidResource Include="Resources\drawable\playlist.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\link.png" />
+    <AndroidResource Include="Resources\drawable\plus.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\list.png" />
+    <AndroidResource Include="Resources\drawable\power.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\location-pin.png" />
+    <AndroidResource Include="Resources\drawable\present.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\lock-open.png" />
+    <AndroidResource Include="Resources\drawable\printer.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\lock.png" />
+    <AndroidResource Include="Resources\drawable\puzzle.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\login.png" />
+    <AndroidResource Include="Resources\drawable\question.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\logout.png" />
+    <AndroidResource Include="Resources\drawable\refresh.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\loop.png" />
+    <AndroidResource Include="Resources\drawable\reload.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\magic-wand.png" />
+    <AndroidResource Include="Resources\drawable\rocket.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\magnet.png" />
+    <AndroidResource Include="Resources\drawable\screen_desktop.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\magnifier-add.png" />
+    <AndroidResource Include="Resources\drawable\screen_smartphone.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\magnifier-remove.png" />
+    <AndroidResource Include="Resources\drawable\screen_tablet.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\magnifier.png" />
+    <AndroidResource Include="Resources\drawable\settings.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\map.png" />
+    <AndroidResource Include="Resources\drawable\share.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\menu.png" />
+    <AndroidResource Include="Resources\drawable\share_alt.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\microphone.png" />
+    <AndroidResource Include="Resources\drawable\shield.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\minus.png" />
+    <AndroidResource Include="Resources\drawable\shuffle.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\mouse.png" />
+    <AndroidResource Include="Resources\drawable\size_actual.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\music-tone-alt.png" />
+    <AndroidResource Include="Resources\drawable\size_fullscreen.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\music-tone.png" />
+    <AndroidResource Include="Resources\drawable\social_behance.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\mustache.png" />
+    <AndroidResource Include="Resources\drawable\social_dribbble.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\note.png" />
+    <AndroidResource Include="Resources\drawable\social_dropbox.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\notebook.png" />
+    <AndroidResource Include="Resources\drawable\social_facebook.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\options-vertical.png" />
+    <AndroidResource Include="Resources\drawable\social_foursqare.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\options.png" />
+    <AndroidResource Include="Resources\drawable\social_github.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\organization.png" />
+    <AndroidResource Include="Resources\drawable\social_google.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\paper-clip.png" />
+    <AndroidResource Include="Resources\drawable\social_instagram.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\paper-plane.png" />
+    <AndroidResource Include="Resources\drawable\social_linkedin.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\paypal.png" />
+    <AndroidResource Include="Resources\drawable\social_pintarest.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\pencil.png" />
+    <AndroidResource Include="Resources\drawable\social_reddit.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\people.png" />
+    <AndroidResource Include="Resources\drawable\social_skype.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\phone.png" />
+    <AndroidResource Include="Resources\drawable\social_soundcloud.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\picture.png" />
+    <AndroidResource Include="Resources\drawable\social_spotify.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\pie-chart.png" />
+    <AndroidResource Include="Resources\drawable\social_steam.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\pin.png" />
+    <AndroidResource Include="Resources\drawable\social_stumbleupon.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\plane.png" />
+    <AndroidResource Include="Resources\drawable\social_tumblr.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\playlist.png" />
+    <AndroidResource Include="Resources\drawable\social_twitter.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\plus.png" />
+    <AndroidResource Include="Resources\drawable\social_vkontakte.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\power.png" />
+    <AndroidResource Include="Resources\drawable\social_youtube.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\present.png" />
+    <AndroidResource Include="Resources\drawable\speech.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\printer.png" />
+    <AndroidResource Include="Resources\drawable\speedometer.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\puzzle.png" />
+    <AndroidResource Include="Resources\drawable\star.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\question.png" />
+    <AndroidResource Include="Resources\drawable\support.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\refresh.png" />
+    <AndroidResource Include="Resources\drawable\symble_female.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\reload.png" />
+    <AndroidResource Include="Resources\drawable\symbol_male.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\rocket.png" />
+    <AndroidResource Include="Resources\drawable\tag.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\screen-desktop.png" />
+    <AndroidResource Include="Resources\drawable\target.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\screen-smartphone.png" />
+    <AndroidResource Include="Resources\drawable\trash.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\screen-tablet.png" />
+    <AndroidResource Include="Resources\drawable\trophy.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\settings.png" />
+    <AndroidResource Include="Resources\drawable\umbrella.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\share-alt.png" />
+    <AndroidResource Include="Resources\drawable\user.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\share.png" />
+    <AndroidResource Include="Resources\drawable\user_female.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\shield.png" />
+    <AndroidResource Include="Resources\drawable\user_follow.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\shuffle.png" />
+    <AndroidResource Include="Resources\drawable\user_following.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\size-actual.png" />
+    <AndroidResource Include="Resources\drawable\user_unfollow.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\size-fullscreen.png" />
+    <AndroidResource Include="Resources\drawable\vector.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\social-behance.png" />
+    <AndroidResource Include="Resources\drawable\volume_1.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\social-dribbble.png" />
+    <AndroidResource Include="Resources\drawable\volume_2.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\social-dropbox.png" />
+    <AndroidResource Include="Resources\drawable\volume_off.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\social-facebook.png" />
+    <AndroidResource Include="Resources\drawable\wallet.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\social-foursqare.png" />
+    <AndroidResource Include="Resources\drawable\wrench.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\social-github.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\social-google.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\social-instagram.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\social-linkedin.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\social-pintarest.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\social-reddit.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\social-skype.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\social-soundcloud.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\social-spotify.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\social-steam.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\social-stumbleupon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\social-tumblr.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\social-twitter.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\social-vkontakte.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\social-youtube.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\speech.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\speedometer.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\star.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\support.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\symble-female.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\symbol-male.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\tag.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\target.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\trash.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\trophy.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\umbrella.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\user-female.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\user-follow.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\user-following.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\user-unfollow.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\user.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\vector.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\volume-1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\volume-2.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\volume-off.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\wallet.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\icons\wrench.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\action-redo.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\action-undo.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\anchor.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\arrow-down-circle.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\arrow-down.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\arrow-left-circle.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\arrow-left.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\arrow-right-circle.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\arrow-right.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\arrow-up-circle.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\arrow-up.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\badge.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\bag.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\ban.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\basket-loaded.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\basket.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\bell.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\book-open.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\briefcase.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\bubble.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\bubbles.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\bulb.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\calculator.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\calender.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\call-end.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\call-in.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\call-out.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\camera.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\camrecorder.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\chart.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\check.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\chemistry.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\clock.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\close.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\cloud-download.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\cloud-upload.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\compass.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\control-end.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\control-forward.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\control-pause.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\control-play.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\control-rewind.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\control-start.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\credit-card.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\crop.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\cup.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\cursor-move.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\cursor.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\diamond.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\direction.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\directions.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\disc.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\dislike.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\doc.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\docs.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\drawar.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\drop.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\earphones-alt.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\earphones.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\emotsmile.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\energy.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\envelope-open.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\envolope-letter.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\envolope.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\equalizer.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\event.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\exclamation.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\eye.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\eyeglass.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\feed.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\film.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\fire.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\flag.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\folder-alt.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\folder.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\frame.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\game-controller.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\ghost.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\globe-alt.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\globe.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\graduation.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\graph.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\grid.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\handbag.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\heart.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\home.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\hourglass.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\info.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\key.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\layers.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\like.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\link.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\list.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\location-pin.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\lock-open.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\lock.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\login.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\logout.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\loop.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\magic-wand.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\magnet.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\magnifier-add.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\magnifier-remove.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\magnifier.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\map.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\menu.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\microphone.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\minus.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\mouse.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\music-tone-alt.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\music-tone.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\mustache.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\note.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\notebook.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\options-vertical.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\options.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\organization.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\paper-clip.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\paper-plane.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\paypal.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\pencil.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\people.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\phone.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\picture.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\pie-chart.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\pin.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\plane.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\playlist.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\plus.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\power.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\present.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\printer.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\puzzle.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\question.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\refresh.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\reload.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\rocket.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\screen-desktop.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\screen-smartphone.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\screen-tablet.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\settings.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\share-alt.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\share.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\shield.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\shuffle.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\size-actual.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\size-fullscreen.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\social-behance.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\social-dribbble.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\social-dropbox.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\social-facebook.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\social-foursqare.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\social-github.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\social-google.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\social-instagram.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\social-linkedin.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\social-pintarest.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\social-reddit.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\social-skype.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\social-soundcloud.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\social-spotify.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\social-steam.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\social-stumbleupon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\social-tumblr.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\social-twitter.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\social-vkontakte.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\social-youtube.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\speech.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\speedometer.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\star.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\support.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\symble-female.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\symbol-male.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\tag.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\target.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\trash.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\trophy.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\umbrella.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\user-female.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\user-follow.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\user-following.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\user-unfollow.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\user.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\vector.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\volume-1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\volume-2.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\volume-off.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\wallet.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xxhdpi\icons\wrench.png" />
+    <AndroidResource Include="Resources\drawable\action_redo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

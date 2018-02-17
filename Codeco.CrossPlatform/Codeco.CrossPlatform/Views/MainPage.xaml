@@ -9,7 +9,7 @@
             BindingContext="{Binding Source={StaticResource Locator}, Path=MainPage}">
     <ContentPage x:Name="SavedFilesTab" Title="Saved Files">
         <ContentPage.ToolbarItems>
-            <ToolbarItem Icon="{extensions:ImageExtension icons/plus.png}" Text="Add" Command="{Binding AddFileCommand}"/>
+            <ToolbarItem Icon="{extensions:ImageExtension plus.png}" Text="Add" Command="{Binding AddFileCommand}"/>
         </ContentPage.ToolbarItems>
         <Grid>
             <ListView x:Name="FilesList">

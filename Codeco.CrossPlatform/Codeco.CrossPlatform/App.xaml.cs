@@ -41,20 +41,27 @@ namespace Codeco.CrossPlatform
 
             MainNavigationHost.NavigateToAsync(new MainPage(), false);
 
-            SetupAccentColorMonitoring();
+            SetupPlatformThemeColorMonitoring();
         }
 
-        private void SetupAccentColorMonitoring()
+        // Sets up the platform-specific DynamicResource colors
+        private void SetupPlatformThemeColorMonitoring()
         {
-            var accentColorervice = DependencyService.Get<IAccentColorService>();
-            accentColorervice.PlatformAccentColor.Subscribe(
-                newColor => 
-                {
-                    Device.BeginInvokeOnMainThread(
-                        () => Resources["AccentColor"] = newColor
-                    );
-                }
-            );            
+            var colorService = DependencyService.Get<IPlatformColorService>();
+            colorService.PlatformAccentColor.Subscribe(newColor => 
+            {
+                Device.BeginInvokeOnMainThread(() => Resources["AccentColor"] = newColor);
+            });
+
+            colorService.PlatformForegroundColor.Subscribe(newColor =>
+            {
+                Device.BeginInvokeOnMainThread(() => Resources["ForegroundColor"] = newColor);
+            });
+
+            colorService.PlatformBackgroundColor.Subscribe(newColor =>
+            {
+                Device.BeginInvokeOnMainThread(() => Resources["BackgroundColor"] = newColor);
+            });
         }
 
         protected override void OnStart ()

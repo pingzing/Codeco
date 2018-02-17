@@ -2,13 +2,15 @@
 <popup:PopupPage xmlns="http://xamarin.com/schemas/2014/forms" 
                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                  xmlns:popup="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
-                 x:Class="Codeco.CrossPlatform.Controls.AddFileView"
+                 xmlns:convert="clr-namespace:Codeco.CrossPlatform.Converters"
+                 x:Class="Codeco.CrossPlatform.Popups.AddFileView"
                  
+                 BindingContext="{Binding Source={StaticResource Locator}, Path=AddFilePopup}"
                  HasSystemPadding="True"
                  CloseWhenBackgroundIsClicked="True">
-    
-    <Frame BackgroundColor="Black"
-           OutlineColor="{DynamicResource AccentColor}"           
+
+    <Frame OutlineColor="{DynamicResource AccentColor}" 
+           BackgroundColor="{DynamicResource BackgroundColor}"
            Padding="20,20,20,20" 
            HorizontalOptions="CenterAndExpand" 
            VerticalOptions="Center" 
@@ -36,11 +38,14 @@
                    Style="{DynamicResource BodyStyle}"
                    Text="{Binding Message}"/>
 
-
             <Entry x:Name="FileNameEntry"
                    Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
                    Placeholder="File name"
-                   Text="{Binding FileNameText, Mode=TwoWay}"/>
+                   Text="{Binding FileNameText, Mode=TwoWay}">
+                <Entry.Behaviors>
+                    <convert:ValidFileNameBehavior/>
+                </Entry.Behaviors>
+            </Entry>
             <Entry x:Name="PasswordEntry"
                    Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
                    IsPassword="True"

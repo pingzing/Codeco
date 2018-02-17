@@ -8,6 +8,7 @@ using Acr.UserDialogs;
 using Rg.Plugins.Popup.Services;
 using Rg.Plugins.Popup.Contracts;
 using Plugin.FilePicker.Abstractions;
+using Codeco.CrossPlatform.Popups;
 
 namespace Codeco.CrossPlatform.Mvvm
 {
@@ -34,14 +35,23 @@ namespace Codeco.CrossPlatform.Mvvm
 
             //Register your ViewModels here
             SimpleIoc.Default.Register<MainViewModel>();
+            SimpleIoc.Default.Register<AddFileViewModel>();
         }
 
+        // Page ViewModel properties, for XAML-y access
         public MainViewModel MainPage => SimpleIoc.Default.GetInstance<MainViewModel>();
+
+        // Popup ViewModel properties, for more XAML-y access
+        public AddFileViewModel AddFilePopup => SimpleIoc.Default.GetInstance<AddFileViewModel>();
 
         private INavigationService InitializeNavigationService()
         {
-            NavigationService navService = new NavigationService(((App)Application.Current).MainNavigationHost)
-                .Configure(typeof(MainViewModel), typeof(MainPage));
+            var popupHost = new PopupHost(SimpleIoc.Default.GetInstance<IPopupNavigation>());
+
+            NavigationService navService = new NavigationService(((App)Application.Current).MainNavigationHost, 
+                popupHost)
+                .Configure(typeof(MainViewModel), typeof(MainPage))
+                .Configure(typeof(AddFileViewModel), typeof(AddFileView));
 
             return navService;
         }

@@ -11,6 +11,10 @@ using Acr.UserDialogs;
 using Rg.Plugins.Popup;
 using Android.Util;
 using Codeco.CrossPlatform.Droid.DependencyServices;
+using Android.Support.V4.Content;
+using Android;
+using System.Threading.Tasks;
+using Android.Support.V4.App;
 
 namespace Codeco.CrossPlatform.Droid
 {
@@ -24,17 +28,50 @@ namespace Codeco.CrossPlatform.Droid
 
             base.OnCreate(bundle);
 
-            Popup.Init(this.ApplicationContext, bundle);
-            UserDialogs.Init(this);
+            Popup.Init(this, bundle);
+            UserDialogs.Init(this);            
 
-            // Populate accent color before we init the Xamarin runtime
-            var themeAccentColor = new TypedValue();
-            this.Theme.ResolveAttribute(Resource.Attribute.colorAccent, themeAccentColor, true);
-            AccentColorService.ContextAccentColor = new AndroidGraphics.Color(themeAccentColor.Data);
+            // Populate theme before we init the Xamarin runtime            
+            PlatformColorService.CurrentTheme = Theme;
 
             global::Xamarin.Forms.Forms.Init(this, bundle);            
 
             LoadApplication(new App());
+
+            GetStoragePermissions();
+        }
+
+        private const int StorageRequestCode = 1;
+        private async Task GetStoragePermissions()
+        {
+            if (ContextCompat.CheckSelfPermission(this, Manifest.Permission.ReadExternalStorage) != Permission.Granted
+                || ContextCompat.CheckSelfPermission(this, Manifest.Permission.WriteExternalStorage) != Permission.Granted)
+            {
+                ActivityCompat.RequestPermissions(this, new string[] { Manifest.Permission.ReadExternalStorage, Manifest.Permission.WriteExternalStorage }, StorageRequestCode);
+            }
+        }
+
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
+        {
+            if (requestCode == 1)
+            {
+                if (grantResults[0] != Permission.Granted)
+                {
+                    // Say angry things.
+                }
+            }
+        }
+
+        public override void OnBackPressed()
+        {
+            if (Rg.Plugins.Popup.Popup.SendBackPressed(base.OnBackPressed))
+            {
+                System.Diagnostics.Debug.WriteLine("Get Popup.OnBackPressed");
+            }
+            else
+            {                
+                base.OnBackPressed();
+            }
         }
     }
 }

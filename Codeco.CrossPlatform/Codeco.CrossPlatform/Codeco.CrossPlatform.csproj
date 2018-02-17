@@ -11,15 +11,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="AppResources\test.csv" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="AppResources\test.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Acr.UserDialogs" Version="7.0.1" />
     <PackageReference Include="DynamicData" Version="6.1.0.2366" />
     <PackageReference Include="MvvmLightLibs" Version="5.4.0-alpha" />
-    <PackageReference Include="Rg.Plugins.Popup" Version="1.1.4.135-beta" />
+    <PackageReference Include="Rg.Plugins.Popup" Version="1.1.4.145-pre" />
     <PackageReference Include="System.Collections.Immutable" Version="1.4.0" />
     <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
     <PackageReference Include="Xam.Plugin.Iconize.SimpleLineIcons" Version="2.0.0.37-beta" />
     <PackageReference Include="Xamarin.Forms" Version="2.5.0.122203" />
-    <PackageReference Include="Xamarin.Plugin.FilePicker" Version="2.0.8-beta" />
   </ItemGroup>
 
   <ItemGroup>
@@ -41,7 +50,7 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Controls\AddFileView.xaml">
+    <EmbeddedResource Update="Popups\AddFileView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Mvvm\NavigationHost.xaml">
@@ -57,5 +66,9 @@
 
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\FilePicker-Plugin-for-Xamarin-and-Windows\src\Plugin.FilePicker\Plugin.FilePicker\Plugin.FilePicker.csproj" />
   </ItemGroup>
 </Project>

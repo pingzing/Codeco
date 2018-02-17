@@ -1,17 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Text;
-
-using Android.App;
-using Android.Content;
 using Android.OS;
 using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Codeco.CrossPlatform.Droid.DependencyServices;
 using Codeco.CrossPlatform.Models.FileSystem;
 using Codeco.CrossPlatform.Services.DependencyInterfaces;

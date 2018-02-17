@@ -1,4 +1,7 @@
 ﻿using Codeco.CrossPlatform.Mvvm;
+using Codeco.CrossPlatform.Popups;
+using Rg.Plugins.Popup.Contracts;
+using Rg.Plugins.Popup.Pages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +17,7 @@ namespace Codeco.CrossPlatform.Services
         private readonly List<Type> _knownPageTypes = new List<Type>();
         private readonly Dictionary<Type, Type> _viewmodelPageAssociations = new Dictionary<Type, Type>();
         private readonly NavigationHost _navHost;
+        private readonly PopupHost _popupHost;
 
         private readonly SemaphoreSlim _knownPagesLock = new SemaphoreSlim(1);
         private readonly SemaphoreSlim _vmAssociationsLock = new SemaphoreSlim(1);
@@ -22,9 +26,10 @@ namespace Codeco.CrossPlatform.Services
 
         public event EventHandler<CanGoBackChangedHandlerArgs> CanGoBackChanged;
 
-        public NavigationService(NavigationHost navigation)
+        public NavigationService(NavigationHost navigation, PopupHost popupHost)
         {
             _navHost = navigation;
+            _popupHost = popupHost;
             _navHost.CanGoBackChanged += navHost_CanGoBackChanged;
         }
 
@@ -109,7 +114,7 @@ namespace Codeco.CrossPlatform.Services
         /// <param name="animated">Whether or not the page transition should be animated.</param>
         public async Task NavigateToViewModelAsync(Type vmType, bool animated = true)
         {
-            await _vmAssociationsLock.WaitAsync();            
+            await _vmAssociationsLock.WaitAsync();
             {
                 Type destPage = null;
                 if (!_viewmodelPageAssociations.TryGetValue(vmType, out destPage))
@@ -148,7 +153,7 @@ namespace Codeco.CrossPlatform.Services
         }
 
         private async Task NavigateToAsync(Type pageKey, object parameter, bool animated = true)
-        {            
+        {
             await _knownPagesLock.WaitAsync();
             {
                 if (_knownPageTypes.Contains(pageKey))
@@ -222,6 +227,110 @@ namespace Codeco.CrossPlatform.Services
                 }
             }
             _knownPagesLock.Release();
+        }
+
+        public async Task<PopupResult> ShowPopupViewModelAsync<T>(bool animated = true) where T : INavigablePopup
+        {
+            await _vmAssociationsLock.WaitAsync();
+            {
+                if (!_viewmodelPageAssociations.TryGetValue(typeof(T), out Type pageType))
+                {
+                    _vmAssociationsLock.Release();
+
+                    throw new ArgumentException(
+                        $"No such ViewModel: {typeof(T)}. Did you forget to call NavigationService.Configure?",
+                        nameof(T));
+                }
+
+                _vmAssociationsLock.Release();
+
+                return await ShowPopupAsync(pageType, animated);
+            }
+        }
+
+        public async Task<PopupResult> ShowPopupAsync(Type popupType, bool animated = true)
+        {
+            await _knownPagesLock.WaitAsync();
+            {
+                if (_knownPageTypes.Contains(popupType))
+                {
+                    ConstructorInfo constructor = popupType.GetTypeInfo()
+                        .DeclaredConstructors
+                        .FirstOrDefault(c => !c.GetParameters().Any());
+
+                    if (constructor == null)
+                    {
+                        _knownPagesLock.Release();
+
+                        throw new InvalidOperationException($"No suitable constructor found for popup {popupType}.");
+                    }
+
+                    var popup = constructor.Invoke(new object[] { }) as PopupPage;
+
+                    _knownPagesLock.Release();
+
+                    return await _popupHost.ShowAsync(popup, animated);
+                }
+                else
+                {
+                    _knownPagesLock.Release();
+
+                    throw new ArgumentException(
+                        $"No such page {popupType}. Did you forget to add it via NavigationService.Configure?",
+                        nameof(popupType));
+                }
+            }
+        }
+
+        public async Task<PopupResult<TResult>> ShowPopupViewModelAsync<TViewModel, TResult>(bool animated = true)
+            where TViewModel : INavigablePopup<TResult>
+        {
+            await _vmAssociationsLock.WaitAsync();
+            {
+                if (!_viewmodelPageAssociations.TryGetValue(typeof(TViewModel), out Type pageType))
+                {
+                    _vmAssociationsLock.Release();
+
+                    throw new ArgumentException(
+                       $"No such ViewModel: {typeof(TViewModel)}. Did you forget to call NavigationService.Configure?",
+                       nameof(TViewModel));
+                }
+
+                _vmAssociationsLock.Release();
+
+                return await ShowPopupAsync<TResult>(pageType, animated);
+            }
+        }
+
+        public async Task<PopupResult<TResult>> ShowPopupAsync<TResult>(Type popupType, bool animated = true)
+        {
+            await _knownPagesLock.WaitAsync();
+            {
+                if (_knownPageTypes.Contains(popupType))
+                {
+                    ConstructorInfo constructor = popupType.GetTypeInfo()
+                        .DeclaredConstructors
+                        .FirstOrDefault(c => !c.GetParameters().Any());
+
+                    if (constructor == null)
+                    {
+                        throw new InvalidOperationException($"No suitable constructor found for popup {popupType}.");
+                    }
+
+                    var popup = constructor.Invoke(new object[] { }) as PopupPage;
+
+                    _knownPagesLock.Release();
+                    return await _popupHost.ShowAsync<TResult>(popup, animated);
+                }
+                else
+                {
+                    _knownPagesLock.Release();
+
+                    throw new ArgumentException(
+                        $"No such page {popupType}. Did you forget to add it via NavigationService.Configure?",
+                        nameof(popupType));
+                }
+            }
         }
 
         /// <summary>

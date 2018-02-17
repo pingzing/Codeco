@@ -1,17 +1,14 @@
 ﻿using Acr.UserDialogs;
-using Codeco.CrossPlatform.Controls;
 using Codeco.CrossPlatform.Models;
 using Codeco.CrossPlatform.Mvvm;
 using Codeco.CrossPlatform.Services;
 using GalaSoft.MvvmLight.Command;
 using Plugin.FilePicker;
 using Plugin.FilePicker.Abstractions;
-using Rg.Plugins.Popup.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -20,8 +17,7 @@ namespace Codeco.CrossPlatform.ViewModels
     public class MainViewModel : NavigableViewModelBase
     {
         private readonly IUserDialogs _userDialogs;
-        private readonly IUserFileService _userFileService;
-        private readonly IPopupNavigation _popupNavigation;
+        private readonly IUserFileService _userFileService;        
         private readonly IFilePicker _filePicker;
 
         private readonly NamedKeyboard _defaultKeyboard = new NamedKeyboard(Keyboard.Default, "Default");
@@ -77,13 +73,11 @@ namespace Codeco.CrossPlatform.ViewModels
         public MainViewModel(INavigationService navService,
                              IUserDialogs userDialogs,
                              IUserFileService userFileService,
-                             IPopupNavigation popupNavigation,
                              IFilePicker filePicker)
             : base(navService)
         {
             _userDialogs = userDialogs;
             _userFileService = userFileService;
-            _popupNavigation = popupNavigation;
             _filePicker = filePicker;
 
             _currentInputKeyboard = _defaultKeyboard;
@@ -140,13 +134,12 @@ namespace Codeco.CrossPlatform.ViewModels
 
         private async void AddFile()
         {
-            var pickedFile = await _filePicker.PickFile();
+            var pickedFile = await CrossFilePicker.Current.PickFile();            
             if (pickedFile == null)
             {
                 return;
             }
 
-            //todo: do validation
             bool isValid = await _userFileService.ValidateFileAsync(pickedFile.DataArray);
             if (!isValid)
             {
@@ -158,11 +151,18 @@ namespace Codeco.CrossPlatform.ViewModels
                 });
                 return;
             }
+            
+            var filePopupResult = await _navigationService.ShowPopupViewModelAsync<AddFileViewModel, (string, string)>();
+            if (filePopupResult.PopupChoice != Popups.PopupChoice.Ok)
+            {
+                return;
+            }
 
-            // Get a password and filename from the user, and encrypt the file.      
-            await _popupNavigation.PushAsync(new AddFileView());
+            var (pickedFileName, pickedPassword) = filePopupResult.Result;
 
-            await _userFileService.CreateUserFileAsync(pickedFile.FileName, FileLocation.Local, pickedFile.DataArray);
+            //TODO: Encrypt the file contents
+
+            await _userFileService.CreateUserFileAsync(pickedFileName, FileLocation.Local, pickedFile.DataArray);
         }
 
         private void DebugAddFolder()
