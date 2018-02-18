@@ -40,5 +40,11 @@ namespace Codeco.Windows10.Services.DependencyServices
             FileStream fileStream = new FileStream(fileHandle, FileAccess.ReadWrite, 4096, false);
             return fileStream;
         }
+
+        public async Task DeleteFileAsync(string relativeFilePath)
+        {
+            var file = await AppDataRoot.GetFileAsync(relativeFilePath);
+            await file.DeleteAsync();
+        }
     }
 }

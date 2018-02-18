@@ -28,6 +28,8 @@ namespace Codeco.CrossPlatform.Services.DependencyInterfaces
         /// <param name="relativeFolderPath">The path of the folder to search, relative to teh application data root.</param>
         /// <returns>A list of the fully-qualified paths of all files contained inside the given folder, or an empty list.</returns>
         Task<List<string>> GetFilesAsync(string relativeFolderPath);
+
+        Task DeleteFileAsync(string relativeFilePath);
     }
 }
 

@@ -7,10 +7,11 @@ namespace Codeco.CrossPlatform.Services
 {
     public interface IFileService
     {
-        Task OpenOrCreateFileAsync(string fileName);
-        Task<CreateFileResult> CreateFileAsync(string fileName);
+        Task OpenOrCreateFileAsync(string relativeFilePath);
+        Task<CreateFileResult> CreateFileAsync(string relativeFilePath);
         DirectoryInfo CreateFolder(string absoluteFolderPath);
-        Task WriteBytesAsync(string relativeFileName, byte[] data);
+        Task WriteBytesAsync(string relativeFilePath, byte[] data);
         Task<List<string>> GetFilesInFolder(string relativeFolderPath);
+        Task DeleteFileAsync(string relativeFilePath);
     }
 }

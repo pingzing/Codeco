@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reactive.Subjects;
 using Android.OS;
@@ -11,43 +12,57 @@ using Codeco.CrossPlatform.Services.DependencyInterfaces;
 namespace Codeco.CrossPlatform.Droid.DependencyServices
 {
     public class FileSystemWatcherService : IFileSystemWatcherService
-    {
-        private static Subject<FileChangedEvent> _fileObservable = null;        
+    {        
+        private static Dictionary<string, Subject<FileChangedEvent>> _storedObservables = new Dictionary<string, Subject<FileChangedEvent>>();
+        private static List<CrossPlatFileObserver> _storedObservers = new List<CrossPlatFileObserver>();
 
         public IObservable<FileChangedEvent> ObserveFolderChanges(string absoluteFolderPath)
         {
-            _fileObservable = new Subject<FileChangedEvent>();
+            var fileObservable = new Subject<FileChangedEvent>();
 
             CrossPlatFileObserver observer = new CrossPlatFileObserver(absoluteFolderPath);
             observer.StartWatching();
+            _storedObservers.Add(observer);
 
-            return _fileObservable;
+            _storedObservables.Add(absoluteFolderPath, fileObservable);
+            return fileObservable;
         }
 
         private class CrossPlatFileObserver : FileObserver
-        {
+        {            
             private static FileObserverEvents _events = FileObserverEvents.AllEvents;
 
-            public CrossPlatFileObserver(string path) : base(path, _events) { }
+            private string _watchedPath;
 
-            public CrossPlatFileObserver(string path, FileObserverEvents events) : base(path, events) { }
-
-            public override void OnEvent([GeneratedEnum] FileObserverEvents e, string path)
+            public CrossPlatFileObserver(string path) : base(path, _events)
             {
-                System.Diagnostics.Debug.WriteLine($"ANDROID FILEOBSERVER: Received {e} from {path}");
+                _watchedPath = path;
+            }
 
-                string name = Path.GetFileNameWithoutExtension(path);
+            public CrossPlatFileObserver(string path, FileObserverEvents events) : base(path, events)
+            {
+                _watchedPath = path;
+            }
+
+            public override void OnEvent([GeneratedEnum] FileObserverEvents e, string pathRelativeToWatcher)
+            {                
+                System.Diagnostics.Debug.WriteLine($"ANDROID FILEOBSERVER: Received {e} from {pathRelativeToWatcher}");
+
+                bool found = _storedObservables.TryGetValue(_watchedPath, out Subject<FileChangedEvent> observable);
+
+                string name = Path.GetFileNameWithoutExtension(pathRelativeToWatcher);
+                string fullPath = Path.Combine(_watchedPath, pathRelativeToWatcher);
 
                 switch (e)
                 {
                     case FileObserverEvents.Create:
-                        _fileObservable.OnNext(new FileChangedEvent(path, name, WatcherChangeTypes.Created));
+                        observable.OnNext(new FileChangedEvent(fullPath, name, WatcherChangeTypes.Created));
                         break;
                     case FileObserverEvents.Delete:
-                        _fileObservable.OnNext(new FileChangedEvent(path, name, WatcherChangeTypes.Deleted));
+                        observable.OnNext(new FileChangedEvent(fullPath, name, WatcherChangeTypes.Deleted));
                         break;
                     case FileObserverEvents.Modify:
-                        _fileObservable.OnNext(new FileChangedEvent(path, name, WatcherChangeTypes.Changed));
+                        observable.OnNext(new FileChangedEvent(fullPath, name, WatcherChangeTypes.Changed));
                         break;
                     default:
                         break;

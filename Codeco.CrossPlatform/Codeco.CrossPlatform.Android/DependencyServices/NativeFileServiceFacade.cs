@@ -46,6 +46,15 @@ namespace Codeco.CrossPlatform.Droid.DependencyServices
             return Task.FromResult(fileStream);
         }
 
+        public Task DeleteFileAsync(string relativeFilePath)
+        {
+            return Task.Run(() => 
+            {
+                string absoluteFilePath = Path.Combine(AppDataRoot, relativeFilePath);
+                File.Delete(absoluteFilePath);
+            });            
+        }
+
         private string GenerateUniqueFilePath(string absoluteFilePath)
         {
             int count = 1;

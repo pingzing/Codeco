@@ -11,16 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="AppResources\test.csv" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="AppResources\test.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Acr.UserDialogs" Version="7.0.1" />
     <PackageReference Include="DynamicData" Version="6.1.0.2366" />
     <PackageReference Include="MvvmLightLibs" Version="5.4.0-alpha" />

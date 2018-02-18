@@ -16,6 +16,8 @@ using System.Threading.Tasks;
 using System.Reactive.Linq;
 using Xamarin.Forms;
 using Codeco.CrossPlatform.Extensions;
+using System.Diagnostics;
+using DynamicData.Binding;
 
 namespace Codeco.CrossPlatform.ViewModels
 {
@@ -67,8 +69,8 @@ namespace Codeco.CrossPlatform.ViewModels
 
         public ObservableCollection<NamedKeyboard> AvailableKeyboards = new ObservableCollection<NamedKeyboard>();
 
-        private ReadOnlyObservableCollection<SimpleFileInfo> _files;
-        public ReadOnlyObservableCollection<SimpleFileInfo> Files => _files;
+        private ReadOnlyObservableCollection<SimpleFileInfoViewModel> _files;
+        public ReadOnlyObservableCollection<SimpleFileInfoViewModel> Files => _files;
 
         private RelayCommand _copyCodeTextCommand;
         public RelayCommand CopyCodeTextCommand => _copyCodeTextCommand ?? (_copyCodeTextCommand = new RelayCommand(CopyCodeText));
@@ -78,6 +80,12 @@ namespace Codeco.CrossPlatform.ViewModels
 
         private RelayCommand _debugAddFolderCommand;
         public RelayCommand DebugAddFolderCommand => _debugAddFolderCommand ?? (_debugAddFolderCommand = new RelayCommand(DebugAddFolder));
+
+        private RelayCommand<SimpleFileInfoViewModel> _renameItemCommand;
+        public RelayCommand<SimpleFileInfoViewModel> RenameItemCommand => _renameItemCommand ?? (_renameItemCommand = new RelayCommand<SimpleFileInfoViewModel>(RenameItem));
+
+        private RelayCommand<SimpleFileInfoViewModel> _deleteItemCommand;
+        public RelayCommand<SimpleFileInfoViewModel> DeleteItemCommand => _deleteItemCommand ?? (_deleteItemCommand = new RelayCommand<SimpleFileInfoViewModel>(DeleteItem));        
 
         public MainViewModel(INavigationService navService,
                              IUserDialogs userDialogs,
@@ -96,17 +104,20 @@ namespace Codeco.CrossPlatform.ViewModels
             AvailableKeyboards.Add(_numericKeyboard);            
         }
 
-        public override async Task Activated(NavigationType navType)
+        public override Task Activated(NavigationType navType)
         {
             if (_files == null)
             {
                 _userFileService.FilesList
                          .Connect()
+                         .Sort(SortExpressionComparer<SimpleFileInfoViewModel>.Descending(x => x.FileLocation))                         
                          .Bind(out _files)
                          .Subscribe();
 
                 RaisePropertyChanged(nameof(Files));
             }
+
+            return Task.CompletedTask;
         }
 
         public override Task Deactivated()
@@ -194,6 +205,16 @@ namespace Codeco.CrossPlatform.ViewModels
         private void CopyCodeText()
         {
             //todo: copy current value to clipboard
+        }
+
+        private void RenameItem(SimpleFileInfoViewModel obj)
+        {
+            Debug.WriteLine($"Rename Item: {obj.Name}");
+        }
+
+        private void DeleteItem(SimpleFileInfoViewModel obj)
+        {
+            _userFileService.DeleteUserFileAsync(obj.Name, obj.FileLocation);
         }
     }
 }

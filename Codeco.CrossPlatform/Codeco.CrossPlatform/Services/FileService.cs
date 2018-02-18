@@ -17,17 +17,17 @@ namespace Codeco.CrossPlatform.Services
             _nativeFileService = nativeFileService;
         }
 
-        public async Task OpenOrCreateFileAsync(string relativeFileName)
+        public async Task OpenOrCreateFileAsync(string relativeFilePath)
         {
-            using (var fileStream = await _nativeFileService.OpenOrCreateFileAsync(relativeFileName))
+            using (var fileStream = await _nativeFileService.OpenOrCreateFileAsync(relativeFilePath))
             {
                 // Just let it close, it's already been created.
             }
         }
 
-        public async Task<CreateFileResult> CreateFileAsync(string relativeFileName)
+        public async Task<CreateFileResult> CreateFileAsync(string relativeFilePath)
         {
-            var createdFile = await _nativeFileService.CreateFileAsync(relativeFileName);
+            var createdFile = await _nativeFileService.CreateFileAsync(relativeFilePath);
             if (createdFile == null || createdFile.Stream == null)
             {
                 return null;
@@ -36,9 +36,9 @@ namespace Codeco.CrossPlatform.Services
             return createdFile;
         }
 
-        public async Task WriteBytesAsync(string relativeFileName, byte[] data)
+        public async Task WriteBytesAsync(string relativeFilePath, byte[] data)
         {
-            using (var fileStream = await _nativeFileService.OpenOrCreateFileAsync(relativeFileName))
+            using (var fileStream = await _nativeFileService.OpenOrCreateFileAsync(relativeFilePath))
             {
                 await fileStream.WriteAsync(data, 0, data.Length);
             }
@@ -61,6 +61,11 @@ namespace Codeco.CrossPlatform.Services
                 Debug.WriteLine($"Failed to create folder at {relativeFolderPath}. Reason: {ex.Message}");
                 return null;
             }
+        }
+
+        public Task DeleteFileAsync(string relativeFilePath)
+        {
+            return _nativeFileService.DeleteFileAsync(relativeFilePath);
         }
 
         /// <summary>

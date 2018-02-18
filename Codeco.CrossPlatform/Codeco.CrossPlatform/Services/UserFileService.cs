@@ -3,6 +3,7 @@ using Codeco.CrossPlatform.Extensions.Reactive;
 using Codeco.CrossPlatform.Models;
 using Codeco.CrossPlatform.Models.FileSystem;
 using Codeco.CrossPlatform.Services.DependencyInterfaces;
+using Codeco.CrossPlatform.ViewModels;
 using DynamicData;
 using System;
 using System.Collections.Generic;
@@ -19,13 +20,15 @@ namespace Codeco.CrossPlatform.Services
     {
         private const string UserFilesFolderName = "CodecoFiles";
         private readonly string _fullUserFilesFolderPath;
+        private readonly string _localFolderPath = Path.Combine(UserFilesFolderName, FileLocation.Local.FolderName());
+        private readonly string _roamedFolderPath = Path.Combine(UserFilesFolderName, FileLocation.Roamed.FolderName());
 
         private readonly IAppFolderService _appFolderService;
         private readonly IFileService _fileService;
         private readonly IFileSystemWatcherService _fileSystemWatcherService;
 
-        private SourceList<SimpleFileInfo> _filesList = new SourceList<SimpleFileInfo>();        
-        public IObservableList<SimpleFileInfo> FilesList { get; private set; }
+        private SourceList<SimpleFileInfoViewModel> _filesList = new SourceList<SimpleFileInfoViewModel>();        
+        public IObservableList<SimpleFileInfoViewModel> FilesList { get; private set; }
 
         public UserFileService(IAppFolderService appFolderService,
                                IFileService fileService,
@@ -50,18 +53,20 @@ namespace Codeco.CrossPlatform.Services
 
         private async Task InitializeFileList(string localFolderName, string roamedFolderName)
         {
-            var localFiles = (await _fileService.GetFilesInFolder(Path.Combine(UserFilesFolderName, localFolderName)))
-                .Select(x => new SimpleFileInfo
+            var localFiles = (await _fileService.GetFilesInFolder(_localFolderPath))
+                .Select(x => new SimpleFileInfoViewModel
                 {
                     Name = Path.GetFileName(x),
-                    Path = x
+                    Path = x,
+                    FileLocation = FileLocation.Local
                 });
 
-            var roamedFiles = (await _fileService.GetFilesInFolder(Path.Combine(UserFilesFolderName, roamedFolderName)))
-                .Select(x => new SimpleFileInfo
+            var roamedFiles = (await _fileService.GetFilesInFolder(_roamedFolderPath))
+                .Select(x => new SimpleFileInfoViewModel
                 {
                     Name = Path.GetFileName(x),
-                    Path = x
+                    Path = x,
+                    FileLocation = FileLocation.Roamed
                 });
 
             _filesList.AddRange(localFiles);
@@ -78,7 +83,12 @@ namespace Codeco.CrossPlatform.Services
                     switch (changeEvent.ChangeType)
                     {
                         case WatcherChangeTypes.Created:
-                            _filesList.Add(new SimpleFileInfo { Name = changeEvent.Name, Path = changeEvent.FullPath });
+                            _filesList.Add(new SimpleFileInfoViewModel
+                            {
+                                Name = changeEvent.Name,
+                                Path = changeEvent.FullPath,
+                                FileLocation = changeEvent.FullPath.Contains(_roamedFolderPath) ? FileLocation.Roamed  : FileLocation.Local
+                            });
                             break;
                         case WatcherChangeTypes.Changed:
                             // TODO: Update item size display
@@ -90,8 +100,14 @@ namespace Codeco.CrossPlatform.Services
                                 _filesList.Remove(itemToRemove);
                             }
                             break;
-                        case WatcherChangeTypes.Renamed:
-                            // TODO: Update item name (make it trigger INotifyPropertyChanged at some point)
+                        case WatcherChangeTypes.Renamed:                            
+                            var itemToRename = _filesList.Items.FirstOrDefault(x => x.Path == changeEvent.RenamedOldPath);
+                            if (itemToRename != null)
+                            {
+                                // Trigger INotifyPropertyChanged events by updating properties
+                                itemToRename.Path = changeEvent.FullPath;
+                                itemToRename.Name = changeEvent.Name;
+                            }
                             break;
                     }
                 });
@@ -118,8 +134,8 @@ namespace Codeco.CrossPlatform.Services
         /// <returns></returns>
         public async Task<string> CreateUserFileAsync(string fileName, FileLocation fileLocation, byte[] data)
         {
-            string absoluteFilePath = Path.Combine(UserFilesFolderName, fileLocation.FolderName(), fileName);
-            var createdFile = await _fileService.CreateFileAsync(absoluteFilePath);
+            string relativeFilePath = Path.Combine(UserFilesFolderName, fileLocation.FolderName(), fileName);
+            var createdFile = await _fileService.CreateFileAsync(relativeFilePath);
             using (createdFile.Stream)
             {
                 await createdFile.Stream.WriteAsync(data, 0, data.Length);
@@ -136,8 +152,8 @@ namespace Codeco.CrossPlatform.Services
         /// <returns></returns>
         public async Task<string> CreateUserFileAsync(string fileName, FileLocation fileLocation, string data)
         {
-            string absoluteFilePath = Path.Combine(UserFilesFolderName, fileLocation.FolderName(), fileName);
-            var createdFile = await _fileService.CreateFileAsync(absoluteFilePath);
+            string relativeFilePath = Path.Combine(UserFilesFolderName, fileLocation.FolderName(), fileName);
+            var createdFile = await _fileService.CreateFileAsync(relativeFilePath);
             using (createdFile.Stream)
             {
                 using (var streamWriter = new StreamWriter(createdFile.Stream))
@@ -146,6 +162,12 @@ namespace Codeco.CrossPlatform.Services
                 }
             }
             return createdFile.FileName;
+        }
+        
+        public async Task DeleteUserFileAsync(string fileName, FileLocation fileLocation)
+        {
+            string relativeFilePath = Path.Combine(_localFolderPath, fileName);
+            await _fileService.DeleteFileAsync(relativeFilePath);
         }
 
         /// <summary>
@@ -180,5 +202,17 @@ namespace Codeco.CrossPlatform.Services
                     .All(splitStrings => splitStrings.Length == 2);
             }
         }
+
+        private string GetRelativeFilePath(string fileName, FileLocation location)
+        {
+            switch (location)
+            {
+                case FileLocation.Roamed:
+                    return Path.Combine(_roamedFolderPath, fileName);
+                default:
+                case FileLocation.Local:
+                    return Path.Combine(_localFolderPath, fileName);
+            }
+        }        
     }
 }
