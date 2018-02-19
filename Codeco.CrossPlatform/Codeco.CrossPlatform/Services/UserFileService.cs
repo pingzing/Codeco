@@ -109,6 +109,7 @@ namespace Codeco.CrossPlatform.Services
                                 // Trigger INotifyPropertyChanged events by updating properties
                                 itemToRename.Path = changeEvent.FullPath;
                                 itemToRename.Name = changeEvent.Name;
+                                itemToRename.FileLocation = changeEvent.FullPath.Contains(_roamedFolderPath) ? FileLocation.Roamed : FileLocation.Local;
                             }
                             break;
                     }
@@ -188,6 +189,15 @@ namespace Codeco.CrossPlatform.Services
             await _fileService.RenameFileAsync(relativeFilePath, newName);
         }
 
+        public async Task ChangeUserFileLocationAsync(string fileName, FileLocation sourceLocation, FileLocation destinationLocation)
+        {
+            await Initialization;
+
+            string sourceRelativeFilePath = GetRelativeFilePath(fileName, sourceLocation);
+            string destinationRelativeFlePath = GetRelativeFilePath(fileName, destinationLocation);
+            await _fileService.MoveFileAsync(sourceRelativeFilePath, destinationRelativeFlePath);
+        }
+
         /// <summary>
         /// Creates a folder for user files under the CodecoFiles folder 
         /// (which is itself at the application root).
@@ -233,6 +243,6 @@ namespace Codeco.CrossPlatform.Services
                 case FileLocation.Local:
                     return Path.Combine(_localFolderPath, fileName);
             }
-        }       
+        }
     }
 }

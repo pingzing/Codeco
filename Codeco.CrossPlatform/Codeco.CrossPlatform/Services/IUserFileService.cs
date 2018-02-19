@@ -17,5 +17,6 @@ namespace Codeco.CrossPlatform.Services
         Task DeleteUserFileAsync(string fileName, FileLocation fileLocation);
         Task<bool> ValidateFileAsync(byte[] dataArray);
         Task RenameUserFile(string fileName, FileLocation fileLocation, string newName);
+        Task ChangeUserFileLocationAsync(string fileName, FileLocation sourceLocation, FileLocation destinationLocation);
     }
 }

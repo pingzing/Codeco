@@ -23,8 +23,14 @@ namespace Codeco.CrossPlatform.ViewModels
         public FileLocation FileLocation
         {
             get => _fileLocation;
-            set => Set(ref _fileLocation, value);
+            set
+            {
+                Set(ref _fileLocation, value);
+                RaisePropertyChanged(nameof(SwitchLocationText));
+            }
         }
+
+        public string SwitchLocationText => FileLocation == FileLocation.Local ? "Switch to Roamed" : "Switch to Local";
 
         public SimpleFileInfoViewModel() { }
 

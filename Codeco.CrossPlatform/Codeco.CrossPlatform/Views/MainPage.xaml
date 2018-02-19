@@ -3,40 +3,70 @@
             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
             x:Class="Codeco.CrossPlatform.Views.MainPage"                        
             
-            xmlns:extensions="clr-namespace:Codeco.CrossPlatform.XamlExtensions"            
+            xmlns:extensions="clr-namespace:Codeco.CrossPlatform.XamlExtensions"     
+            xmlns:customCtl="clr-namespace:Codeco.CrossPlatform.CustomRenderers"
             
             Title="Tab Page"
             BindingContext="{Binding Source={StaticResource Locator}, Path=MainPage}">
 
     <TabbedPage.Resources>
         <ResourceDictionary>
+            <DataTemplate x:Key="FileItemTemplate">
+                <ViewCell>
+                    <ViewCell.ContextActions>
+                        <MenuItem Text="Rename" Clicked="RenameItem_Clicked" CommandParameter="{Binding .}"/>
+                        <MenuItem Text="{Binding SwitchLocationText}" Clicked="SwitchLocation_Clicked" CommandParameter="{Binding .}"/>
+                        <MenuItem Text="Delete" Clicked="DeleteItem_Clicked" CommandParameter="{Binding .}" IsDestructive="True"/>
+                    </ViewCell.ContextActions>
+                    <Grid>
+                        <Grid.Padding>
+                            <OnPlatform x:TypeArguments="Thickness">
+                                <On Platform="Android" Value="10,0,10,0"/>
+                                <On Platform="UWP" Value="0"/>
+                            </OnPlatform>
+                        </Grid.Padding>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Text="{Binding Name}" Style="{DynamicResource ListItemTextStyle}"/>
+                        <Label Grid.Row="1" Text="{Binding FileLocation}" Style="{DynamicResource ListItemDetailTextStyle}"/>
+                    </Grid>
+                </ViewCell>
+            </DataTemplate>
         </ResourceDictionary>
     </TabbedPage.Resources>
-    
+
     <ContentPage x:Name="SavedFilesTab" Title="Saved Files">
         <ContentPage.ToolbarItems>
             <ToolbarItem Icon="{extensions:ImageExtension plus.png}" Text="Add" Command="{Binding AddFileCommand}"/>
         </ContentPage.ToolbarItems>
         <Grid>
-            <ListView x:Name="FilesList"
-                      ItemsSource="{Binding Files}"
-                      ItemSelected="FilesList_ItemSelected">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <ViewCell.ContextActions>
-                                <MenuItem Text="Rename" Clicked="RenameItem_Clicked" CommandParameter="{Binding .}"/>
-                                <MenuItem Text="Delete" Clicked="DeleteItem_Clicked" CommandParameter="{Binding .}" IsDestructive="True"/>
-                            </ViewCell.ContextActions>
-                            <StackLayout Margin="0, 2.5, 0, 2.5">
-                                <Label Text="{Binding Name}" Style="{DynamicResource ListItemTextStyle}"/>
-                                <Label Text="{Binding FileLocation}" Style="{DynamicResource ListItemDetailTextStyle}"/>
-                            </StackLayout>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-                
-            </ListView>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <customCtl:OptionalSelectionListView x:Name="RoamedFilesList"
+                                                 Grid.Row="0"                                                 
+                                                 HasUnevenRows="True"
+                                                 IsSelectionEnabled ="False"
+                                                 ItemsSource="{Binding RoamedFiles}"
+                                                 ItemSelected="FilesList_ItemSelected"
+                                                 ItemTemplate="{StaticResource FileItemTemplate}">
+                <x:Arguments>
+                    <ListViewCachingStrategy>RecycleElement</ListViewCachingStrategy>
+                </x:Arguments>
+            </customCtl:OptionalSelectionListView>
+            <customCtl:OptionalSelectionListView x:Name="LocalFilesList"
+                                                 Grid.Row="1"                                                 
+                                                 HasUnevenRows="True"
+                                                 IsSelectionEnabled="False"
+                                                 ItemsSource="{Binding LocalFiles}"
+                                                 ItemTemplate="{StaticResource FileItemTemplate}">
+                <x:Arguments>
+                    <ListViewCachingStrategy>RecycleElement</ListViewCachingStrategy>
+                </x:Arguments>
+            </customCtl:OptionalSelectionListView>
         </Grid>
     </ContentPage>
 
@@ -82,7 +112,7 @@
                         IsEnabled="{Binding IsCopyButtonEnabled, Mode=OneWay}"
                         Text="Copy"
                         VerticalOptions="End"/>
-                
+
                 <!--Row 2-->
                 <Label x:Name="InputBoxHeader"
                        Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"                       
@@ -93,7 +123,7 @@
                        Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
                        Keyboard="{Binding CurrentInputKeyboard.Keyboard, Mode=OneWay}"
                        Text="{Binding InputText, Mode=TwoWay}"/>
-                
+
                 <!--Row 4-->
 
                 <Picker x:Name="CurrentKeyboardBox"

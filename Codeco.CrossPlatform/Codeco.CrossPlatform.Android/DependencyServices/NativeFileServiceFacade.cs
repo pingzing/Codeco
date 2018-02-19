@@ -56,7 +56,19 @@ namespace Codeco.CrossPlatform.Droid.DependencyServices
                 absoluteDestPath = GenerateUniqueFilePath(absoluteDestPath);
             }
             File.Move(absoluteFilePath, absoluteDestPath);
-            return Task.FromResult(absoluteDestPath);
+            return Task.FromResult(Path.GetFileName(absoluteDestPath));
+        }
+
+        public Task<string> MoveFileAsync(string sourceRelativeFilePath, string destinationRelativeFlePath)
+        {
+            string absoluteSourcePath = Path.Combine(AppDataRoot, sourceRelativeFilePath);
+            string absoluteDestPath = Path.Combine(AppDataRoot, destinationRelativeFlePath);
+            if (File.Exists(absoluteDestPath))
+            {
+                absoluteDestPath = GenerateUniqueFilePath(absoluteDestPath);
+            }
+            File.Move(absoluteSourcePath, absoluteDestPath);
+            return Task.FromResult(Path.GetFileName(absoluteDestPath));
         }
 
         public Task DeleteFileAsync(string relativeFilePath)
@@ -86,6 +98,6 @@ namespace Codeco.CrossPlatform.Droid.DependencyServices
             } while (File.Exists(newFullPath));
 
             return newFullPath;
-        }
+        }        
     }
 }

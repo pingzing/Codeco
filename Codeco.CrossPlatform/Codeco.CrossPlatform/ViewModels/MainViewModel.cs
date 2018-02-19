@@ -69,8 +69,11 @@ namespace Codeco.CrossPlatform.ViewModels
 
         public ObservableCollection<NamedKeyboard> AvailableKeyboards = new ObservableCollection<NamedKeyboard>();
 
-        private ReadOnlyObservableCollection<SimpleFileInfoViewModel> _files;
-        public ReadOnlyObservableCollection<SimpleFileInfoViewModel> Files => _files;
+        private ReadOnlyObservableCollection<SimpleFileInfoViewModel> _roamedFiles;
+        public ReadOnlyObservableCollection<SimpleFileInfoViewModel> RoamedFiles => _roamedFiles;
+
+        private ReadOnlyObservableCollection<SimpleFileInfoViewModel> _localFiles;
+        public ReadOnlyObservableCollection<SimpleFileInfoViewModel> LocalFiles => _localFiles;
 
         private RelayCommand _copyCodeTextCommand;
         public RelayCommand CopyCodeTextCommand => _copyCodeTextCommand ?? (_copyCodeTextCommand = new RelayCommand(CopyCodeText));
@@ -85,7 +88,10 @@ namespace Codeco.CrossPlatform.ViewModels
         public RelayCommand<SimpleFileInfoViewModel> RenameItemCommand => _renameItemCommand ?? (_renameItemCommand = new RelayCommand<SimpleFileInfoViewModel>(RenameItem));
 
         private RelayCommand<SimpleFileInfoViewModel> _deleteItemCommand;
-        public RelayCommand<SimpleFileInfoViewModel> DeleteItemCommand => _deleteItemCommand ?? (_deleteItemCommand = new RelayCommand<SimpleFileInfoViewModel>(DeleteItem));        
+        public RelayCommand<SimpleFileInfoViewModel> DeleteItemCommand => _deleteItemCommand ?? (_deleteItemCommand = new RelayCommand<SimpleFileInfoViewModel>(DeleteItem));
+
+        private RelayCommand<SimpleFileInfoViewModel> _switchItemLocationCommand;
+        public RelayCommand<SimpleFileInfoViewModel> SwitchItemLocationCommand => _switchItemLocationCommand ?? (_switchItemLocationCommand = new RelayCommand<SimpleFileInfoViewModel>(SwitchItemLocation));
 
         public MainViewModel(INavigationService navService,
                              IUserDialogs userDialogs,
@@ -106,15 +112,26 @@ namespace Codeco.CrossPlatform.ViewModels
 
         public override Task Activated(NavigationType navType)
         {
-            if (_files == null)
+            if (_roamedFiles == null)
             {
-                _userFileService.FilesList
-                         .Connect()
-                         .Sort(SortExpressionComparer<SimpleFileInfoViewModel>.Descending(x => x.FileLocation))                         
-                         .Bind(out _files)
+                _userFileService.FilesList                    
+                         .Connect()       
+                         .Filter(x => x.FileLocation == FileLocation.Roamed)
+                         .Bind(out _roamedFiles)
                          .Subscribe();
 
-                RaisePropertyChanged(nameof(Files));
+                RaisePropertyChanged(nameof(RoamedFiles));
+            }
+
+            if (_localFiles == null)
+            {
+                _userFileService.FilesList
+                    .Connect()
+                    .Filter(x => x.FileLocation == FileLocation.Local)
+                    .Bind(out _localFiles)
+                    .Subscribe();
+
+                RaisePropertyChanged(nameof(LocalFiles));
             }
 
             return Task.CompletedTask;
@@ -229,6 +246,12 @@ namespace Codeco.CrossPlatform.ViewModels
         private void DeleteItem(SimpleFileInfoViewModel obj)
         {
             _userFileService.DeleteUserFileAsync(obj.Name, obj.FileLocation);
+        }
+
+        private void SwitchItemLocation(SimpleFileInfoViewModel obj)
+        {
+            FileLocation destinationLocation = obj.FileLocation == FileLocation.Local ? FileLocation.Roamed : FileLocation.Local;
+            _userFileService.ChangeUserFileLocationAsync(obj.Name, obj.FileLocation, destinationLocation);
         }
     }
 }

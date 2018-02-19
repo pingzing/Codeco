@@ -48,11 +48,21 @@ namespace Codeco.Windows10.Services.DependencyServices
             return file.Name;
         }
 
+        public async Task<string> MoveFileAsync(string sourceRelativeFilePath, string destinationRelativeFlePath)
+        {
+            string destFolderPath = Path.GetDirectoryName(destinationRelativeFlePath);
+            string destFileName = Path.GetFileName(destinationRelativeFlePath);
+
+            var file = await AppDataRoot.GetFileAsync(sourceRelativeFilePath);            
+            var destinationFolder = await AppDataRoot.GetFolderAsync(destFolderPath);
+            await file.MoveAsync(destinationFolder, destFileName, NameCollisionOption.GenerateUniqueName);
+            return file.Name;
+        }
+
         public async Task DeleteFileAsync(string relativeFilePath)
         {
             var file = await AppDataRoot.GetFileAsync(relativeFilePath);
             await file.DeleteAsync();
         }
-
     }
 }

@@ -10,6 +10,7 @@ using Rg.Plugins.Popup.Contracts;
 using Plugin.FilePicker.Abstractions;
 using Codeco.CrossPlatform.Popups;
 using Codeco.Encryption;
+using System;
 
 namespace Codeco.CrossPlatform.Mvvm
 {
@@ -44,7 +45,7 @@ namespace Codeco.CrossPlatform.Mvvm
         public MainViewModel MainPage => SimpleIoc.Default.GetInstance<MainViewModel>();
 
         // Popup ViewModel properties, for more XAML-y access
-        public AddFileViewModel AddFilePopup => SimpleIoc.Default.GetInstance<AddFileViewModel>();
+        public AddFileViewModel AddFilePopup => SimpleIoc.Default.GetInstance<AddFileViewModel>(Guid.NewGuid().ToString());
 
         private INavigationService InitializeNavigationService()
         {

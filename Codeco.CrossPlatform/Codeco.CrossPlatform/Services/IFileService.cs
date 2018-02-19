@@ -14,5 +14,6 @@ namespace Codeco.CrossPlatform.Services
         Task<List<string>> GetFilesInFolder(string relativeFolderPath);
         Task DeleteFileAsync(string relativeFilePath);
         Task<string> RenameFileAsync(string relativeFilePath, string newName);
+        Task<string> MoveFileAsync(string sourceRelativeFilePath, string destinationRelativeFlePath);
     }
 }

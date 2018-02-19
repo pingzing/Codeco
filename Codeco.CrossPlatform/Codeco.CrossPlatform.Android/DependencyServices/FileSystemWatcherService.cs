@@ -47,6 +47,8 @@ namespace Codeco.CrossPlatform.Droid.DependencyServices
 
             public override void OnEvent([GeneratedEnum] FileObserverEvents e, string pathRelativeToWatcher)
             {
+                // TODO: Our fancy rename strategy doesn't work if things are going from one folder to another.
+                // Reconsider how we track going from Local -> Roamed and vice-versa.
                 System.Diagnostics.Debug.WriteLine($"ANDROID FILEOBSERVER: {e}: {pathRelativeToWatcher}");
 
                 bool found = _storedObservables.TryGetValue(_watchedPath, out Subject<FileChangedEvent> observable);

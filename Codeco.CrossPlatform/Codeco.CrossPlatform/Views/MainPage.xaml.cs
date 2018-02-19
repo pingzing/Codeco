@@ -24,7 +24,7 @@ namespace Codeco.CrossPlatform.Views
 
         public void RenameItem_Clicked(object sender, EventArgs e)
         {
-            var menuItem = ((MenuItem)sender);
+            var menuItem = (MenuItem)sender;
             var viewModel = this.BindingContext as MainViewModel;
             var fileInfoItem = menuItem.CommandParameter as SimpleFileInfoViewModel;
             viewModel.RenameItemCommand.Execute(fileInfoItem);
@@ -32,10 +32,18 @@ namespace Codeco.CrossPlatform.Views
 
         public void DeleteItem_Clicked(object sender, EventArgs e)
         {
-            var menuItem = ((MenuItem)sender);
+            var menuItem = (MenuItem)sender;
             var viewModel = this.BindingContext as MainViewModel;
             var fileInfoItem = menuItem.CommandParameter as SimpleFileInfoViewModel;
             viewModel.DeleteItemCommand.Execute(fileInfoItem);
+        }
+
+        public void SwitchLocation_Clicked(object sender, EventArgs e)
+        {
+            var menuItem = (MenuItem)sender;
+            var viewModel = this.BindingContext as MainViewModel;
+            var fileInfoItem = menuItem.CommandParameter as SimpleFileInfoViewModel;
+            viewModel.SwitchItemLocationCommand.Execute(fileInfoItem);
         }
     }
 }
