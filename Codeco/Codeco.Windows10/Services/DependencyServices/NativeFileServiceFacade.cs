@@ -41,10 +41,18 @@ namespace Codeco.Windows10.Services.DependencyServices
             return fileStream;
         }
 
+        public async Task<string> RenameFileAsync(string relativeFilePath, string newName)
+        {
+            var file = await AppDataRoot.GetFileAsync(relativeFilePath);
+            await file.RenameAsync(newName, NameCollisionOption.GenerateUniqueName);
+            return file.Name;
+        }
+
         public async Task DeleteFileAsync(string relativeFilePath)
         {
             var file = await AppDataRoot.GetFileAsync(relativeFilePath);
             await file.DeleteAsync();
         }
+
     }
 }

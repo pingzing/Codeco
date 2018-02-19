@@ -12,7 +12,7 @@ namespace Codeco.CrossPlatform.Droid.DependencyServices
 {
     public class NativeFileServiceFacade : INativeFileServiceFacade
     {
-        public static readonly string AppDataRoot = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);        
+        public static readonly string AppDataRoot = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
         public Task<List<string>> GetFilesAsync(string relativeFolderPath)
         {
@@ -33,7 +33,7 @@ namespace Codeco.CrossPlatform.Droid.DependencyServices
                 FileName = absoluteFilePath,
                 Stream = fileStream
             });
-        }        
+        }
 
         public Task<FileStream> OpenOrCreateFileAsync(string relativeFilePath)
         {
@@ -46,13 +46,24 @@ namespace Codeco.CrossPlatform.Droid.DependencyServices
             return Task.FromResult(fileStream);
         }
 
+        public Task<string> RenameFileAsync(string relativeFilePath, string newName)
+        {
+
+            string absoluteFilePath = Path.Combine(AppDataRoot, relativeFilePath);
+            string absoluteDestPath = Path.Combine(Path.GetDirectoryName(absoluteFilePath), newName);
+            if (File.Exists(absoluteDestPath))
+            {
+                absoluteDestPath = GenerateUniqueFilePath(absoluteDestPath);
+            }
+            File.Move(absoluteFilePath, absoluteDestPath);
+            return Task.FromResult(absoluteDestPath);
+        }
+
         public Task DeleteFileAsync(string relativeFilePath)
         {
-            return Task.Run(() => 
-            {
-                string absoluteFilePath = Path.Combine(AppDataRoot, relativeFilePath);
-                File.Delete(absoluteFilePath);
-            });            
+            string absoluteFilePath = Path.Combine(AppDataRoot, relativeFilePath);
+            File.Delete(absoluteFilePath);
+            return Task.CompletedTask;
         }
 
         private string GenerateUniqueFilePath(string absoluteFilePath)

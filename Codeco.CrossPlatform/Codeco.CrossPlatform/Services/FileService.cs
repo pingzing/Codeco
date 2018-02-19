@@ -63,6 +63,11 @@ namespace Codeco.CrossPlatform.Services
             }
         }
 
+        public async Task<string> RenameFileAsync(string relativeFilePath, string newName)
+        {
+            return await _nativeFileService.RenameFileAsync(relativeFilePath, newName);
+        }
+
         public Task DeleteFileAsync(string relativeFilePath)
         {
             return _nativeFileService.DeleteFileAsync(relativeFilePath);
@@ -76,6 +81,6 @@ namespace Codeco.CrossPlatform.Services
         public Task<List<string>> GetFilesInFolder(string relativeFolderPath)
         {
             return _nativeFileService.GetFilesAsync(relativeFolderPath);
-        }        
+        }
     }
 }

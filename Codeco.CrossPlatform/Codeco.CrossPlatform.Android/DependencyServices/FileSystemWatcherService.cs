@@ -12,7 +12,7 @@ using Codeco.CrossPlatform.Services.DependencyInterfaces;
 namespace Codeco.CrossPlatform.Droid.DependencyServices
 {
     public class FileSystemWatcherService : IFileSystemWatcherService
-    {        
+    {
         private static Dictionary<string, Subject<FileChangedEvent>> _storedObservables = new Dictionary<string, Subject<FileChangedEvent>>();
         private static List<CrossPlatFileObserver> _storedObservers = new List<CrossPlatFileObserver>();
 
@@ -29,10 +29,11 @@ namespace Codeco.CrossPlatform.Droid.DependencyServices
         }
 
         private class CrossPlatFileObserver : FileObserver
-        {            
+        {
             private static FileObserverEvents _events = FileObserverEvents.AllEvents;
 
             private string _watchedPath;
+            private RenameFlag _renamedFrom = null;
 
             public CrossPlatFileObserver(string path) : base(path, _events)
             {
@@ -45,8 +46,8 @@ namespace Codeco.CrossPlatform.Droid.DependencyServices
             }
 
             public override void OnEvent([GeneratedEnum] FileObserverEvents e, string pathRelativeToWatcher)
-            {                
-                System.Diagnostics.Debug.WriteLine($"ANDROID FILEOBSERVER: Received {e} from {pathRelativeToWatcher}");
+            {
+                System.Diagnostics.Debug.WriteLine($"ANDROID FILEOBSERVER: {e}: {pathRelativeToWatcher}");
 
                 bool found = _storedObservables.TryGetValue(_watchedPath, out Subject<FileChangedEvent> observable);
 
@@ -56,18 +57,43 @@ namespace Codeco.CrossPlatform.Droid.DependencyServices
                 switch (e)
                 {
                     case FileObserverEvents.Create:
+                        _renamedFrom = null;
                         observable.OnNext(new FileChangedEvent(fullPath, name, WatcherChangeTypes.Created));
                         break;
                     case FileObserverEvents.Delete:
+                        _renamedFrom = null;
                         observable.OnNext(new FileChangedEvent(fullPath, name, WatcherChangeTypes.Deleted));
                         break;
                     case FileObserverEvents.Modify:
+                        _renamedFrom = null;
                         observable.OnNext(new FileChangedEvent(fullPath, name, WatcherChangeTypes.Changed));
+                        break;
+                    case FileObserverEvents.MovedFrom:
+                        _renamedFrom = new RenameFlag { MovedFromPath = fullPath };
+                        break;
+                    case FileObserverEvents.MovedTo:
+                        if (_renamedFrom != null)
+                        {
+                            observable.OnNext(new FileChangedEvent
+                            (
+                                fullPath, 
+                                name, 
+                                WatcherChangeTypes.Renamed, 
+                                _renamedFrom.MovedFromPath, 
+                                Path.GetFileName(_renamedFrom.MovedFromPath))
+                            );
+                            _renamedFrom = null;
+                        }
                         break;
                     default:
                         break;
                 }
             }
         }
-    }    
+
+        private class RenameFlag
+        {
+            public string MovedFromPath { get; set; }
+        }
+    }
 }

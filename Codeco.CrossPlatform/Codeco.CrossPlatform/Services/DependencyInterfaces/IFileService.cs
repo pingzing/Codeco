@@ -30,6 +30,7 @@ namespace Codeco.CrossPlatform.Services.DependencyInterfaces
         Task<List<string>> GetFilesAsync(string relativeFolderPath);
 
         Task DeleteFileAsync(string relativeFilePath);
+        Task<string> RenameFileAsync(string relativeFilePath, string newName);
     }
 }
 

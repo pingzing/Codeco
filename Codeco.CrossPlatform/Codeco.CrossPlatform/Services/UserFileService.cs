@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Codeco.CrossPlatform.Services
 {
-    public class UserFileService : IUserFileService
+    public class UserFileService : IUserFileService, IInitializesAsync
     {
         private const string UserFilesFolderName = "CodecoFiles";
         private readonly string _fullUserFilesFolderPath;
@@ -29,6 +29,8 @@ namespace Codeco.CrossPlatform.Services
 
         private SourceList<SimpleFileInfoViewModel> _filesList = new SourceList<SimpleFileInfoViewModel>();        
         public IObservableList<SimpleFileInfoViewModel> FilesList { get; private set; }
+
+        public Task Initialization { get; private set; }
 
         public UserFileService(IAppFolderService appFolderService,
                                IFileService fileService,
@@ -43,12 +45,12 @@ namespace Codeco.CrossPlatform.Services
             string localFolderName = FileLocation.Local.FolderName();
             string roamedFolderName = FileLocation.Roamed.FolderName();
 
-            CreateUserFolder(localFolderName);
-            CreateUserFolder(roamedFolderName);
+            var localFolderTask = CreateUserFolderAsync(localFolderName);
+            var roamedFolderTask = CreateUserFolderAsync(roamedFolderName);
 
             FilesList = _filesList.AsObservableList();
 
-            InitializeFileList(localFolderName, roamedFolderName);
+            Initialization = InitializeFileList(localFolderName, roamedFolderName);
         }
 
         private async Task InitializeFileList(string localFolderName, string roamedFolderName)
@@ -119,10 +121,12 @@ namespace Codeco.CrossPlatform.Services
         /// <param name="fileName">File name only, not a path.</param>
         /// <param name="fileLocation">Whether the file should be stored only on the device, or synced between devices.</param>
         /// <returns></returns>
-        public Task CreateUserFileAsync(string fileName, FileLocation fileLocation)
+        public async Task CreateUserFileAsync(string fileName, FileLocation fileLocation)
         {
-            string absoluteFilePath = Path.Combine(UserFilesFolderName, fileLocation.FolderName(), fileName);
-            return _fileService.CreateFileAsync(absoluteFilePath);
+            await Initialization;
+
+            string absoluteFilePath = GetRelativeFilePath(fileName, fileLocation);
+            await _fileService.CreateFileAsync(absoluteFilePath);
         }
 
         /// <summary>
@@ -134,7 +138,9 @@ namespace Codeco.CrossPlatform.Services
         /// <returns></returns>
         public async Task<string> CreateUserFileAsync(string fileName, FileLocation fileLocation, byte[] data)
         {
-            string relativeFilePath = Path.Combine(UserFilesFolderName, fileLocation.FolderName(), fileName);
+            await Initialization;
+
+            string relativeFilePath = GetRelativeFilePath(fileName, fileLocation);
             var createdFile = await _fileService.CreateFileAsync(relativeFilePath);
             using (createdFile.Stream)
             {
@@ -152,7 +158,9 @@ namespace Codeco.CrossPlatform.Services
         /// <returns></returns>
         public async Task<string> CreateUserFileAsync(string fileName, FileLocation fileLocation, string data)
         {
-            string relativeFilePath = Path.Combine(UserFilesFolderName, fileLocation.FolderName(), fileName);
+            await Initialization;
+
+            string relativeFilePath = GetRelativeFilePath(fileName, fileLocation);
             var createdFile = await _fileService.CreateFileAsync(relativeFilePath);
             using (createdFile.Stream)
             {
@@ -166,8 +174,18 @@ namespace Codeco.CrossPlatform.Services
         
         public async Task DeleteUserFileAsync(string fileName, FileLocation fileLocation)
         {
-            string relativeFilePath = Path.Combine(_localFolderPath, fileName);
+            await Initialization;
+
+            string relativeFilePath = GetRelativeFilePath(fileName, fileLocation);
             await _fileService.DeleteFileAsync(relativeFilePath);
+        }
+
+        public async Task RenameUserFile(string fileName, FileLocation fileLocation, string newName)
+        {
+            await Initialization;
+
+            string relativeFilePath = GetRelativeFilePath(fileName, fileLocation);
+            await _fileService.RenameFileAsync(relativeFilePath, newName);
         }
 
         /// <summary>
@@ -177,7 +195,7 @@ namespace Codeco.CrossPlatform.Services
         /// <param name="relativeFolderPath">Path of the folder to create, relative to 
         /// the AppRoot/CoedcoFiles/ folder.</param>
         /// <returns>The <see cref="DirectoryInfo"/> of the created folder, or null.</returns>
-        public DirectoryInfo CreateUserFolder(string relativeFolderPath)
+        public async Task<DirectoryInfo> CreateUserFolderAsync(string relativeFolderPath)
         {
             string absoluteFolderPath = Path.Combine(_fullUserFilesFolderPath, relativeFolderPath);
             return _fileService.CreateFolder(absoluteFolderPath);
@@ -185,6 +203,8 @@ namespace Codeco.CrossPlatform.Services
 
         public async Task<bool> ValidateFileAsync(byte[] dataArray)
         {
+            await Initialization;
+
             using (var stream = new StreamReader(new MemoryStream(dataArray)))
             {
                 IList<string> lines = (await stream.ReadToEndAsync())
@@ -213,6 +233,6 @@ namespace Codeco.CrossPlatform.Services
                 case FileLocation.Local:
                     return Path.Combine(_localFolderPath, fileName);
             }
-        }        
+        }       
     }
 }

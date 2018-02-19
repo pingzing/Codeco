@@ -199,7 +199,7 @@ namespace Codeco.CrossPlatform.ViewModels
         private void DebugAddFolder()
         {
             Random rand = new Random();
-            _userFileService.CreateUserFolder($"testFolder-{rand.Next()}");
+            _userFileService.CreateUserFolderAsync($"testFolder-{rand.Next()}");
         }
 
         private void CopyCodeText()
@@ -207,9 +207,23 @@ namespace Codeco.CrossPlatform.ViewModels
             //todo: copy current value to clipboard
         }
 
-        private void RenameItem(SimpleFileInfoViewModel obj)
+        private async void RenameItem(SimpleFileInfoViewModel obj)
         {
-            Debug.WriteLine($"Rename Item: {obj.Name}");
+            // Get new name
+            var promptResult = await _userDialogs.PromptAsync(new PromptConfig
+            {
+                Title = "Rename file",
+                Text = obj.Name,
+                Placeholder = "New file name",
+                OnTextChanged = args => args.IsValid = !String.IsNullOrWhiteSpace(args.Value),
+                OkText = "Rename",
+                CancelText = "Cancel"
+            });
+
+            if (promptResult.Ok)
+            {
+                await _userFileService.RenameUserFile(obj.Name, obj.FileLocation, promptResult.Value);
+            }            
         }
 
         private void DeleteItem(SimpleFileInfoViewModel obj)
