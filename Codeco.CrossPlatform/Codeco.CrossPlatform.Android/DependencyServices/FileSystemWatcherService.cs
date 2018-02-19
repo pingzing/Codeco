@@ -49,6 +49,7 @@ namespace Codeco.CrossPlatform.Droid.DependencyServices
             {
                 // TODO: Our fancy rename strategy doesn't work if things are going from one folder to another.
                 // Reconsider how we track going from Local -> Roamed and vice-versa.
+                // Maybe a static dictionary that tracks movement via a "consumable" RenameFlag.
                 System.Diagnostics.Debug.WriteLine($"ANDROID FILEOBSERVER: {e}: {pathRelativeToWatcher}");
 
                 bool found = _storedObservables.TryGetValue(_watchedPath, out Subject<FileChangedEvent> observable);
