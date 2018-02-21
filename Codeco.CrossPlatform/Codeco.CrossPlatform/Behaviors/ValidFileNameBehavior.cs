@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions;
 using Xamarin.Forms;
 
-namespace Codeco.CrossPlatform.Converters
+namespace Codeco.CrossPlatform.Behaviors
 {
     public class ValidFileNameBehavior : Behavior<Entry>
     {

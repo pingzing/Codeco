@@ -25,25 +25,49 @@ namespace Codeco.CrossPlatform.Views
         public void RenameItem_Clicked(object sender, EventArgs e)
         {
             var menuItem = (MenuItem)sender;
+            var viewCell = (ViewCell)menuItem.BindingContext;            
+
             var viewModel = this.BindingContext as MainViewModel;
-            var fileInfoItem = menuItem.CommandParameter as SimpleFileInfoViewModel;
+            var fileInfoItem = viewCell.BindingContext as SimpleFileInfoViewModel;
             viewModel.RenameItemCommand.Execute(fileInfoItem);
         }
 
         public void DeleteItem_Clicked(object sender, EventArgs e)
         {
             var menuItem = (MenuItem)sender;
+            var viewCell = (ViewCell)menuItem.BindingContext;
+            viewCell.ContextActions.Clear();
+
             var viewModel = this.BindingContext as MainViewModel;
-            var fileInfoItem = menuItem.CommandParameter as SimpleFileInfoViewModel;
+            var fileInfoItem = viewCell.BindingContext as SimpleFileInfoViewModel;
             viewModel.DeleteItemCommand.Execute(fileInfoItem);
         }
 
         public void SwitchLocation_Clicked(object sender, EventArgs e)
         {
             var menuItem = (MenuItem)sender;
+            var viewCell = (ViewCell)menuItem.BindingContext;
+            viewCell.ContextActions.Clear();
+
             var viewModel = this.BindingContext as MainViewModel;
-            var fileInfoItem = menuItem.CommandParameter as SimpleFileInfoViewModel;
+            var fileInfoItem = viewCell.BindingContext as SimpleFileInfoViewModel;
             viewModel.SwitchItemLocationCommand.Execute(fileInfoItem);
+        }
+
+        // We're doing this in code, because data bindings on MenuItems are broken on UWP, due
+        // to a ViewCell recycling bug.
+        public void FileItemTemplateViewCell_BindingContextChanged(object sender, EventArgs e)
+        {
+            var viewCell = sender as ViewCell;            
+            if (viewCell != null)
+            {
+                var simpleFileInfoViewModel = viewCell.BindingContext as SimpleFileInfoViewModel;
+                if (simpleFileInfoViewModel != null)
+                {
+                    var switchLocationMenuItem = viewCell.ContextActions[1];
+                    switchLocationMenuItem.Text = simpleFileInfoViewModel.SwitchLocationText;
+                }
+            }
         }
     }
 }

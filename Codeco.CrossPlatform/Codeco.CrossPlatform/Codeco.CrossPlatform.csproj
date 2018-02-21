@@ -55,6 +55,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Converters\" />
     <Folder Include="Properties\" />
   </ItemGroup>
 

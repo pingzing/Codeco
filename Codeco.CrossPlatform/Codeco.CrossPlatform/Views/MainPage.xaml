@@ -5,24 +5,36 @@
             
             xmlns:extensions="clr-namespace:Codeco.CrossPlatform.XamlExtensions"     
             xmlns:customCtl="clr-namespace:Codeco.CrossPlatform.CustomRenderers"
+            xmlns:behavior="clr-namespace:Codeco.CrossPlatform.Behaviors"
             
             Title="Tab Page"
             BindingContext="{Binding Source={StaticResource Locator}, Path=MainPage}">
 
     <TabbedPage.Resources>
         <ResourceDictionary>
+
             <DataTemplate x:Key="FileItemTemplate">
-                <ViewCell>
+                <ViewCell x:Name="FileItemTemplateViewCell" 
+                          BindingContextChanged="FileItemTemplateViewCell_BindingContextChanged">
                     <ViewCell.ContextActions>
-                        <MenuItem Text="Rename" Clicked="RenameItem_Clicked" CommandParameter="{Binding .}"/>
-                        <MenuItem Text="{Binding SwitchLocationText}" Clicked="SwitchLocation_Clicked" CommandParameter="{Binding .}"/>
-                        <MenuItem Text="Delete" Clicked="DeleteItem_Clicked" CommandParameter="{Binding .}" IsDestructive="True"/>
+                        <!--Setting the BindingContext to the parent ViewCell and not using CommandParameter here as a 
+                        workaround for a XF UWP bug that doesn't update MenuItems' BindingContext when the Cell gets a new item.-->
+                        <MenuItem BindingContext="{x:Reference FileItemTemplateViewCell}" 
+                                  Clicked="RenameItem_Clicked" 
+                                  Text="Rename"/>
+                        <MenuItem BindingContext="{x:Reference FileItemTemplateViewCell}"                                  
+                                  Clicked="SwitchLocation_Clicked"/>
+                        <MenuItem BindingContext="{x:Reference FileItemTemplateViewCell}" 
+                                  Clicked="DeleteItem_Clicked" 
+                                  Text="Delete"/>
                     </ViewCell.ContextActions>
-                    <Grid>
+                    <!--Background color as not COMPLETELY transparent as workaround for right-click being ignored on
+                    transparent background in UWP-->
+                    <Grid BackgroundColor="#01FFFFFF">
                         <Grid.Padding>
                             <OnPlatform x:TypeArguments="Thickness">
                                 <On Platform="Android" Value="10,0,10,0"/>
-                                <On Platform="UWP" Value="0"/>
+                                <On Platform="UWP" Value="0,0,0,5"/>
                             </OnPlatform>
                         </Grid.Padding>
                         <Grid.RowDefinitions>
@@ -30,7 +42,13 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <Label Grid.Row="0" Text="{Binding Name}" Style="{DynamicResource ListItemTextStyle}"/>
-                        <Label Grid.Row="1" Text="{Binding FileLocation}" Style="{DynamicResource ListItemDetailTextStyle}"/>
+                        <Label Grid.Row="1" 
+                               Text="{Binding FileLocation}" 
+                               Style="{DynamicResource ListItemDetailTextStyle}">
+                            <Label.Behaviors>
+                                <behavior:FileLocationToTextColorBehavior/>
+                            </Label.Behaviors>
+                        </Label>
                     </Grid>
                 </ViewCell>
             </DataTemplate>
@@ -44,24 +62,13 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition/>
-                <RowDefinition/>
             </Grid.RowDefinitions>
-            <customCtl:OptionalSelectionListView x:Name="RoamedFilesList"
+            <customCtl:OptionalSelectionListView x:Name="FilesList"
                                                  Grid.Row="0"                                                 
                                                  HasUnevenRows="True"
                                                  IsSelectionEnabled ="False"
-                                                 ItemsSource="{Binding RoamedFiles}"
+                                                 ItemsSource="{Binding Files}"
                                                  ItemSelected="FilesList_ItemSelected"
-                                                 ItemTemplate="{StaticResource FileItemTemplate}">
-                <x:Arguments>
-                    <ListViewCachingStrategy>RecycleElement</ListViewCachingStrategy>
-                </x:Arguments>
-            </customCtl:OptionalSelectionListView>
-            <customCtl:OptionalSelectionListView x:Name="LocalFilesList"
-                                                 Grid.Row="1"                                                 
-                                                 HasUnevenRows="True"
-                                                 IsSelectionEnabled="False"
-                                                 ItemsSource="{Binding LocalFiles}"
                                                  ItemTemplate="{StaticResource FileItemTemplate}">
                 <x:Arguments>
                     <ListViewCachingStrategy>RecycleElement</ListViewCachingStrategy>

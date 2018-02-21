@@ -102,7 +102,7 @@ namespace Codeco.CrossPlatform.Services
                                 _filesList.Remove(itemToRemove);
                             }
                             break;
-                        case WatcherChangeTypes.Renamed:                            
+                        case WatcherChangeTypes.Renamed:
                             var itemToRename = _filesList.Items.FirstOrDefault(x => x.Path == changeEvent.RenamedOldPath);
                             if (itemToRename != null)
                             {

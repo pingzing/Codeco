@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reactive.Subjects;
+using System.Security.Cryptography;
 using Android.OS;
 using Android.Runtime;
 using Codeco.CrossPlatform.Droid.DependencyServices;
@@ -31,9 +32,7 @@ namespace Codeco.CrossPlatform.Droid.DependencyServices
         private class CrossPlatFileObserver : FileObserver
         {
             private static FileObserverEvents _events = FileObserverEvents.AllEvents;
-
             private string _watchedPath;
-            private RenameFlag _renamedFrom = null;
 
             public CrossPlatFileObserver(string path) : base(path, _events)
             {
@@ -47,9 +46,6 @@ namespace Codeco.CrossPlatform.Droid.DependencyServices
 
             public override void OnEvent([GeneratedEnum] FileObserverEvents e, string pathRelativeToWatcher)
             {
-                // TODO: Our fancy rename strategy doesn't work if things are going from one folder to another.
-                // Reconsider how we track going from Local -> Roamed and vice-versa.
-                // Maybe a static dictionary that tracks movement via a "consumable" RenameFlag.
                 System.Diagnostics.Debug.WriteLine($"ANDROID FILEOBSERVER: {e}: {pathRelativeToWatcher}");
 
                 bool found = _storedObservables.TryGetValue(_watchedPath, out Subject<FileChangedEvent> observable);
@@ -60,33 +56,24 @@ namespace Codeco.CrossPlatform.Droid.DependencyServices
                 switch (e)
                 {
                     case FileObserverEvents.Create:
-                        _renamedFrom = null;
                         observable.OnNext(new FileChangedEvent(fullPath, name, WatcherChangeTypes.Created));
                         break;
                     case FileObserverEvents.Delete:
-                        _renamedFrom = null;
                         observable.OnNext(new FileChangedEvent(fullPath, name, WatcherChangeTypes.Deleted));
                         break;
                     case FileObserverEvents.Modify:
-                        _renamedFrom = null;
                         observable.OnNext(new FileChangedEvent(fullPath, name, WatcherChangeTypes.Changed));
                         break;
+
+                    // Android doesn't have a rename event--instead, it fires a MovedFrom, followed by a MovedTo.
+                    // There's no way reliably track a file from one folder to the next, so treat MovedFrom as a Delete,
+                    // and MovedTo as a Create.
                     case FileObserverEvents.MovedFrom:
-                        _renamedFrom = new RenameFlag { MovedFromPath = fullPath };
+                        observable.OnNext(new FileChangedEvent(fullPath, name, WatcherChangeTypes.Deleted));
                         break;
+
                     case FileObserverEvents.MovedTo:
-                        if (_renamedFrom != null)
-                        {
-                            observable.OnNext(new FileChangedEvent
-                            (
-                                fullPath, 
-                                name, 
-                                WatcherChangeTypes.Renamed, 
-                                _renamedFrom.MovedFromPath, 
-                                Path.GetFileName(_renamedFrom.MovedFromPath))
-                            );
-                            _renamedFrom = null;
-                        }
+                        observable.OnNext(new FileChangedEvent(fullPath, name, WatcherChangeTypes.Created));
                         break;
                     default:
                         break;
@@ -94,9 +81,11 @@ namespace Codeco.CrossPlatform.Droid.DependencyServices
             }
         }
 
-        private class RenameFlag
+        private class FileMoveInfo
         {
-            public string MovedFromPath { get; set; }
+            public string FromName { get; set; }
+            public string FromPath { get; set; }
+            public byte[] HashedFileContents { get; set; }
         }
     }
 }

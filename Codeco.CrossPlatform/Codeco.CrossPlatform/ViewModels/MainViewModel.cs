@@ -69,11 +69,8 @@ namespace Codeco.CrossPlatform.ViewModels
 
         public ObservableCollection<NamedKeyboard> AvailableKeyboards = new ObservableCollection<NamedKeyboard>();
 
-        private ReadOnlyObservableCollection<SimpleFileInfoViewModel> _roamedFiles;
-        public ReadOnlyObservableCollection<SimpleFileInfoViewModel> RoamedFiles => _roamedFiles;
-
-        private ReadOnlyObservableCollection<SimpleFileInfoViewModel> _localFiles;
-        public ReadOnlyObservableCollection<SimpleFileInfoViewModel> LocalFiles => _localFiles;
+        private ReadOnlyObservableCollection<SimpleFileInfoViewModel> _files;
+        public ReadOnlyObservableCollection<SimpleFileInfoViewModel> Files => _files;        
 
         private RelayCommand _copyCodeTextCommand;
         public RelayCommand CopyCodeTextCommand => _copyCodeTextCommand ?? (_copyCodeTextCommand = new RelayCommand(CopyCodeText));
@@ -112,28 +109,16 @@ namespace Codeco.CrossPlatform.ViewModels
 
         public override Task Activated(NavigationType navType)
         {
-            if (_roamedFiles == null)
+            if (_files == null)
             {
                 _userFileService.FilesList                    
                          .Connect()       
-                         .Filter(x => x.FileLocation == FileLocation.Roamed)
-                         .Bind(out _roamedFiles)
+                         .Sort(SortExpressionComparer<SimpleFileInfoViewModel>.Descending(x => x.FileLocation).ThenByAscending(x => x.Name))
+                         .Bind(out _files)
                          .Subscribe();
 
-                RaisePropertyChanged(nameof(RoamedFiles));
+                RaisePropertyChanged(nameof(Files));
             }
-
-            if (_localFiles == null)
-            {
-                _userFileService.FilesList
-                    .Connect()
-                    .Filter(x => x.FileLocation == FileLocation.Local)
-                    .Bind(out _localFiles)
-                    .Subscribe();
-
-                RaisePropertyChanged(nameof(LocalFiles));
-            }
-
             return Task.CompletedTask;
         }
 
