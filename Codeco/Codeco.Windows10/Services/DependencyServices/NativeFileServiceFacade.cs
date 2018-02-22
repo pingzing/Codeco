@@ -64,5 +64,12 @@ namespace Codeco.Windows10.Services.DependencyServices
             var file = await AppDataRoot.GetFileAsync(relativeFilePath);
             await file.DeleteAsync();
         }
+
+        public async Task<string> GetFileContentsAsync(string relativeFilePath)
+        {
+            var file = await AppDataRoot.GetFileAsync(relativeFilePath);
+            string fileContents = await FileIO.ReadTextAsync(file);
+            return fileContents;
+        }
     }
 }

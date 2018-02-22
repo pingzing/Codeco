@@ -22,6 +22,19 @@ namespace Codeco.CrossPlatform.Views
             ((ListView)sender).SelectedItem = null; //Disable selection entirely.
         }
 
+        public void FilesList_ItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            var item = e.Item as SimpleFileInfoViewModel;
+            if (item != null)
+            {
+                var viewModel = this.BindingContext as MainViewModel;
+                if (viewModel != null)
+                {
+                    viewModel.SetActiveFileCommand.Execute(item);
+                }
+            }
+        }
+
         public void RenameItem_Clicked(object sender, EventArgs e)
         {
             var menuItem = (MenuItem)sender;

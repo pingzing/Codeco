@@ -86,6 +86,11 @@ namespace Codeco.CrossPlatform.Services
         public Task<List<string>> GetFilesInFolder(string relativeFolderPath)
         {
             return _nativeFileService.GetFilesAsync(relativeFolderPath);
-        }       
+        }
+
+        public Task<string> GetFileContentsAsync(string relativeFilePath)
+        {
+            return _nativeFileService.GetFileContentsAsync(relativeFilePath);
+        }
     }
 }

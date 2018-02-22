@@ -26,7 +26,6 @@ namespace Codeco.CrossPlatform.ViewModels
         private readonly IUserDialogs _userDialogs;
         private readonly IUserFileService _userFileService;
         private readonly IFilePicker _filePicker;
-        private readonly IEncryptionService _encryptionService;
 
         private readonly NamedKeyboard _defaultKeyboard = new NamedKeyboard(Keyboard.Default, "Default");
         private readonly NamedKeyboard _numericKeyboard = new NamedKeyboard(Keyboard.Numeric, "Numeric");
@@ -78,9 +77,6 @@ namespace Codeco.CrossPlatform.ViewModels
         private RelayCommand _addFileCommand;
         public RelayCommand AddFileCommand => _addFileCommand ?? (_addFileCommand = new RelayCommand(AddFile));
 
-        private RelayCommand _debugAddFolderCommand;
-        public RelayCommand DebugAddFolderCommand => _debugAddFolderCommand ?? (_debugAddFolderCommand = new RelayCommand(DebugAddFolder));
-
         private RelayCommand<SimpleFileInfoViewModel> _renameItemCommand;
         public RelayCommand<SimpleFileInfoViewModel> RenameItemCommand => _renameItemCommand ?? (_renameItemCommand = new RelayCommand<SimpleFileInfoViewModel>(RenameItem));
 
@@ -90,17 +86,18 @@ namespace Codeco.CrossPlatform.ViewModels
         private RelayCommand<SimpleFileInfoViewModel> _switchItemLocationCommand;
         public RelayCommand<SimpleFileInfoViewModel> SwitchItemLocationCommand => _switchItemLocationCommand ?? (_switchItemLocationCommand = new RelayCommand<SimpleFileInfoViewModel>(SwitchItemLocation));
 
+        private RelayCommand<SimpleFileInfoViewModel> _setActiveFileCommand;
+        public RelayCommand<SimpleFileInfoViewModel> SetActiveFileCommand => _setActiveFileCommand ?? (_setActiveFileCommand = new RelayCommand<SimpleFileInfoViewModel>(SetActiveFile));        
+
         public MainViewModel(INavigationService navService,
                              IUserDialogs userDialogs,
                              IUserFileService userFileService,
-                             IFilePicker filePicker,
-                             IEncryptionService encryptionService)
+                             IFilePicker filePicker)
             : base(navService)
         {
             _userDialogs = userDialogs;
             _userFileService = userFileService;
             _filePicker = filePicker;
-            _encryptionService = encryptionService;
 
             _currentInputKeyboard = _defaultKeyboard;
             AvailableKeyboards.Add(_defaultKeyboard);
@@ -192,16 +189,40 @@ namespace Codeco.CrossPlatform.ViewModels
             }
 
             var (pickedFileName, pickedPassword) = filePopupResult.Result;
-            var (encryptedData, salt, iv) = _encryptionService.Encrypt(pickedFileDataString, pickedPassword);
-            //TODO: Save the salt and the IV somewhere.
 
-            await _userFileService.CreateUserFileAsync(pickedFileName, FileLocation.Local, encryptedData);
+            await _userFileService.CreateUserFileAsync(pickedFileName, FileLocation.Local, pickedPassword, pickedFileDataString);
         }
 
-        private void DebugAddFolder()
+        private async void SetActiveFile(SimpleFileInfoViewModel obj)
         {
-            Random rand = new Random();
-            _userFileService.CreateUserFolderAsync($"testFolder-{rand.Next()}");
+            // Prompt user for password
+            var promptResult = await _userDialogs.PromptAsync(new PromptConfig
+            {
+                Message = "Enter this file's password",
+                OkText = "Unlock",
+                CancelText = "Cancel",
+                Title = "Enter password",
+                Placeholder = "Password",
+                OnTextChanged = args =>
+                {
+                    args.IsValid = !String.IsNullOrEmpty(args.Value);
+                }
+            });
+
+            if (!promptResult.Ok)
+            {
+                return;
+            }
+
+            // Use password to decrypt file
+            var fileDict = await _userFileService.GetUserFileContentsAsync(obj.Name, obj.FileLocation, promptResult.Text);
+
+            // Load dict into current
+            _activeDictFile = fileDict;
+
+            // Probably do some other stuff too--change title, etc etc
+
+            // Switch active tab to "Active File" tab
         }
 
         private void CopyCodeText()

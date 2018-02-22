@@ -69,6 +69,7 @@
                                                  IsSelectionEnabled ="False"
                                                  ItemsSource="{Binding Files}"
                                                  ItemSelected="FilesList_ItemSelected"
+                                                 ItemTapped="FilesList_ItemTapped"
                                                  ItemTemplate="{StaticResource FileItemTemplate}">
                 <x:Arguments>
                     <ListViewCachingStrategy>RecycleElement</ListViewCachingStrategy>

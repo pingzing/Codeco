@@ -78,6 +78,16 @@ namespace Codeco.CrossPlatform.Droid.DependencyServices
             return Task.CompletedTask;
         }
 
+        public async Task<string> GetFileContentsAsync(string relativeFilePath)
+        {
+            string absolutePath = Path.Combine(AppDataRoot, relativeFilePath);
+            using (var reader = File.OpenText(absolutePath))
+            {
+                string fileText = await reader.ReadToEndAsync();
+                return fileText;
+            }
+        }
+
         private string GenerateUniqueFilePath(string absoluteFilePath)
         {
             int count = 1;

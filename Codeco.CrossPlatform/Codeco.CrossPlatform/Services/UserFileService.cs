@@ -4,6 +4,7 @@ using Codeco.CrossPlatform.Models;
 using Codeco.CrossPlatform.Models.FileSystem;
 using Codeco.CrossPlatform.Services.DependencyInterfaces;
 using Codeco.CrossPlatform.ViewModels;
+using Codeco.Encryption;
 using DynamicData;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,7 @@ namespace Codeco.CrossPlatform.Services
         private readonly IAppFolderService _appFolderService;
         private readonly IFileService _fileService;
         private readonly IFileSystemWatcherService _fileSystemWatcherService;
+        private readonly IEncryptionService _encryptionService;
 
         private SourceList<SimpleFileInfoViewModel> _filesList = new SourceList<SimpleFileInfoViewModel>();        
         public IObservableList<SimpleFileInfoViewModel> FilesList { get; private set; }
@@ -34,11 +36,13 @@ namespace Codeco.CrossPlatform.Services
 
         public UserFileService(IAppFolderService appFolderService,
                                IFileService fileService,
-                               IFileSystemWatcherService fileSystemWatcherService)
+                               IFileSystemWatcherService fileSystemWatcherService,
+                               IEncryptionService encryptionService)
         {
             _appFolderService = appFolderService;
             _fileService = fileService;
             _fileSystemWatcherService = fileSystemWatcherService;
+            _encryptionService = encryptionService;
 
             _fullUserFilesFolderPath = Path.Combine(_appFolderService.GetAppFolderPath(), UserFilesFolderName);
 
@@ -157,9 +161,12 @@ namespace Codeco.CrossPlatform.Services
         /// <param name="fileLocation">Whether the file should be stored only on the device, or synced between devices.</param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public async Task<string> CreateUserFileAsync(string fileName, FileLocation fileLocation, string data)
+        public async Task<string> CreateUserFileAsync(string fileName, FileLocation fileLocation, string password, string pickedFileData)
         {
             await Initialization;
+
+            var (encryptedData, salt, iv) = _encryptionService.Encrypt(pickedFileData, password);
+            //TODO: Save the salt and the IV somewhere.
 
             string relativeFilePath = GetRelativeFilePath(fileName, fileLocation);
             var createdFile = await _fileService.CreateFileAsync(relativeFilePath);
@@ -167,9 +174,10 @@ namespace Codeco.CrossPlatform.Services
             {
                 using (var streamWriter = new StreamWriter(createdFile.Stream))
                 {
-                    await streamWriter.WriteAsync(data);
+                    await streamWriter.WriteAsync(encryptedData);
                 }
-            }
+            }            
+
             return createdFile.FileName;
         }
         
@@ -209,6 +217,22 @@ namespace Codeco.CrossPlatform.Services
         {
             string absoluteFolderPath = Path.Combine(_fullUserFilesFolderPath, relativeFolderPath);
             return _fileService.CreateFolder(absoluteFolderPath);
+        }
+
+        public async Task<Dictionary<string, string>> GetUserFileContentsAsync(string name, FileLocation fileLocation, string password)
+        {
+            await Initialization;
+
+            string relativeFilePath = GetRelativeFilePath(name, fileLocation);
+            string encryptedContents = await _fileService.GetFileContentsAsync(relativeFilePath);
+
+            // TODO: Get IV and Salt from wherever we decided to save them
+            string decryptedContents = _encryptionService.Decrypt(encryptedContents, password, null, null);
+            return decryptedContents.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries) // split into lines
+                .Select(x => x.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)) // Split into key-value pairs
+                .ToDictionary(
+                    keySelector: keyVal1 => keyVal1[0], 
+                    elementSelector: keyVal2 => keyVal2[1]);
         }
 
         public async Task<bool> ValidateFileAsync(byte[] dataArray)
