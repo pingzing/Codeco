@@ -1,6 +1,9 @@
 ﻿using Codeco.CrossPlatform.Mvvm;
 using Codeco.CrossPlatform.Services.DependencyInterfaces;
 using Codeco.CrossPlatform.Views;
+using AC = Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -67,6 +70,7 @@ namespace Codeco.CrossPlatform
         protected override void OnStart ()
         {
             // Handle when your app starts
+            AC.AppCenter.Start($"uwp=<UwpReplaceMe>;android=<AndroidReplaceMe>", typeof(Analytics), typeof(Crashes));
         }
 
         protected override void OnSleep ()
