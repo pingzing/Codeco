@@ -2,7 +2,7 @@
   
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <PackageTargetFallback>portable-win+net45+wp8+win81+wpa8</PackageTargetFallback>
+    <AssetTargetFallback>$(AssetTargetFallback);portable-win+net45+wp8+win81+wpa8;</AssetTargetFallback>
     <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
 
