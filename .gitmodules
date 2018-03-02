@@ -1,3 +1,6 @@
 [submodule "FilePicker-Plugin-for-Xamarin-and-Windows"]
 	path = FilePicker-Plugin-for-Xamarin-and-Windows
 	url = ./FilePicker-Plugin-for-Xamarin-and-Windows
+[submodule "FilePicker-Plugin-for-Xamarin-and-Windows\\"]
+	path = FilePicker-Plugin-for-Xamarin-and-Windows\\
+	url = ./FilePicker-Plugin-for-Xamarin-and-Windows\\
