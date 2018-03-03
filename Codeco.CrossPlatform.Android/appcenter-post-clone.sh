@@ -5,6 +5,7 @@ android_api_key=$ANDROID_API_KEY
 
 if [ -z "$uwp_api_key" ] || [ -n "$uwp_api_key" ] ; then
     echo "No UWP API key found under UWP_API_KEY environment variable." 1>&2
+    echo "UWP API key is: $uwp_api_key"
     exit 1
 fi
 
