@@ -4,9 +4,18 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssetTargetFallback>$(AssetTargetFallback);portable-win+net45+wp8+win81+wpa8;</AssetTargetFallback>
     <NeutralLanguage>en</NeutralLanguage>
+    <Configurations>Debug;Release;UWPOnlyDebug;UWPOnlyRelease;AndroidOnlyDebug;AndroidOnlyRelease</Configurations>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugType>Full</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='AndroidOnlyDebug|AnyCPU'">
+    <DebugType>Full</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='UWPOnlyDebug|AnyCPU'">
     <DebugType>Full</DebugType>
   </PropertyGroup>
 

@@ -4,9 +4,18 @@
     <TargetFramework>netstandard1.0</TargetFramework>
     <ProjectGuid>{6EDB0588-FFC5-4EF5-8A99-9E241D0F878D}</ProjectGuid>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Configurations>Debug;Release;UWPOnlyDebug;UWPOnlyRelease;AndroidOnlyDebug;AndroidOnlyRelease</Configurations>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DocumentationFile>bin\Release\netstandard1.0\Plugin.FilePicker.Abstractions.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='AndroidOnlyRelease|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard1.0\Plugin.FilePicker.Abstractions.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='UWPOnlyRelease|AnyCPU'">
     <DocumentationFile>bin\Release\netstandard1.0\Plugin.FilePicker.Abstractions.xml</DocumentationFile>
   </PropertyGroup>
 
