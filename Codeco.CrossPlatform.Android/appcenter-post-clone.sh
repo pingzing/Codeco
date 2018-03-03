@@ -17,6 +17,7 @@ if [ -z $android_api_key ] ; then
     exit 1
 fi
 
+# For some reason, trying to give sed a relative path intermittently fails in the CI server. Navigating to it directly works just fine, however
 echo "Navigating to ../Codeco.CrossPlatform..."
 cd ..
 cd Codeco.CrossPlatform

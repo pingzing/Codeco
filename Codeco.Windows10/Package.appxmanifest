@@ -3,7 +3,7 @@
   <Identity Name="10707NeilApps.Codeco.Test" Publisher="CN=B458EF9C-1F3A-4DD2-AB1A-76FB5056CF30" Version="2.6.5.0" />
   <mp:PhoneIdentity PhoneProductId="c8e7a794-811d-4bb5-9fcb-17f515d968c3" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>Codeco Crossplat</DisplayName>
+    <DisplayName>Codeco</DisplayName>
     <PublisherDisplayName>NeilApps</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
