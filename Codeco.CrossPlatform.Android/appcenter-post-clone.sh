@@ -17,10 +17,9 @@ if [ -z $android_api_key ] ; then
     exit 1
 fi
 
-echo "Replacing API keys in App.xaml.cs."
-
 echo "Running ls on ../Codeco.CrossPlatform:"
-
 ls ../Codeco.CrossPlatform
+
+echo "Replacing API keys in App.xaml.cs."
 
 sed -i .'' -e "s/<UwpReplaceMe>/$uwp_api_key/" ../Codeco.CrossPlatform/App.xaml.cs | sed -i '' -e "s/<AndroidReplaceMe>/$android_api_key/" ../Codeco.CrossPlatform/App.xaml.cs
