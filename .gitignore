@@ -21,6 +21,9 @@ build/
 bld/
 [Bb]in/
 [Oo]bj/
+BundleArtifacts/
+_pkginfo.txt
+_scale-*.appx
 
 # Visual Studio 2015 cache/options directory
 .vs/
@@ -210,3 +213,7 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
+
+# Project-Specific
+*[Tt]humbs.db
+manual_install_readme.txt

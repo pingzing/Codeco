@@ -1,0 +1,511 @@
+﻿<common:BindablePage
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:common="using:Codeco.Windows10.Common"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:Codeco.Windows10.Models"
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:Media="using:Microsoft.Xaml.Interactions.Media"
+    x:Class="Codeco.Windows10.Views.MainPage"
+    mc:Ignorable="d"
+    NavigationCacheMode="Required"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
+
+    <Page.Resources>
+        <CollectionViewSource x:Key="FileViewSource" ItemsPath="Files" Source="{Binding FileGroups}"
+                              IsSourceGrouped="True" />
+
+        <Style x:Key="PivotTitleTextBlockStyle" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="{ThemeResource PivotTitleFontFamily}" />
+            <Setter Property="FontWeight" Value="{ThemeResource PivotTitleThemeFontWeight}" />
+            <Setter Property="FontSize" Value="{ThemeResource PivotTitleFontSize}" />
+        </Style>
+
+        <DataTemplate x:DataType="models:IBindableStorageFile" x:Key="FileDataTemplate">
+            <StackPanel x:Name="ContainerStackPanel"
+                        Tapped="SavedFile_Tapped"
+                        RightTapped="SavedFile_RightTapped"
+                        Holding="ContainerStackPanel_Holding">
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout>
+                        <MenuFlyout.MenuFlyoutPresenterStyle>
+                            <Style TargetType="MenuFlyoutPresenter">
+                                <Setter Property="Background" Value="{ThemeResource SystemAccentColorLow}"/>
+                            </Style>
+                        </MenuFlyout.MenuFlyoutPresenterStyle>
+                        <MenuFlyoutItem Text="Delete"
+                                        Command="{Binding Main.DeleteFileCommand, Mode=OneWay, Source={StaticResource Locator}}"
+                                        CommandParameter="{x:Bind Mode=OneWay}"
+                                        Foreground="White"/>
+                        <MenuFlyoutItem Text="Rename"
+                                        Command="{Binding Main.RenameFileCommand, Mode=OneWay, Source={StaticResource Locator}}"
+                                        CommandParameter="{x:Bind Mode=OneWay}"
+                                        Foreground="White"/>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
+
+                <TextBlock Text="{x:Bind Name, Mode=OneWay}"
+                           Style="{StaticResource SubheaderTextBlockStyle}"
+                           Pivot.SlideInAnimationGroup="GroupTwo"/>
+                <TextBlock Text="{x:Bind CreateDate, Mode=OneWay}"
+                           Style="{StaticResource CaptionTextBlockStyle}"
+                           Foreground="{ThemeResource SystemControlBackgroundBaseMediumBrush}"
+                           Pivot.SlideInAnimationGroup="GroupTwo"/>
+                <TextBlock Text="{x:Bind FileSize, Mode=OneWay}"
+                           Style="{StaticResource CaptionTextBlockStyle}"
+                           Foreground="{ThemeResource SystemControlBackgroundBaseMediumBrush}"
+                           Pivot.SlideInAnimationGroup="GroupThree"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <Storyboard x:Key="CopyTextEffectStoryboard">
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="CopyEffectText">
+                <DiscreteObjectKeyFrame KeyTime="0">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:1.7">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Collapsed</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+            </ObjectAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="CopyEffectText">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0.05"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="1">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <BackEase EasingMode="EaseOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="CopyEffectText">
+                <EasingDoubleKeyFrame KeyTime="0" Value="1.25"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="1">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <BackEase EasingMode="EaseOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="CopyEffectText" Storyboard.TargetProperty="(UIElement.Foreground).(LinearGradientBrush.GradientStops)[0].(GradientStop.Offset)" EnableDependentAnimation="True">
+                <LinearDoubleKeyFrame KeyTime="0:0:0.6" Value="-0.2"/>
+                <LinearDoubleKeyFrame KeyTime="0:0:1" Value=".9"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="CopyEffectText" Storyboard.TargetProperty="(UIElement.Foreground).(LinearGradientBrush.GradientStops)[1].(GradientStop.Offset)" EnableDependentAnimation="True">
+                <LinearDoubleKeyFrame KeyTime="0:0:0.6" Value="-0.1"/>
+                <LinearDoubleKeyFrame KeyTime="0:0:1" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="CopyEffectText" Storyboard.TargetProperty="(UIElement.Foreground).(LinearGradientBrush.GradientStops)[2].(GradientStop.Offset)" EnableDependentAnimation="True">
+                <LinearDoubleKeyFrame KeyTime="0:0:0.6" Value="0"/>
+                <LinearDoubleKeyFrame KeyTime="0:0:1" Value="1.1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <ColorAnimationUsingKeyFrames EnableDependentAnimation="True" Storyboard.TargetProperty="(TextBlock.Foreground).(GradientBrush.GradientStops)[0].(GradientStop.Color)" Storyboard.TargetName="CopyEffectText">
+                <EasingColorKeyFrame KeyTime="0:0:1" Value="Gray"/>
+                <EasingColorKeyFrame KeyTime="0:0:1.2" Value="White"/>
+            </ColorAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="CopyEffectText">
+                <EasingDoubleKeyFrame KeyTime="0:0:1.2" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.6" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+
+        <Storyboard x:Key="WideCopyTextEffectStoryboard">
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="WideCopyEffectText">
+                <DiscreteObjectKeyFrame KeyTime="0">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:1.7">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Collapsed</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+            </ObjectAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="WideCopyEffectText">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0.05"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="1">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <BackEase EasingMode="EaseOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="WideCopyEffectText">
+                <EasingDoubleKeyFrame KeyTime="0" Value="1.25"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="1">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <BackEase EasingMode="EaseOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="WideCopyEffectText" Storyboard.TargetProperty="(UIElement.Foreground).(LinearGradientBrush.GradientStops)[0].(GradientStop.Offset)" EnableDependentAnimation="True">
+                <LinearDoubleKeyFrame KeyTime="0:0:0.6" Value="-0.2"/>
+                <LinearDoubleKeyFrame KeyTime="0:0:1" Value=".9"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="WideCopyEffectText" Storyboard.TargetProperty="(UIElement.Foreground).(LinearGradientBrush.GradientStops)[1].(GradientStop.Offset)" EnableDependentAnimation="True">
+                <LinearDoubleKeyFrame KeyTime="0:0:0.6" Value="-0.1"/>
+                <LinearDoubleKeyFrame KeyTime="0:0:1" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="WideCopyEffectText" Storyboard.TargetProperty="(UIElement.Foreground).(LinearGradientBrush.GradientStops)[2].(GradientStop.Offset)" EnableDependentAnimation="True">
+                <LinearDoubleKeyFrame KeyTime="0:0:0.6" Value="0"/>
+                <LinearDoubleKeyFrame KeyTime="0:0:1" Value="1.1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <ColorAnimationUsingKeyFrames EnableDependentAnimation="True" Storyboard.TargetProperty="(TextBlock.Foreground).(GradientBrush.GradientStops)[0].(GradientStop.Color)" Storyboard.TargetName="WideCopyEffectText">
+                <EasingColorKeyFrame KeyTime="0:0:1" Value="Gray"/>
+                <EasingColorKeyFrame KeyTime="0:0:1.2" Value="White"/>
+            </ColorAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="WideCopyEffectText">
+                <EasingDoubleKeyFrame KeyTime="0:0:1.2" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.6" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+
+    </Page.Resources>
+
+    <Grid x:Name="LayoutRoot" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="Common">
+                <VisualState x:Name="Narrow">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="MainPivot.(UIElement.Visibility)" Value="Visible" />
+                        <Setter Target="BottomCommandBar.(UIElement.Visibility)" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Wide">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="600" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="WideGrid.(UIElement.Visibility)" Value="Visible" />
+                        <Setter Target="TopCommandBar.(UIElement.Visibility)" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <Pivot x:Name="MainPivot"
+               x:DeferLoadStrategy="Lazy"
+               Title="CODECO"
+               DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
+               Visibility="Collapsed">
+            <PivotItem x:Name="SavedPivotItem" Header="Saved Files">
+                <Grid>
+                    <ListView x:Name="FileListCollection"                          
+                              Margin="-10 10 0 0"
+                              ItemsSource="{Binding Source={StaticResource FileViewSource}}"
+                              SelectionMode="None"
+                              ItemTemplate="{StaticResource FileDataTemplate}">
+                        <ListView.GroupStyle>
+                            <GroupStyle HidesIfEmpty="True">
+                                <GroupStyle.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}"                                            
+                                                   Style="{StaticResource TitleTextBlockStyle}" 
+                                                   FontSize="30" 
+                                                   Foreground="{StaticResource SystemControlBackgroundAccentBrush}" 
+                                                   IsHitTestVisible="False"
+                                                   Pivot.SlideInAnimationGroup="GroupOne"/>
+                                    </DataTemplate>
+                                </GroupStyle.HeaderTemplate>
+                            </GroupStyle>
+                        </ListView.GroupStyle>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
+                    <TextBlock x:Name="EmptyCollectionPivotBlock"
+                               Margin="0 10 0 0"
+                               Style="{StaticResource SubheaderTextBlockStyle}"
+                               Foreground="Gray"
+                               Text="Looks a little empty in here. Try adding an item!"
+                               Visibility="{x:Bind ViewModel.ShouldShowPlaceholder, Mode=OneWay}"
+                               Pivot.SlideInAnimationGroup="GroupTwo"/>
+                </Grid>
+            </PivotItem>
+
+            <PivotItem x:Name="ActivePivotItem" Header="Active">
+                <ScrollViewer Margin="-16 0 -16 0" VerticalScrollBarVisibility="Auto">
+                    <Grid Margin="16 0 16 0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="{Binding OpenFileText}"
+                                   Style="{StaticResource HeaderTextBlockStyle}"
+                                   FontSize="45"
+                                   TextWrapping="WrapWholeWords"
+                                   Foreground="{Binding OpenFileText, Converter={StaticResource FilenameToColorConverter}}" />
+
+                        <Grid Grid.Row="1" Margin="10,10,10,0" VerticalAlignment="Center">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Row="0" Grid.Column="0"
+                                       Text="🔑"
+                                       FontSize="30"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock x:Name="KeyBlock"
+                                       Grid.Row="1" Grid.Column="0"
+                                       Style="{ThemeResource SubtitleTextBlockStyle}"
+                                       Foreground="{ThemeResource ApplicationForegroundThemeBrush}"
+                                       HorizontalAlignment="Center"
+                                       Text="{x:Bind ViewModel.CodeText, Mode=OneWay}" />
+                            <TextBlock x:Name="CopyEffectText"
+                                       Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                                       FontWeight="SemiBold"
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Bottom"
+                                       Margin="0 0 -10 5"
+                                       Text="Copied!"
+                                       Visibility="Collapsed" 
+                                       RenderTransformOrigin="0.5,0.5">
+                                <TextBlock.Foreground>
+                                    <LinearGradientBrush StartPoint="0.4, 0" EndPoint="0.5,1">
+                                        <GradientStop Color="LightGray" Offset="-0.2"/>
+                                        <GradientStop Color="White" Offset="-0.1"/>
+                                        <GradientStop Color="LightGray" Offset="0"/>
+                                    </LinearGradientBrush>
+                                </TextBlock.Foreground>
+                                <TextBlock.RenderTransform>
+                                    <CompositeTransform/>
+                                </TextBlock.RenderTransform>
+                            </TextBlock>
+                            <Button x:Name="CopyButton"
+                                    Grid.Row="1" Grid.Column="1"
+                                    ToolTipService.ToolTip="Copy"
+                                    ToolTipService.Placement="Top"
+                                    Background="{ThemeResource SystemControlBackgroundAccentBrush}"
+                                    Content="&#xE8C8;"
+                                    Command="{x:Bind ViewModel.CopyCodeTextCommand}"
+                                    FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                                    IsEnabled="{x:Bind ViewModel.IsCopyButtonEnabled, Mode=OneWay}"
+                                    VerticalAlignment="Bottom">
+                                <Interactivity:Interaction.Behaviors>
+                                    <Core:EventTriggerBehavior EventName="Click">
+                                        <Media:ControlStoryboardAction ControlStoryboardOption="Play" Storyboard="{StaticResource CopyTextEffectStoryboard}"/>
+                                    </Core:EventTriggerBehavior>
+                                </Interactivity:Interaction.Behaviors>
+                            </Button>
+                            <TextBox x:Name="InputBox"
+                                     Grid.Row="2" Grid.ColumnSpan="2"
+                                     Header="Input"
+                                     InputScope="{x:Bind ViewModel.CurrentNarrowInputScope, Mode=OneWay}"
+                                     MaxLength="{Binding LongestCode}"
+                                     Text="{Binding InputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock x:Name="InputScopeBlock"
+                                       Grid.Row="3" Grid.ColumnSpan="2"                                   
+                                       FontSize="15">
+                                <Run Text="Input Method:" />
+                                <Run Text="{x:Bind ViewModel.CurrentInputMethodText, Mode=OneWay}"
+                                     Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" />
+                            </TextBlock>
+                        </Grid>
+                    </Grid>
+                </ScrollViewer>
+            </PivotItem>
+        </Pivot>
+
+        <Grid x:Name="WideGrid"
+              x:DeferLoadStrategy="Lazy"
+              Visibility="Collapsed"
+              Margin="0 2 0 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0" Margin="12 5 12 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           Style="{ThemeResource TitleTextBlockStyle}"
+                           Text="Active" />
+
+                <ScrollViewer Grid.Row="1" Margin="-12 0 -12 0" VerticalScrollBarVisibility="Auto">
+                    <Grid Margin="12 8 12 0" HorizontalAlignment="Stretch">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="{Binding OpenFileText}"
+                                   Style="{StaticResource HeaderTextBlockStyle}"
+                                   FontSize="45"
+                                   TextWrapping="NoWrap"
+                                   Foreground="{Binding OpenFileText, Converter={StaticResource FilenameToColorConverter}}" />
+
+                        <Grid Grid.Row="1" Margin="10,10,10,0" VerticalAlignment="Center">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Row="0" Grid.ColumnSpan="1"
+                                       Text="🔑"
+                                       FontSize="30"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock x:Name="WideKeyBlock"
+                                       Grid.Row="1" Grid.ColumnSpan="1"
+                                       Style="{ThemeResource SubtitleTextBlockStyle}"
+                                       Foreground="{ThemeResource ApplicationForegroundThemeBrush}"
+                                       HorizontalAlignment="Center"
+                                       Text="{x:Bind ViewModel.CodeText, Mode=OneWay}" />
+                            <TextBlock x:Name="WideCopyEffectText"
+                                       Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                                       FontWeight="SemiBold"
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Bottom"
+                                       Margin="0 0 -10 5"
+                                       Text="Copied!"
+                                       Visibility="Collapsed" RenderTransformOrigin="0.5,0.5">
+                                <TextBlock.Foreground>
+                                    <LinearGradientBrush StartPoint="0.4, 0" EndPoint="0.5,1">
+                                        <GradientStop Color="LightGray" Offset="-0.2"/>
+                                        <GradientStop Color="White" Offset="-0.1"/>
+                                        <GradientStop Color="LightGray" Offset="0"/>
+                                    </LinearGradientBrush>
+                                </TextBlock.Foreground>
+                                <TextBlock.RenderTransform>
+                                    <CompositeTransform/>
+                                </TextBlock.RenderTransform>
+                            </TextBlock>
+                            <Button x:Name="WideCopyButton"
+                                    Grid.Row="1" Grid.Column="1"
+                                    ToolTipService.ToolTip="Copy"
+                                    ToolTipService.Placement="Top"
+                                    Background="{ThemeResource SystemControlBackgroundAccentBrush}"
+                                    Content="&#xE8C8;"
+                                    Command="{x:Bind ViewModel.CopyCodeTextCommand}"
+                                    FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                                    IsEnabled="{x:Bind ViewModel.IsCopyButtonEnabled, Mode=OneWay}"
+                                    VerticalAlignment="Bottom">
+                                <Interactivity:Interaction.Behaviors>
+                                    <Core:EventTriggerBehavior EventName="Click">
+                                        <Media:ControlStoryboardAction ControlStoryboardOption="Play" Storyboard="{StaticResource WideCopyTextEffectStoryboard}"/>
+                                    </Core:EventTriggerBehavior>
+                                </Interactivity:Interaction.Behaviors>
+                            </Button>
+                            <TextBox x:Name="WideInputBox"
+                                     Grid.Row="2" Grid.ColumnSpan="2"
+                                     Header="Input"
+                                     InputScope="{x:Bind ViewModel.CurrentWideInputScope, Mode=OneWay}"
+                                     MaxLength="{Binding LongestCode}"
+                                     Text="{Binding InputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock x:Name="WideInputScopeBlock"
+                                       Grid.Row="3" Grid.ColumnSpan="2"
+                                       FontSize="15">
+                                <Run Text="Input method:" />
+                                <Run Text="{x:Bind ViewModel.CurrentInputMethodText, Mode=OneWay}"
+                                     Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" />
+                            </TextBlock>
+                        </Grid>
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
+
+            <Grid Grid.Column="1" Margin="0 10 0 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           Style="{ThemeResource TitleTextBlockStyle}"
+                           Text="Saved Files" />
+
+                <Grid Grid.Row="1">
+                    <ListView x:Name="WideFileListCollection"                          
+                              Margin="-10 10 0 0"
+                              ItemsSource="{Binding Source={StaticResource FileViewSource}}"
+                              SelectionMode="None"
+                              ItemTemplate="{StaticResource FileDataTemplate}">
+                        <ListView.GroupStyle>
+                            <GroupStyle HidesIfEmpty="True">
+                                <GroupStyle.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}"                                            
+                                           Style="{StaticResource TitleTextBlockStyle}" 
+                                           FontSize="30" 
+                                           Foreground="{StaticResource SystemControlBackgroundAccentBrush}" 
+                                           IsHitTestVisible="False"/>
+                                    </DataTemplate>
+                                </GroupStyle.HeaderTemplate>
+                            </GroupStyle>
+                        </ListView.GroupStyle>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
+                    <TextBlock x:Name="ËmptyCollectionGridBlock"
+                               Margin="0 10 0 0"
+                               Style="{StaticResource SubheaderTextBlockStyle}"
+                               Foreground="Gray"
+                               Text="Looks a little empty in here. Try adding an item!"
+                               Visibility="{x:Bind ViewModel.ShouldShowPlaceholder, Mode=OneWay}"/>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+
+    <Page.TopAppBar>
+        <CommandBar x:Name="TopCommandBar" Visibility="Collapsed" x:DeferLoadStrategy="Lazy">
+            <CommandBar.Content>
+                <TextBlock Text="CODECO"
+                           Margin="12 14 0 0"
+                           FontFamily="{ThemeResource PivotTitleFontFamily}"
+                           FontWeight="{ThemeResource PivotTitleThemeFontWeight}"
+                           FontSize="{ThemeResource PivotTitleFontSize}"
+                           OpticalMarginAlignment="TrimSideBearings" />
+            </CommandBar.Content>
+            <AppBarButton x:Name="ClearAllWideButton" Icon="Cancel" Label="DEBUG: Clear all data" Foreground="Red" Visibility="Collapsed" Tapped="Deubg_ClearAllTapped"/>
+            <AppBarButton Icon="Delete" Label="Delete active file" Command="{x:Bind ViewModel.DeleteActiveFileCommand}" 
+                          IsEnabled="{x:Bind ViewModel.ActiveFile, Mode=OneWay, Converter={StaticResource EmptyNullToBooleanConverter}}" />
+            <AppBarButton Icon="Keyboard" Label="Input style" Command="{x:Bind ViewModel.ChangeInputScopeCommand}" />
+            <AppBarButton Icon="Setting" Label="Settings" Command="{x:Bind ViewModel.GoToSettingsCommand}" />
+            <AppBarButton Icon="Add" Label="Add file" Command="{x:Bind ViewModel.AddFileCommand}" />
+        </CommandBar>
+    </Page.TopAppBar>
+
+    <Page.BottomAppBar>
+        <CommandBar x:Name="BottomCommandBar" Visibility="Collapsed" x:DeferLoadStrategy="Lazy">
+            <AppBarButton x:Name="ClearAllNarrowButton" Icon="Cancel" Label="DEBUG: Clear all data" Foreground="Red" Visibility="Collapsed" Tapped="Deubg_ClearAllTapped"/>
+            <AppBarButton Icon="Delete" Label="Delete active file" Command="{x:Bind ViewModel.DeleteActiveFileCommand}" 
+                          IsEnabled="{x:Bind ViewModel.ActiveFile, Mode=OneWay, Converter={StaticResource EmptyNullToBooleanConverter}}" />
+            <AppBarButton Icon="Keyboard" Label="Input style" Command="{x:Bind ViewModel.ChangeInputScopeCommand}" />
+            <AppBarButton Icon="Setting" Label="Settings" Command="{x:Bind ViewModel.GoToSettingsCommand}" />
+            <AppBarButton Icon="Add" Label="Add file" Command="{x:Bind ViewModel.AddFileCommand}" />
+        </CommandBar>
+    </Page.BottomAppBar>
+
+</common:BindablePage>

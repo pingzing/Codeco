@@ -1,0 +1,22 @@
+<Application x:Class="Codeco.Windows10.App" 
+             xmlns:converters="using:Codeco.Windows10.Common.Converters" 
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+             xmlns:local="using:Codeco.Windows10" 
+             xmlns:vm="using:Codeco.Windows10.ViewModels" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             d1p1:Ignorable="d"
+             xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006">
+    <Application.Resources>
+        <ResourceDictionary>
+            <vm:ViewModelLocator x:Key="Locator" x:Name="ViewModelLocator" />
+
+            <converters:StringFormatConverter x:Key="StringFormatConverter" />
+            <converters:FilenameToColorConverter x:Key="FilenameToColorConverter" />
+            <converters:EmptyNullToBooleanConverter x:Key="EmptyNullToBooleanConverter"/>
+
+            <SolidColorBrush x:Key="SystemAccentColorLow" Opacity="0.7"/> <!--Color set at runtime-->
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
