@@ -19,10 +19,8 @@ fi
 
 echo "Replacing API keys in App.xaml.cs."
 
-cd ..
+echo "Running ls on ../Codeco.CrossPlatform:"
 
-echo "Went up a level, running ls:"
-
-ls
+ls ../Codeco.CrossPlatform
 
 sed -i .'' -e "s/<UwpReplaceMe>/$uwp_api_key/" ../Codeco.CrossPlatform/App.xaml.cs | sed -i '' -e "s/<AndroidReplaceMe>/$android_api_key/" ../Codeco.CrossPlatform/App.xaml.cs
