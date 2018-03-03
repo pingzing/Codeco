@@ -19,5 +19,4 @@ fi
 
 echo "Replacing API keys in App.xaml.cs."
 
-sed -i .bak -e "s/<UwpReplaceMe>/$uwp_api_key" ../Codeco.CrossPlatform/App.xaml.cs \
-| sed -i .bak -e "s/<AndroidReplaceMe>/$android_api_key" ../Codeco.CrossPlatform/App.xaml.cs
+sed -i .bak -e "s/<UwpReplaceMe>/$uwp_api_key/" ../Codeco.CrossPlatform/App.xaml.cs | sed -i .bak -e "s/<AndroidReplaceMe>/$android_api_key/" ../Codeco.CrossPlatform/App.xaml.cs
