@@ -20,5 +20,5 @@ fi
 echo "Replacing API keys in App.xaml.cs."
 
 # The two single quotes are there to deal with a quirk of OSX's version of sed: https://stackoverflow.com/questions/4247068/sed-command-with-i-option-failing-on-mac-but-works-on-linux
-sed --in-place '' --expression="s/<UwpReplaceMe>/$uwp_api_key" ../Codeco.CrossPlatform/App.xaml.cs \
-| sed --in-place '' --expression="s/<AndroidReplaceMe>/$android_api_key" ../Codeco.CrossPlatform/App.xaml.cs
+sed --in-place --expression="s/<UwpReplaceMe>/$uwp_api_key" ../Codeco.CrossPlatform/App.xaml.cs \
+| sed --in-place --expression="s/<AndroidReplaceMe>/$android_api_key" ../Codeco.CrossPlatform/App.xaml.cs
