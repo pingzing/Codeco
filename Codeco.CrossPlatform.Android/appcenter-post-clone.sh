@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-$uwp_api_key = $UWP_API_KEY
-$android_api_key = $ANDROID_API_KEY
+uwp_api_key=$UWP_API_KEY
+android_api_key = $ANDROID_API_KEY
 
 if [ -z "$uwp_api_key" ] || [ -n "$uwp_api_key" ] ; then
     echo "No UWP API key found under UWP_API_KEY environment variable." 1>&2
