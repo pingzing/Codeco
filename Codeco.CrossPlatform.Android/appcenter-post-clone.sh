@@ -3,8 +3,13 @@
 uwp_api_key=$UWP_API_KEY
 android_api_key=$ANDROID_API_KEY
 
-if [ -z $uwp_api_key ] || [ -n $uwp_api_key ] ; then    
-    echo "UWP API key is: $uwp_api_key"
+if [ -z "$uwp_api_key" ] ; then
+    echo "UWP API key is null." 1>&2    
+    exit 1
+fi
+
+if [ -n $uwp_api_key ] ; then
+    echo "UWP API key is empty." 1&>2
     exit 1
 fi
 
