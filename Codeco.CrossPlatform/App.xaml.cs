@@ -70,7 +70,7 @@ namespace Codeco.CrossPlatform
         protected override void OnStart ()
         {
             // Handle when your app starts
-            AC.AppCenter.Start($"uwp=<UwpReplaceMe>;android=<AndroidReplaceMe>", typeof(Analytics), typeof(Crashes));
+            AC.AppCenter.Start($"uwp={AppCenterConfig.UwpKey};android={AppCenterConfig.AndroidKey}", typeof(Analytics), typeof(Crashes));
         }
 
         protected override void OnSleep ()

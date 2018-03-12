@@ -12,9 +12,9 @@ if ([string]::IsNullOrWhiteSpace($androidApiKey)) {
     Throw;
 }
 
-$originalContent = Get-Content .\Codeco.CrossPlatform\App.xaml.cs;
+$originalContent = Get-Content .\Codeco.CrossPlatform\AppCenterConfig.cs;
 $uwpReplacedContent = $originalContent.Replace("<UwpReplaceMe>", $uwpApiKey);
 $bothReplacedContent = $uwpReplacedContent.Replace("<AndroidReplaceMe>", $androidApiKey);
 
 # Rewrite the file with our new file-string
-Set-Content .\Codeco.CrossPlatform\App.xaml.cs $bothReplacedContent;
+Set-Content .\Codeco.CrossPlatform\AppCenterConfig.cs $bothReplacedContent;

@@ -5,7 +5,6 @@
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
-using Microsoft.Practices.ServiceLocation;
 using Codeco.Windows10.Services.Mocks;
 using Codeco.Windows10.ViewModels.DesignViewModels;
 using Codeco.Windows10.Services;
@@ -24,28 +23,28 @@ namespace Codeco.Windows10.ViewModels
         /// </summary>
         public ViewModelLocator()
         {
-            ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
+            //ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
-            if (ViewModelBase.IsInDesignModeStatic)
-            {
-                // Create design time view services and models                                    
-                SimpleIoc.Default.Register<IFileService, MockFileService>();
-                SimpleIoc.Default.Register<INavigationServiceEx, NavigationServiceEx>();
-                SimpleIoc.Default.Register<IInitializationValueService, InitializationValueService>();
-                SimpleIoc.Default.Register<SettingsViewModelDesign>();
-                SimpleIoc.Default.Register<MainViewModelDesign>();
-            }
-            else
-            {
-                // Create run time view services and models                          
-                NavigationServiceEx navService = InitializeNavigationService();
-                SimpleIoc.Default.Register<INavigationServiceEx>(() => navService);
+            //if (ViewModelBase.IsInDesignModeStatic)
+            //{
+            //    // Create design time view services and models                                    
+            //    SimpleIoc.Default.Register<IFileService, MockFileService>();
+            //    SimpleIoc.Default.Register<INavigationServiceEx, NavigationServiceEx>();
+            //    SimpleIoc.Default.Register<IInitializationValueService, InitializationValueService>();
+            //    SimpleIoc.Default.Register<SettingsViewModelDesign>();
+            //    SimpleIoc.Default.Register<MainViewModelDesign>();
+            //}
+            //else
+            //{
+            //    // Create run time view services and models                          
+            //    NavigationServiceEx navService = InitializeNavigationService();
+            //    SimpleIoc.Default.Register<INavigationServiceEx>(() => navService);
 
-                SimpleIoc.Default.Register<IFileService, FileService>();
-                SimpleIoc.Default.Register<IInitializationValueService, InitializationValueService>();
-                SimpleIoc.Default.Register<MainViewModel>();
-                SimpleIoc.Default.Register<SettingsViewModel>();
-            }            
+            //    SimpleIoc.Default.Register<IFileService, FileService>();
+            //    SimpleIoc.Default.Register<IInitializationValueService, InitializationValueService>();
+            //    SimpleIoc.Default.Register<MainViewModel>();
+            //    SimpleIoc.Default.Register<SettingsViewModel>();
+            //}            
         }
 
         private NavigationServiceEx InitializeNavigationService()
@@ -56,13 +55,15 @@ namespace Codeco.Windows10.ViewModels
             return navService;
         }
 
-        public MainViewModel Main => ViewModelBase.IsInDesignModeStatic
-            ? ServiceLocator.Current.GetInstance<MainViewModelDesign>()
-            : ServiceLocator.Current.GetInstance<MainViewModel>();
+        public MainViewModel Main => null;
+        //ViewModelBase.IsInDesignModeStatic
+        //? ServiceLocator.Current.GetInstance<MainViewModelDesign>()
+        //: ServiceLocator.Current.GetInstance<MainViewModel>();
 
-        public SettingsViewModel Settings => ViewModelBase.IsInDesignModeStatic 
-            ? ServiceLocator.Current.GetInstance<SettingsViewModelDesign>() 
-            : ServiceLocator.Current.GetInstance<SettingsViewModel>();
+        public SettingsViewModel Settings => null;
+            //ViewModelBase.IsInDesignModeStatic 
+            //? ServiceLocator.Current.GetInstance<SettingsViewModelDesign>() 
+            //: ServiceLocator.Current.GetInstance<SettingsViewModel>();
         
         public static void Cleanup()
         {

@@ -988,13 +988,13 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FilePicker-Plugin-for-Xamarin-and-Windows\src\Plugin.FilePicker\Plugin.FilePicker.UWP\Plugin.FilePicker.UWP.csproj">
-      <Project>{e34b516d-c0d8-450f-9db0-bb6a5b04aef1}</Project>
-      <Name>Plugin.FilePicker.UWP</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Codeco.CrossPlatform\Codeco.CrossPlatform.csproj">
       <Project>{399367d2-1733-4d4a-8274-36c4f3ef3901}</Project>
       <Name>Codeco.CrossPlatform</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FilePicker-Plugin-for-Xamarin-and-Windows\src\Plugin.FilePicker\Plugin.FilePicker.UWP\Plugin.FilePicker.UWP.csproj">
+      <Project>{e34b516d-c0d8-450f-9db0-bb6a5b04aef1}</Project>
+      <Name>Plugin.FilePicker.UWP</Name>
     </ProjectReference>
     <ProjectReference Include="..\Codeco.Encryption\Codeco.Encryption.csproj">
       <Project>{b344c5ab-fa18-45d9-b630-b0f4a7fa8dc1}</Project>

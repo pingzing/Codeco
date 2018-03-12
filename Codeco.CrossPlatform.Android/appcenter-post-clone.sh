@@ -22,6 +22,6 @@ echo "Navigating to ../Codeco.CrossPlatform..."
 cd ..
 cd Codeco.CrossPlatform
 
-echo "Replacing API keys in App.xaml.cs."
+echo "Replacing API keys in AppCenterConfig.cs."
 
-sed -i .'' -e "s/<UwpReplaceMe>/$uwp_api_key/" App.xaml.cs | sed -i '' -e "s/<AndroidReplaceMe>/$android_api_key/" App.xaml.cs
+sed -i .'' -e "s/<UwpReplaceMe>/$uwp_api_key/" AppCenterConfig.cs | sed -i '' -e "s/<AndroidReplaceMe>/$android_api_key/" AppCenterConfig.cs
