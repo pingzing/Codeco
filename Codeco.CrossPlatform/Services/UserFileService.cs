@@ -14,6 +14,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Codeco.CrossPlatform.Services
 {
@@ -141,40 +142,30 @@ namespace Codeco.CrossPlatform.Services
         /// <param name="fileLocation">Whether the file should be stored only on the device, or synced between devices.</param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public async Task<string> CreateUserFileAsync(string fileName, FileLocation fileLocation, byte[] data)
-        {
-            await Initialization;
-
-            string relativeFilePath = GetRelativeFilePath(fileName, fileLocation);
-            var createdFile = await _fileService.CreateFileAsync(relativeFilePath);
-            using (createdFile.Stream)
-            {
-                await createdFile.Stream.WriteAsync(data, 0, data.Length);
-            }
-            return createdFile.FileName;
-        }
-
-        /// <summary>
-        /// Creates a file with the given name, and returns its name and a FileStream pointed to it.
-        /// </summary>
-        /// <param name="fileName">File name only, not a path.</param>
-        /// <param name="fileLocation">Whether the file should be stored only on the device, or synced between devices.</param>
-        /// <param name="data"></param>
-        /// <returns></returns>
         public async Task<string> CreateUserFileAsync(string fileName, FileLocation fileLocation, string password, string pickedFileData)
         {
             await Initialization;
 
-            var (encryptedData, salt, iv) = _encryptionService.Encrypt(pickedFileData, password);
-            //TODO: Save the salt and the IV somewhere.
+            var pickedFileDictionary = DeserializeSimpleFormat(pickedFileData);
+            string dictionaryJson = JsonConvert.SerializeObject(pickedFileDictionary);
 
+            var (encryptedData, salt, iv) = _encryptionService.Encrypt(dictionaryJson, password);
+            UserFileContents fileContents = new UserFileContents
+            {
+                EncryptedUserKeyValues = encryptedData,
+                EncryptionIV = iv,
+                EncryptionSalt = salt,
+                FileId = Guid.NewGuid()
+            };
+
+            string fileContentsJson = JsonConvert.SerializeObject(fileContents);            
             string relativeFilePath = GetRelativeFilePath(fileName, fileLocation);
             var createdFile = await _fileService.CreateFileAsync(relativeFilePath);
             using (createdFile.Stream)
             {
                 using (var streamWriter = new StreamWriter(createdFile.Stream))
                 {
-                    await streamWriter.WriteAsync(encryptedData);
+                    await streamWriter.WriteAsync(fileContentsJson);
                 }
             }            
 
@@ -219,20 +210,26 @@ namespace Codeco.CrossPlatform.Services
             return _fileService.CreateFolder(absoluteFolderPath);
         }
 
+        private Dictionary<string, string> DeserializeSimpleFormat(string contents)
+        {
+            return contents.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries) // split into lines
+                .Select(x => x.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)) // Split into key-value pairs
+                .ToDictionary(
+                    keySelector: keyVal1 => keyVal1[0],
+                    elementSelector: keyVal2 => keyVal2[1]);
+        }
+
         public async Task<Dictionary<string, string>> GetUserFileContentsAsync(string name, FileLocation fileLocation, string password)
         {
             await Initialization;
 
             string relativeFilePath = GetRelativeFilePath(name, fileLocation);
-            string encryptedContents = await _fileService.GetFileContentsAsync(relativeFilePath);
+            string serializedContents = await _fileService.GetFileContentsAsync(relativeFilePath);
+            UserFileContents contents = JsonConvert.DeserializeObject<UserFileContents>(serializedContents);
+            string jsonDictionary = _encryptionService.Decrypt(contents.EncryptedUserKeyValues, password, contents.EncryptionSalt, contents.EncryptionIV);
+            var keyValueDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDictionary);
 
-            // TODO: Get IV and Salt from wherever we decided to save them
-            string decryptedContents = _encryptionService.Decrypt(encryptedContents, password, null, null);
-            return decryptedContents.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries) // split into lines
-                .Select(x => x.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)) // Split into key-value pairs
-                .ToDictionary(
-                    keySelector: keyVal1 => keyVal1[0], 
-                    elementSelector: keyVal2 => keyVal2[1]);
+            return keyValueDict;
         }
 
         public async Task<bool> ValidateFileAsync(byte[] dataArray)

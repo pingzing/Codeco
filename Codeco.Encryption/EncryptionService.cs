@@ -69,13 +69,13 @@ namespace Codeco.Encryption
             string decryptedString = null; // Will be filled in below.
             using (Aes aes = Aes.Create())
             {
-                (byte[] key, _) = GetKeyAndSaltFromPassword(password, aes.KeySize, salt);
+                (byte[] key, _) = GetKeyAndSaltFromPassword(password, aes.Key.Length, salt);
                 byte[] ivBytes = Convert.FromBase64String(initializationVector);
                 aes.Key = key;
                 aes.IV = ivBytes;
 
                 ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
-                using (MemoryStream memoryStream = new MemoryStream())
+                using (MemoryStream memoryStream = new MemoryStream(encryptedBytes))
                 {
                     using (CryptoStream cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read))
                     {

@@ -35,6 +35,11 @@ namespace Codeco.CrossPlatform.Views
             }
         }
 
+        // All these context menu _Clicked methods that move or deleted an item
+        // clear the ViewCell's ContextActions, because on UWP, if that ViewCell 
+        // gets recycled, it will use the old BindingContext for the ContextActions.
+        // Clearing the ContextActions seems to force reevaluation, however.
+
         public void RenameItem_Clicked(object sender, EventArgs e)
         {
             var menuItem = (MenuItem)sender;
@@ -65,6 +70,22 @@ namespace Codeco.CrossPlatform.Views
             var viewModel = this.BindingContext as MainViewModel;
             var fileInfoItem = viewCell.BindingContext as SimpleFileInfoViewModel;
             viewModel.SwitchItemLocationCommand.Execute(fileInfoItem);
+        }
+
+        private bool _copyEffectAnimating = false;
+        public async void CopyButton_Clicked(object sender, EventArgs e)
+        {
+            if (!_copyEffectAnimating)
+            {
+                _copyEffectAnimating = true;
+                await CopyEffectText.TranslateTo(0, 50, 0, null);
+                CopyEffectText.FadeTo(1, length: 250);                
+                await CopyEffectText.TranslateTo(0, 0, 250, Easing.SpringOut);
+                await Task.Delay(2000);
+                await CopyEffectText.FadeTo(0);
+                await CopyEffectText.TranslateTo(0, 0, 0, null);
+                _copyEffectAnimating = false;
+            }
         }
 
         // We're doing this in code, because data bindings on MenuItems are broken on UWP, due

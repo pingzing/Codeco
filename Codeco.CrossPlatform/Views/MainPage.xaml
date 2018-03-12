@@ -7,7 +7,7 @@
             xmlns:customCtl="clr-namespace:Codeco.CrossPlatform.CustomRenderers"
             xmlns:behavior="clr-namespace:Codeco.CrossPlatform.Behaviors"
             
-            Title="Tab Page"
+            Title="Codeco"
             BindingContext="{Binding Source={StaticResource Locator}, Path=MainPage}">
 
     <TabbedPage.Resources>
@@ -79,67 +79,81 @@
     </ContentPage>
 
     <ContentPage x:Name="ActiveFileTab" Title="Active">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
 
-        <ScrollView VerticalOptions="Center">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
+            <Label x:Name="OpenFileLabel"
+                   Text="{Binding ActiveFileName}"
+                   Style="{DynamicResource SubtitleStyle}"
+                   TextColor="Gray"/>
 
-                <!--Row 0-->
-                <Label x:Name="KeyIconLabel" 
-                       Grid.Row="0" Grid.Column="0"
-                       Text="🔑"
-                       FontSize="30"
-                       HorizontalOptions="CenterAndExpand"/>
-                <Label x:Name="KeyLabel" 
-                       Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
-                       Style="{DynamicResource SubtitleStyle}"
-                       HorizontalOptions="CenterAndExpand"
-                       Text="{Binding CodeText, Mode=OneWay}"/>
-                <Label x:Name="CopyEffectText"
-                       Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
-                       FontAttributes="Bold"
-                       HorizontalOptions="End"
-                       VerticalOptions="End"
-                       Text="Copied!"/>
+            <ScrollView Grid.Row="1" VerticalOptions="Center">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-                <!--Row 1-->
-                <Button x:Name="CopyButton"
-                        Grid.Row="1" Grid.Column="1"
-                        BackgroundColor="Blue"
-                        Command="{Binding CopyCodeTextCommand}"
-                        IsEnabled="{Binding IsCopyButtonEnabled, Mode=OneWay}"
-                        Text="Copy"
-                        VerticalOptions="End"/>
+                    <!--Row 0-->
+                    <Label x:Name="KeyIconLabel" 
+                           Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                           Text="🔑"
+                           FontSize="30"
+                           HorizontalOptions="CenterAndExpand"/>
+                    <Label x:Name="CopyEffectText"
+                           Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="1"
+                           Opacity="0"                       
+                           HorizontalOptions="End"
+                           VerticalOptions="End"
+                           Text="Copied!"/>
 
-                <!--Row 2-->
-                <Label x:Name="InputBoxHeader"
-                       Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"                       
-                       Text="Input"/>
+                    <!--Row 1-->
+                    <Label x:Name="KeyLabel" 
+                           Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                           Style="{DynamicResource ListItemTextStyle}"
+                           HorizontalOptions="CenterAndExpand"
+                           Text="{Binding CodeText, Mode=OneWay}"/>
 
-                <!--Row 3-->
-                <Entry x:Name="InputBox"
-                       Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
-                       Keyboard="{Binding CurrentInputKeyboard.Keyboard, Mode=OneWay}"
-                       Text="{Binding InputText, Mode=TwoWay}"/>
+                    <Button x:Name="CopyButton"
+                            Grid.Row="1" Grid.Column="2"
+                            BackgroundColor="Blue"
+                            Command="{Binding CopyCodeTextCommand}"
+                            Clicked="CopyButton_Clicked"
+                            IsEnabled="{Binding IsCopyButtonEnabled, Mode=OneWay}"
+                            Text="Copy"/>
 
-                <!--Row 4-->
+                    <!--Row 2-->
+                    <Label x:Name="InputBoxHeader"
+                           Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"                       
+                           Text="Input"/>
 
-                <Picker x:Name="CurrentKeyboardBox"
-                        Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"                        
-                        ItemsSource="{Binding AvailableKeyboards}"
-                        ItemDisplayBinding="{Binding Name}"/>
+                    <!--Row 3-->
+                    <Entry x:Name="InputBox"
+                           Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"
+                           Keyboard="{Binding CurrentInputKeyboard.Keyboard, Mode=OneWay}"
+                           Text="{Binding InputText, Mode=TwoWay}"/>
 
-            </Grid>
-        </ScrollView>
+                    <!--Row 4-->
+
+                    <Picker x:Name="CurrentKeyboardBox"
+                            Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"                        
+                            ItemsSource="{Binding AvailableKeyboards}"
+                            ItemDisplayBinding="{Binding Name}"
+                            SelectedItem="{Binding CurrentInputKeyboard, Mode=TwoWay}"/>
+
+                </Grid>
+            </ScrollView>
+        </Grid>
     </ContentPage>
 </TabbedPage>

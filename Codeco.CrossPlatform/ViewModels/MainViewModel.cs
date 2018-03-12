@@ -18,6 +18,7 @@ using Xamarin.Forms;
 using Codeco.CrossPlatform.Extensions;
 using System.Diagnostics;
 using DynamicData.Binding;
+using Plugin.Clipboard.Abstractions;
 
 namespace Codeco.CrossPlatform.ViewModels
 {
@@ -26,6 +27,7 @@ namespace Codeco.CrossPlatform.ViewModels
         private readonly IUserDialogs _userDialogs;
         private readonly IUserFileService _userFileService;
         private readonly IFilePicker _filePicker;
+        private readonly IClipboard _clipboard;
 
         private readonly NamedKeyboard _defaultKeyboard = new NamedKeyboard(Keyboard.Default, "Default");
         private readonly NamedKeyboard _numericKeyboard = new NamedKeyboard(Keyboard.Numeric, "Numeric");
@@ -36,15 +38,14 @@ namespace Codeco.CrossPlatform.ViewModels
         public string CodeText
         {
             get => _codeText;
-            set => Set(ref _codeText, value);
+            set
+            {
+                Set(ref _codeText, value);
+                RaisePropertyChanged(nameof(IsCopyButtonEnabled));
+            }
         }
 
-        private bool _isCopyButtonEnabled;
-        public bool IsCopyButtonEnabled
-        {
-            get => _isCopyButtonEnabled;
-            set => Set(ref _isCopyButtonEnabled, value);
-        }
+        public bool IsCopyButtonEnabled => !String.IsNullOrWhiteSpace(CodeText);
 
         private NamedKeyboard _currentInputKeyboard;
         public NamedKeyboard CurrentInputKeyboard
@@ -66,7 +67,14 @@ namespace Codeco.CrossPlatform.ViewModels
             }
         }
 
-        public ObservableCollection<NamedKeyboard> AvailableKeyboards = new ObservableCollection<NamedKeyboard>();
+        private string _activeFileName = "None";
+        public string ActiveFileName
+        {
+            get => _activeFileName;
+            set => Set(ref _activeFileName, value);
+        }
+
+        public ObservableCollection<NamedKeyboard> AvailableKeyboards { get; } = new ObservableCollection<NamedKeyboard>();
 
         private ReadOnlyObservableCollection<SimpleFileInfoViewModel> _files;
         public ReadOnlyObservableCollection<SimpleFileInfoViewModel> Files => _files;        
@@ -92,16 +100,18 @@ namespace Codeco.CrossPlatform.ViewModels
         public MainViewModel(INavigationService navService,
                              IUserDialogs userDialogs,
                              IUserFileService userFileService,
-                             IFilePicker filePicker)
+                             IFilePicker filePicker,
+                             IClipboard clipboard)
             : base(navService)
         {
             _userDialogs = userDialogs;
             _userFileService = userFileService;
             _filePicker = filePicker;
+            _clipboard = clipboard;
 
-            _currentInputKeyboard = _defaultKeyboard;
             AvailableKeyboards.Add(_defaultKeyboard);
-            AvailableKeyboards.Add(_numericKeyboard);            
+            AvailableKeyboards.Add(_numericKeyboard);
+            CurrentInputKeyboard = _defaultKeyboard;
         }
 
         public override Task Activated(NavigationType navType)
@@ -110,12 +120,15 @@ namespace Codeco.CrossPlatform.ViewModels
             {
                 _userFileService.FilesList                    
                          .Connect()       
-                         .Sort(SortExpressionComparer<SimpleFileInfoViewModel>.Descending(x => x.FileLocation).ThenByAscending(x => x.Name))
+                         .Sort(SortExpressionComparer<SimpleFileInfoViewModel>
+                            .Descending(x => x.FileLocation)
+                            .ThenByAscending(x => x.Name))
                          .Bind(out _files)
                          .Subscribe();
 
                 RaisePropertyChanged(nameof(Files));
-            }
+            }                                  
+
             return Task.CompletedTask;
         }
 
@@ -126,7 +139,7 @@ namespace Codeco.CrossPlatform.ViewModels
 
         private void LookupValue(string inputText)
         {
-            if (_activeDictFile.TryGetValue(inputText, out string foundValue))
+            if (_activeDictFile != null && _activeDictFile.TryGetValue(inputText, out string foundValue))
             {
                 CodeText = foundValue;
             }
@@ -221,13 +234,16 @@ namespace Codeco.CrossPlatform.ViewModels
             _activeDictFile = fileDict;
 
             // Probably do some other stuff too--change title, etc etc
+            ActiveFileName = obj.Name;
 
             // Switch active tab to "Active File" tab
+            // No mechanism to do this yet. Maybe use MVVM Light's Messenger
+
         }
 
         private void CopyCodeText()
         {
-            //todo: copy current value to clipboard
+            _clipboard.SetText(CodeText);            
         }
 
         private async void RenameItem(SimpleFileInfoViewModel obj)

@@ -11,6 +11,8 @@ using Plugin.FilePicker.Abstractions;
 using Codeco.CrossPlatform.Popups;
 using Codeco.Encryption;
 using System;
+using Plugin.Clipboard;
+using Plugin.Clipboard.Abstractions;
 
 namespace Codeco.CrossPlatform.Mvvm
 {
@@ -35,6 +37,7 @@ namespace Codeco.CrossPlatform.Mvvm
             SimpleIoc.Default.Register<IUserFileService, UserFileService>();
             SimpleIoc.Default.Register<IFilePicker>(() => Plugin.FilePicker.CrossFilePicker.Current);
             SimpleIoc.Default.Register<IEncryptionService, EncryptionService>();
+            SimpleIoc.Default.Register<IClipboard>(() => CrossClipboard.Current);
 
             //Register your ViewModels here
             SimpleIoc.Default.Register<MainViewModel>();

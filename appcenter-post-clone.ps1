@@ -12,9 +12,13 @@ if ([string]::IsNullOrWhiteSpace($androidApiKey)) {
     Throw;
 }
 
+Write-Host "Android and UWP keys both found, replacing the contents of AppCenterConfig.cs..."
+
 $originalContent = Get-Content .\Codeco.CrossPlatform\AppCenterConfig.cs;
 $uwpReplacedContent = $originalContent.Replace("<UwpReplaceMe>", $uwpApiKey);
 $bothReplacedContent = $uwpReplacedContent.Replace("<AndroidReplaceMe>", $androidApiKey);
 
 # Rewrite the file with our new file-string
 Set-Content .\Codeco.CrossPlatform\AppCenterConfig.cs $bothReplacedContent;
+
+Write-Host "Keys successfully added." 
