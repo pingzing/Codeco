@@ -16,6 +16,8 @@ using Codeco.Windows10.Services.DependencyServices;
 using System.Reflection;
 using System.Collections.Generic;
 using Rg.Plugins.Popup.Windows;
+using Windows.ApplicationModel.AppService;
+using Windows.ApplicationModel.Background;
 
 namespace Codeco.Windows10
 {    
@@ -57,6 +59,7 @@ namespace Codeco.Windows10
                 Xamarin.Forms.DependencyService.Register<NativeFileServiceFacade>();
                 Xamarin.Forms.DependencyService.Register<PlatformColorService>();
                 Xamarin.Forms.DependencyService.Register<FileSystemWatcherService>();
+                Xamarin.Forms.DependencyService.Register<ConnectedDeviceService>();
                 
                 rootFrame.CacheSize = 1;
 
@@ -108,7 +111,38 @@ namespace Codeco.Windows10
         {            
             base.OnActivated(args);          
         }
-        
+
+        private AppServiceConnection _appServiceConnection;
+        private BackgroundTaskDeferral _appServiceDeferral;
+        protected override void OnBackgroundActivated(BackgroundActivatedEventArgs args)
+        {
+            base.OnBackgroundActivated(args);
+            IBackgroundTaskInstance taskInstance = args.TaskInstance;
+            AppServiceTriggerDetails appService = taskInstance.TriggerDetails as AppServiceTriggerDetails;
+            _appServiceDeferral = taskInstance.GetDeferral();
+            taskInstance.Canceled += OnAppServiceCanceled;
+            _appServiceConnection = appService.AppServiceConnection;
+            _appServiceConnection.RequestReceived += OnAppServiceRequestReceived;
+            _appServiceConnection.ServiceClosed += OnAppServiceClosed;
+        }
+
+        private void OnAppServiceCanceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
+        {
+            _appServiceDeferral?.Complete();
+        }
+
+        private void OnAppServiceRequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
+        {
+            AppServiceDeferral messageDeferral = args.GetDeferral();
+            // do syncing stuff
+            messageDeferral.Complete();
+        }
+
+        private void OnAppServiceClosed(AppServiceConnection sender, AppServiceClosedEventArgs args)
+        {
+            _appServiceDeferral?.Complete();
+        }
+
         private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();

@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3" IgnorableNamespaces="uap mp uap3">
   <Identity Name="10707NeilApps.Codeco.Test" Publisher="CN=B458EF9C-1F3A-4DD2-AB1A-76FB5056CF30" Version="2.6.5.0" />
   <mp:PhoneIdentity PhoneProductId="c8e7a794-811d-4bb5-9fcb-17f515d968c3" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>Codeco</DisplayName>
+    <DisplayName>Codeco Crossplat</DisplayName>
     <PublisherDisplayName>NeilApps</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -25,9 +25,15 @@
         </uap:DefaultTile>
         <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#DAA520" />
       </uap:VisualElements>
+      <Extensions>
+        <uap:Extension Category="windows.appService" EntryPoint="Codeco.Windows10.App">
+          <uap3:AppService Name="ReceiveSyncDataService" SupportsRemoteSystems="true" />
+        </uap:Extension>
+      </Extensions>
     </Application>
   </Applications>
   <Capabilities>
     <Capability Name="internetClient" />
+    <uap3:Capability Name="remoteSystem" />
   </Capabilities>
 </Package>

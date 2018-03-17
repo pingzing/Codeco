@@ -836,6 +836,7 @@
     <Compile Include="Models\Mocks\MockBindableStorageFile.cs" />
     <Compile Include="Models\Mocks\MockStorageFile.cs" />
     <Compile Include="Models\SavedFiles.cs" />
+    <Compile Include="Services\DependencyServices\ConnectedDeviceService.cs" />
     <Compile Include="Services\DependencyServices\PlatformColorService.cs" />
     <Compile Include="Services\DependencyServices\FileSystemWatcherService.cs" />
     <Compile Include="Services\DependencyServices\NativeFileServiceFacade.cs" />
