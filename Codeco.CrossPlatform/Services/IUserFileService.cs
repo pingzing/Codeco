@@ -13,11 +13,12 @@ namespace Codeco.CrossPlatform.Services
 
         Task CreateUserFileAsync(string fileName, FileLocation fileLocation);
         Task<string> CreateUserFileAsync(string fileName, FileLocation fileLocation, string password, string pickedFileData);
-        Task<DirectoryInfo> CreateUserFolderAsync(string relativeFolderPath);
+        DirectoryInfo CreateUserFolderAsync(string relativeFolderPath);
         Task DeleteUserFileAsync(string fileName, FileLocation fileLocation);
         Task<bool> ValidateFileAsync(byte[] dataArray);
         Task RenameUserFile(string fileName, FileLocation fileLocation, string newName);
         Task ChangeUserFileLocationAsync(string fileName, FileLocation sourceLocation, FileLocation destinationLocation);
         Task<Dictionary<string, string>> GetUserFileContentsAsync(string name, FileLocation fileLocation, string password);
+        string GetRelativeFilePath(string fileName, FileLocation location);
     }
 }

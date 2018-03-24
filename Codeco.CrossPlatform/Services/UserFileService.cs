@@ -20,8 +20,8 @@ namespace Codeco.CrossPlatform.Services
 {
     public class UserFileService : IUserFileService, IInitializesAsync
     {
-        private const string UserFilesFolderName = "CodecoFiles";
-        private readonly string _fullUserFilesFolderPath;
+        private readonly string _appFolderPath;
+        public const string UserFilesFolderName = "CodecoFiles";        
         private readonly string _localFolderPath = Path.Combine(UserFilesFolderName, FileLocation.Local.FolderName());
         private readonly string _roamedFolderPath = Path.Combine(UserFilesFolderName, FileLocation.Roamed.FolderName());
 
@@ -45,7 +45,7 @@ namespace Codeco.CrossPlatform.Services
             _fileSystemWatcherService = fileSystemWatcherService;
             _encryptionService = encryptionService;
 
-            _fullUserFilesFolderPath = Path.Combine(_appFolderService.GetAppFolderPath(), UserFilesFolderName);
+            _appFolderPath = _appFolderService.GetAppFolderPath();
 
             string localFolderName = FileLocation.Local.FolderName();
             string roamedFolderName = FileLocation.Roamed.FolderName();
@@ -55,10 +55,10 @@ namespace Codeco.CrossPlatform.Services
 
             FilesList = _filesList.AsObservableList();
 
-            Initialization = InitializeFileList(localFolderName, roamedFolderName);
+            Initialization = InitializeFileList();
         }
 
-        private async Task InitializeFileList(string localFolderName, string roamedFolderName)
+        private async Task InitializeFileList()
         {
             var localFiles = (await _fileService.GetFilesInFolder(_localFolderPath))
                 .Select(x => new SimpleFileInfoViewModel
@@ -79,8 +79,16 @@ namespace Codeco.CrossPlatform.Services
             _filesList.AddRange(localFiles);
             _filesList.AddRange(roamedFiles);
 
-            var localFolderWatcher = _fileSystemWatcherService.ObserveFolderChanges(Path.Combine(_fullUserFilesFolderPath, localFolderName));
-            var roamedFolderWatcher = _fileSystemWatcherService.ObserveFolderChanges(Path.Combine(_fullUserFilesFolderPath, roamedFolderName));
+            var localFolderWatcher = _fileSystemWatcherService.ObserveFolderChanges(Path.Combine
+            (
+                _appFolderPath, 
+                _localFolderPath
+            ));
+            var roamedFolderWatcher = _fileSystemWatcherService.ObserveFolderChanges(Path.Combine
+            (
+                _appFolderPath,
+                _roamedFolderPath
+            ));
 
             var uiThreadContext = await SynchronizationContextExtensions.GetUIThreadAsync();
             Observable.Merge(localFolderWatcher, roamedFolderWatcher)
@@ -204,9 +212,9 @@ namespace Codeco.CrossPlatform.Services
         /// <param name="relativeFolderPath">Path of the folder to create, relative to 
         /// the AppRoot/CoedcoFiles/ folder.</param>
         /// <returns>The <see cref="DirectoryInfo"/> of the created folder, or null.</returns>
-        public async Task<DirectoryInfo> CreateUserFolderAsync(string relativeFolderPath)
+        public DirectoryInfo CreateUserFolderAsync(string relativeFolderPath)
         {
-            string absoluteFolderPath = Path.Combine(_fullUserFilesFolderPath, relativeFolderPath);
+            string absoluteFolderPath = Path.Combine(_appFolderPath, UserFilesFolderName, relativeFolderPath);
             return _fileService.CreateFolder(absoluteFolderPath);
         }
 
@@ -254,7 +262,7 @@ namespace Codeco.CrossPlatform.Services
             }
         }
 
-        private string GetRelativeFilePath(string fileName, FileLocation location)
+        public string GetRelativeFilePath(string fileName, FileLocation location)
         {
             switch (location)
             {
