@@ -12,6 +12,7 @@ using System.Text;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using GalaSoft.MvvmLight.Ioc;
 
 #if !DEBUG
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
@@ -26,11 +27,11 @@ namespace Codeco.CrossPlatform
         public ViewModelLocator Locator { get; }
         public NavigationHost MainNavigationHost { get; set; }
 
-        public App ()
+        public App()
         {            
             if (_initialized)
             {
-                // TODO: Maybe call OnResume in Android doesn't do it for us.
+                // TODO: Maybe call OnResume if Android doesn't do it for us.
                 return;
             }
 
@@ -40,17 +41,20 @@ namespace Codeco.CrossPlatform
             MainNavigationHost = new NavigationHost();
             Locator = (ViewModelLocator)Current.Resources["Locator"];
 
-            MainPage = MainNavigationHost;            
-
-            MainNavigationHost.NavigateToAsync(new MainPage(), false);
-
-            SetupPlatformThemeColorMonitoring();
+            MainPage = MainNavigationHost;
         }
 
         // Sets up the platform-specific DynamicResource colors
+        bool _colorsInitialized = false;
         private void SetupPlatformThemeColorMonitoring()
         {
-            var colorService = DependencyService.Get<IPlatformColorService>();
+            if (_colorsInitialized)
+            {
+                return;
+            }
+            _colorsInitialized = true;
+
+            var colorService = SimpleIoc.Default.GetInstance<IPlatformColorService>();
             colorService.PlatformAccentColor.Subscribe(newColor => 
             {
                 Device.BeginInvokeOnMainThread(() => Resources["AccentColor"] = newColor);
@@ -71,6 +75,9 @@ namespace Codeco.CrossPlatform
         {
             // Handle when your app starts
             AC.AppCenter.Start($"uwp={AppCenterConfig.UwpKey};android={AppCenterConfig.AndroidKey}", typeof(Analytics), typeof(Crashes));
+            SetupPlatformThemeColorMonitoring();            
+
+            MainNavigationHost.NavigateToAsync(new MainPage(), false);
         }
 
         protected override void OnSleep ()

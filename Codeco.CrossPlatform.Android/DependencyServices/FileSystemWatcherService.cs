@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reactive.Subjects;
-using System.Security.Cryptography;
 using Android.OS;
 using Android.Runtime;
-using Codeco.CrossPlatform.Droid.DependencyServices;
 using Codeco.CrossPlatform.Models.FileSystem;
 using Codeco.CrossPlatform.Services.DependencyInterfaces;
 
-[assembly: Xamarin.Forms.Dependency(typeof(FileSystemWatcherService))]
 namespace Codeco.CrossPlatform.Droid.DependencyServices
 {
     public class FileSystemWatcherService : IFileSystemWatcherService

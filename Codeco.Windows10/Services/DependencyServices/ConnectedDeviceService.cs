@@ -1,9 +1,8 @@
-﻿using Codeco.CrossPlatform.Services.DependencyInterfaces;
-using Codeco.Windows10.Common;
+﻿using Codeco.CrossPlatform.Services;
+using Codeco.CrossPlatform.Services.DependencyInterfaces;
 using Codeco.Windows10.Services.DependencyServices;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -15,17 +14,24 @@ using CrossPlat = Codeco.CrossPlatform.Models.DependencyServices;
 
 [assembly: Xamarin.Forms.Dependency(typeof(ConnectedDeviceService))]
 namespace Codeco.Windows10.Services.DependencyServices
-{    
+{
     public class ConnectedDeviceService : IConnectedDeviceService
     {
+        private readonly IChangeJournalService _changeJournalService;
+
         private RemoteSystemWatcher _watcher;
         private IObservable<CrossPlat.RemoteSystemEvent> _remoteSystemWatcher;
         private ConcurrentDictionary<string, RemoteSystem> _foundSystems = new ConcurrentDictionary<string, RemoteSystem>();
         private AppServiceConnection _remoteConnection = new AppServiceConnection
         {
             AppServiceName = "ReceiveSyncDataService",
-            PackageFamilyName = "10707NeilApps.Codeco.Test_1zcj54t5p2twp",
-        };
+            PackageFamilyName = "10707NeilApps.Codeco.Test_1zcj54t5p2twp", //todo: finalize this, and somehow make it not hardcoded
+        };        
+
+        public ConnectedDeviceService(IChangeJournalService changeJournalService)
+        {
+            _changeJournalService = changeJournalService;
+        }
 
         public async Task<CrossPlat.GetDeviceResult> GetDeviceWatcher()
         {
@@ -81,7 +87,8 @@ namespace Codeco.Windows10.Services.DependencyServices
             values.Add("Message", message);
 
             var response = await _remoteConnection.SendMessageAsync(values);
-            response.Status == AppServiceResponseStatus.
+            
+            // TODO: Handle response
         }
 
         private void SetupLocalHandlers(RemoteSystemWatcher watcher)

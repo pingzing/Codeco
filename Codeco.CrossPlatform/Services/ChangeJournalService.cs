@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Reactive;
 using System.Collections.Concurrent;
+using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace Codeco.CrossPlatform.Services
 {
@@ -19,10 +21,9 @@ namespace Codeco.CrossPlatform.Services
         private readonly IFileSystemWatcherService _fileSystemWatcherService;
 
         private readonly string _appFolderPath;
+        private const string JournalFileName = "ChangeJournal.json";
         private readonly string _localFolderPath = Path.Combine(UserFileService.UserFilesFolderName, FileLocation.Local.FolderName());
-        private readonly string _roamedFolderPath = Path.Combine(UserFileService.UserFilesFolderName, FileLocation.Roamed.FolderName());
-
-        private BlockingCollection<ChangeJournalEntry> _recentChangesBuffer = new BlockingCollection<ChangeJournalEntry>();
+        private readonly string _roamedFolderPath = Path.Combine(UserFileService.UserFilesFolderName, FileLocation.Roamed.FolderName());        
 
         public Task Initialization { get; private set; }
 
@@ -59,72 +60,72 @@ namespace Codeco.CrossPlatform.Services
             ));                                   
 
             Observable.Merge(localFolderWatcher, roamedFolderWatcher)
-                .Subscribe(async changeEvent =>
+                .Buffer(TimeSpan.FromSeconds(10))
+                .Subscribe(async changeEvents =>
                 {
-                    switch (changeEvent.ChangeType)
+                    var eventBuffer = new BlockingCollection<ChangeJournalEntry>();
+                    var processingTask = ProcessChangeLoop(eventBuffer);
+                    foreach (var changeEvent in changeEvents)
                     {
-                        case WatcherChangeTypes.Created:
-                            string createRelativePath = _userFileService.GetRelativeFilePath(changeEvent.Name, GetFileLocation(changeEvent.FullPath));
-                            string fileJson = await _fileService.GetFileContentsAsync(createRelativePath);
-                            byte[] fileBytes = Encoding.UTF8.GetBytes(fileJson);
-                            _recentChangesBuffer.Add(new CreationJournalEntry
-                            {
-                                ChangeType = WatcherChangeTypes.Created,
-                                FileContents = fileBytes,
-                                RelativeFilePath = createRelativePath,
-                                Id = Guid.NewGuid(),
-                                Timestamp = DateTimeOffset.UtcNow
-                            });
-                            break;
-                        case WatcherChangeTypes.Deleted:
-                            string deleteRelativePath = _userFileService.GetRelativeFilePath(changeEvent.Name, GetFileLocation(changeEvent.FullPath));
-                            _recentChangesBuffer.Add(new DeletionJournalEntry
-                            {
-                                ChangeType = WatcherChangeTypes.Deleted,
-                                Id = Guid.NewGuid(),
-                                RelativeFilePath = deleteRelativePath,
-                                Timestamp = DateTimeOffset.UtcNow
-                            });
-                            break;
-                        case WatcherChangeTypes.Renamed:
-                            string oldRelativePath = _userFileService.GetRelativeFilePath(changeEvent.RenamedOldName, GetFileLocation(changeEvent.RenamedOldPath));
-                            string newRelativePath = _userFileService.GetRelativeFilePath(changeEvent.Name, GetFileLocation(changeEvent.FullPath));
-                            _recentChangesBuffer.Add(new RenameJournalEntry
-                            {
-                                ChangeType = WatcherChangeTypes.Renamed,
-                                Id = Guid.NewGuid(),
-                                OldRelativePath = oldRelativePath,
-                                RelativeFilePath = newRelativePath,
-                                Timestamp = DateTimeOffset.UtcNow
-                            });
-                            break;                        
+                        switch (changeEvent.ChangeType)
+                        {
+                            case WatcherChangeTypes.Created:
+                                string createRelativePath = _userFileService.GetRelativeFilePath(changeEvent.Name, GetFileLocation(changeEvent.FullPath));
+                                string fileJson = await _fileService.GetFileContentsAsync(createRelativePath);
+                                byte[] fileBytes = Encoding.UTF8.GetBytes(fileJson);
+                                eventBuffer.Add(new CreationJournalEntry
+                                {
+                                    ChangeType = WatcherChangeTypes.Created,
+                                    FileContents = fileBytes,
+                                    RelativeFilePath = createRelativePath,
+                                    Id = Guid.NewGuid(),
+                                    Timestamp = DateTimeOffset.UtcNow
+                                });
+                                break;
+                            case WatcherChangeTypes.Deleted:
+                                string deleteRelativePath = _userFileService.GetRelativeFilePath(changeEvent.Name, GetFileLocation(changeEvent.FullPath));
+                                eventBuffer.Add(new DeletionJournalEntry
+                                {
+                                    ChangeType = WatcherChangeTypes.Deleted,
+                                    Id = Guid.NewGuid(),
+                                    RelativeFilePath = deleteRelativePath,
+                                    Timestamp = DateTimeOffset.UtcNow
+                                });
+                                break;
+                            case WatcherChangeTypes.Renamed:
+                                string oldRelativePath = _userFileService.GetRelativeFilePath(changeEvent.RenamedOldName, GetFileLocation(changeEvent.RenamedOldPath));
+                                string newRelativePath = _userFileService.GetRelativeFilePath(changeEvent.Name, GetFileLocation(changeEvent.FullPath));
+                                eventBuffer.Add(new RenameJournalEntry
+                                {
+                                    ChangeType = WatcherChangeTypes.Renamed,
+                                    Id = Guid.NewGuid(),
+                                    OldRelativePath = oldRelativePath,
+                                    RelativeFilePath = newRelativePath,
+                                    Timestamp = DateTimeOffset.UtcNow
+                                });
+                                break;
+                        }
                     }
+                    eventBuffer.CompleteAdding();
+                    await processingTask;
                 });
-
-            Observable.Interval(TimeSpan.FromSeconds(10)).Subscribe(ProcessEventsBuffer);
         }
 
-        private void ProcessEventsBuffer(long timerInvocationCount)
-        {
-            if (_recentChangesBuffer.Count == 0)
+        private async Task ProcessChangeLoop(BlockingCollection<ChangeJournalEntry> buffer)
+        {                        
+            using (var fileStream = await _fileService.OpenOrCreateFileAsync(JournalFileName))
             {
-                return;
+                using (StreamWriter writer = new StreamWriter(fileStream))
+                {
+                    foreach (var changeEvent in buffer.GetConsumingEnumerable())
+                    {                        
+                        Debug.WriteLine($"Processing changeEvent: {changeEvent.ChangeType} for file {changeEvent.RelativeFilePath}.");
+                        string serializedChangedEvent = JsonConvert.SerializeObject(changeEvent);
+                        writer.WriteLine(serializedChangedEvent);
+
+                    }
+                }
             }            
-
-            // open file
-
-            // todo: how do we manage file size? we could periodically clear out entries older than x days
-            // could be a hard file size limit, that starts chewing away older entries once we hit it
-            // could be some complex syncing mechanism that only clears out events once they've been
-            // synced to at least one peer
-            // best option? probably clear out old events
-
-            foreach (var changeEvent in _recentChangesBuffer.GetConsumingEnumerable())
-            {
-                // write to file
-            }
-
-            // close file
         }
 
         private FileLocation GetFileLocation(string filePath)

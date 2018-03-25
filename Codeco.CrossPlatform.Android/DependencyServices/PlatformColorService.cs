@@ -2,12 +2,10 @@
 using AndroidGraphics = Android.Graphics; //Avoid namespaace collision witih Codeco.CrossPlatform.Android
 using Codeco.CrossPlatform.Services.DependencyInterfaces;
 using Xamarin.Forms;
-using Codeco.CrossPlatform.Droid.DependencyServices;
 using static Android.Content.Res.Resources;
 using Android.Util;
 using System;
 
-[assembly: Dependency(typeof(PlatformColorService))]
 namespace Codeco.CrossPlatform.Droid.DependencyServices
 {
     public class PlatformColorService : IPlatformColorService

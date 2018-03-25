@@ -1,5 +1,4 @@
 ﻿using Codeco.CrossPlatform.Models.FileSystem;
-using Codeco.Windows10.Services.DependencyServices;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 
-[assembly: Xamarin.Forms.Dependency(typeof(NativeFileServiceFacade))]
 namespace Codeco.Windows10.Services.DependencyServices
 {
     public class NativeFileServiceFacade : CrossPlatform.Services.DependencyInterfaces.INativeFileServiceFacade

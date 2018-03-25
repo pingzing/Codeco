@@ -1,11 +1,9 @@
 ﻿using Codeco.CrossPlatform.Services.DependencyInterfaces;
-using Codeco.Windows10.Services.DependencyServices;
 using System;
 using System.Reactive.Subjects;
 using Windows.UI.ViewManagement;
 using Xamarin.Forms;
 
-[assembly: Dependency(typeof(PlatformColorService))]
 namespace Codeco.Windows10.Services.DependencyServices
 {
     public class PlatformColorService : IPlatformColorService

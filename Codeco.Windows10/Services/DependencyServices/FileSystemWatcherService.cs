@@ -6,9 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using Codeco.CrossPlatform.Extensions.Reactive;
-using Codeco.Windows10.Services.DependencyServices;
 
-[assembly: Xamarin.Forms.Dependency(typeof(FileSystemWatcherService))]
 namespace Codeco.Windows10.Services.DependencyServices
 {
     public class FileSystemWatcherService : IFileSystemWatcherService

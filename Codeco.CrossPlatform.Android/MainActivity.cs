@@ -15,6 +15,8 @@ using Android.Support.V4.Content;
 using Android;
 using System.Threading.Tasks;
 using Android.Support.V4.App;
+using Codeco.CrossPlatform.Services.DependencyInterfaces;
+using GalaSoft.MvvmLight.Ioc;
 
 namespace Codeco.CrossPlatform.Droid
 {
@@ -34,15 +36,17 @@ namespace Codeco.CrossPlatform.Droid
             // Populate theme before we init the Xamarin runtime            
             PlatformColorService.CurrentTheme = Theme;
 
-            global::Xamarin.Forms.Forms.Init(this, bundle);            
+            global::Xamarin.Forms.Forms.Init(this, bundle);
 
-            LoadApplication(new App());
+            var crossPlatApp = new App();
+            RegisterXamarinDependencies();
+            LoadApplication(crossPlatApp);
 
             GetStoragePermissions();
         }
 
         private const int StorageRequestCode = 1;
-        private async Task GetStoragePermissions()
+        private void GetStoragePermissions()
         {
             if (ContextCompat.CheckSelfPermission(this, Manifest.Permission.ReadExternalStorage) != Permission.Granted
                 || ContextCompat.CheckSelfPermission(this, Manifest.Permission.WriteExternalStorage) != Permission.Granted)
@@ -72,6 +76,16 @@ namespace Codeco.CrossPlatform.Droid
             {                
                 base.OnBackPressed();
             }
+        }
+
+        private void RegisterXamarinDependencies()
+        {
+            //Dependency services            
+            SimpleIoc.Default.Register<IAppFolderService, AppFolderService>();
+            SimpleIoc.Default.Register<INativeFileServiceFacade, NativeFileServiceFacade>();
+            SimpleIoc.Default.Register<IPlatformColorService, PlatformColorService>();
+            SimpleIoc.Default.Register<IFileSystemWatcherService, FileSystemWatcherService>();
+            SimpleIoc.Default.Register<IConnectedDeviceService, ConnectedDeviceService>();
         }
     }
 }

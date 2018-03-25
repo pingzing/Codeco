@@ -101,7 +101,8 @@ namespace Codeco.CrossPlatform.ViewModels
                              IUserDialogs userDialogs,
                              IUserFileService userFileService,
                              IFilePicker filePicker,
-                             IClipboard clipboard)
+                             IClipboard clipboard,
+                             IChangeJournalService changeJournalService) // remove this once we have the remote stuff all set up
             : base(navService)
         {
             _userDialogs = userDialogs;

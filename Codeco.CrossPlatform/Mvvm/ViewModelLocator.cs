@@ -26,18 +26,20 @@ namespace Codeco.CrossPlatform.Mvvm
         public ViewModelLocator()
         {
             //Register (and initialize, if necessary) your services here
-            SimpleIoc.Default.Register<IAppFolderService>(() => DependencyService.Get<IAppFolderService>());
-            SimpleIoc.Default.Register<INativeFileServiceFacade>(() => DependencyService.Get<INativeFileServiceFacade>());
+            //SimpleIoc.Default.Register<IAppFolderService>(() => DependencyService.Get<IAppFolderService>());
+            //SimpleIoc.Default.Register<INativeFileServiceFacade>(() => DependencyService.Get<INativeFileServiceFacade>());
             SimpleIoc.Default.Register<IPopupNavigation>(() => PopupNavigation.Instance);
             SimpleIoc.Default.Register<INavigationService>(InitializeNavigationService);
             SimpleIoc.Default.Register<ILocalizeService>(() => DependencyService.Get<ILocalizeService>());
             SimpleIoc.Default.Register<IUserDialogs>(() => UserDialogs.Instance);
             SimpleIoc.Default.Register<IFileService, FileService>();
-            SimpleIoc.Default.Register<IFileSystemWatcherService>(() => DependencyService.Get<IFileSystemWatcherService>());
+            //SimpleIoc.Default.Register<IFileSystemWatcherService>(() => DependencyService.Get<IFileSystemWatcherService>());
             SimpleIoc.Default.Register<IUserFileService, UserFileService>();
             SimpleIoc.Default.Register<IFilePicker>(() => Plugin.FilePicker.CrossFilePicker.Current);
             SimpleIoc.Default.Register<IEncryptionService, EncryptionService>();
             SimpleIoc.Default.Register<IClipboard>(() => CrossClipboard.Current);
+            SimpleIoc.Default.Register<IChangeJournalService, ChangeJournalService>();
+            //SimpleIoc.Default.Register<IConnectedDeviceService>(() => DependencyService.Get<IConnectedDeviceService>());
 
             //Register your ViewModels here
             SimpleIoc.Default.Register<MainViewModel>();

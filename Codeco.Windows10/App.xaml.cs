@@ -18,6 +18,8 @@ using System.Collections.Generic;
 using Rg.Plugins.Popup.Windows;
 using Windows.ApplicationModel.AppService;
 using Windows.ApplicationModel.Background;
+using GalaSoft.MvvmLight.Ioc;
+using Codeco.CrossPlatform.Services.DependencyInterfaces;
 
 namespace Codeco.Windows10
 {    
@@ -48,18 +50,13 @@ namespace Codeco.Windows10
                 //Associate the frame with a SuspensionManager key
                 SuspensionManager.RegisterFrame(rootFrame, "AppFrame");
 
+                // Note: platform-dependencies are registered in the MainXamarinPage.xaml.cs file.
+
                 Rg.Plugins.Popup.Popup.Init();
                 List<Assembly> assembliesToLoad = new List<Assembly>();
                 assembliesToLoad.AddRange(Rg.Plugins.Popup.Popup.GetExtraAssemblies());
 
-                Xamarin.Forms.Forms.Init(e, assembliesToLoad);
-
-                //Dependency services
-                Xamarin.Forms.DependencyService.Register<AppFolderService>();
-                Xamarin.Forms.DependencyService.Register<NativeFileServiceFacade>();
-                Xamarin.Forms.DependencyService.Register<PlatformColorService>();
-                Xamarin.Forms.DependencyService.Register<FileSystemWatcherService>();
-                Xamarin.Forms.DependencyService.Register<ConnectedDeviceService>();
+                Xamarin.Forms.Forms.Init(e, assembliesToLoad);                
                 
                 rootFrame.CacheSize = 1;
 
@@ -95,7 +92,7 @@ namespace Codeco.Windows10
             Window.Current.Activate();
 
             DispatcherHelper.Initialize();            
-        }
+        }       
 
         private void SetupRuntimeResources()
         {

@@ -17,12 +17,10 @@ namespace Codeco.CrossPlatform.Services
             _nativeFileService = nativeFileService;
         }
 
-        public async Task OpenOrCreateFileAsync(string relativeFilePath)
+        public async Task<FileStream> OpenOrCreateFileAsync(string relativeFilePath)
         {
-            using (var fileStream = await _nativeFileService.OpenOrCreateFileAsync(relativeFilePath))
-            {
-                // Just let it close, it's already been created.
-            }
+            var fileStream = await _nativeFileService.OpenOrCreateFileAsync(relativeFilePath);
+            return fileStream;
         }
 
         public async Task<CreateFileResult> CreateFileAsync(string relativeFilePath)
