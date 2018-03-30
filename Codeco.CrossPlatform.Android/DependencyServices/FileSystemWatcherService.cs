@@ -8,9 +8,12 @@ using Codeco.CrossPlatform.Models.FileSystem;
 using Codeco.CrossPlatform.Services.DependencyInterfaces;
 
 namespace Codeco.CrossPlatform.Droid.DependencyServices
-{
+{    
     public class FileSystemWatcherService : IFileSystemWatcherService
     {
+        // Todo: Change this into a one-to-many thing. We might get multiple observers on the same folder.
+        // Alternately: Make it so that if we try to observe a folder we already know about, just return the
+        // existing observable.
         private static Dictionary<string, Subject<FileChangedEvent>> _storedObservables = new Dictionary<string, Subject<FileChangedEvent>>();
         private static List<CrossPlatFileObserver> _storedObservers = new List<CrossPlatFileObserver>();
 
@@ -21,7 +24,7 @@ namespace Codeco.CrossPlatform.Droid.DependencyServices
             CrossPlatFileObserver observer = new CrossPlatFileObserver(absoluteFolderPath);
             observer.StartWatching();
             _storedObservers.Add(observer);
-
+            
             _storedObservables.Add(absoluteFolderPath, fileObservable);
             return fileObservable;
         }
