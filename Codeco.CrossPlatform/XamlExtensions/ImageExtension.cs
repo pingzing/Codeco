@@ -26,8 +26,7 @@ namespace Codeco.CrossPlatform.XamlExtensions
             }
 
             if (Device.RuntimePlatform == Device.UWP
-                || Device.RuntimePlatform == Device.WinRT
-                || Device.RuntimePlatform == Device.WinRT)
+                || Device.RuntimePlatform == Device.WPF)
             {
                 return System.IO.Path.Combine("Assets/", Path);
             }

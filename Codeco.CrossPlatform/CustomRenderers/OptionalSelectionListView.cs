@@ -23,5 +23,10 @@ namespace Codeco.CrossPlatform.CustomRenderers
         {
 
         }
+
+        public OptionalSelectionListView() : this(ListViewCachingStrategy.RecycleElement)
+        {
+
+        }
     }
 }

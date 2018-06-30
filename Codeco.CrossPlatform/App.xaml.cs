@@ -13,6 +13,7 @@ using System.Text;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using GalaSoft.MvvmLight.Ioc;
+using Xamarin.Forms.Internals;
 
 #if !DEBUG
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
@@ -36,6 +37,10 @@ namespace Codeco.CrossPlatform
             }
 
             _initialized = true;
+
+            Log.Listeners.Add(new DelegateLogListener((_, arg2) => Debug.WriteLine(arg2)));
+            LiveReload.Init();
+
 
             InitializeComponent();
             MainNavigationHost = new NavigationHost();
