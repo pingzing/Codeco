@@ -29,7 +29,7 @@ namespace Codeco.CrossPlatform.Droid.DependencyServices
             _platformAccentColor = new BehaviorSubject<Color>(ToXamarinColor(accentColor));
 
             var themeBackground = new TypedValue();
-            CurrentTheme.ResolveAttribute(Resource.Attribute.background, themeBackground, true);
+            CurrentTheme.ResolveAttribute(Android.Resource.Attribute.WindowBackground, themeBackground, true);
             var backgroundColor = new AndroidGraphics.Color(themeBackground.Data);
             _platformBackgroundColor = new BehaviorSubject<Color>(ToXamarinColor(backgroundColor));
 

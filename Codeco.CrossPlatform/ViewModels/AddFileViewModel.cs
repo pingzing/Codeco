@@ -25,6 +25,13 @@ namespace Codeco.CrossPlatform.ViewModels
             }
         }
 
+        private string _message;
+        public string Message
+        {
+            get => _message;
+            set => Set(ref _message, value);
+        }
+
         private string _passwordText;
         public string PasswordText
         {

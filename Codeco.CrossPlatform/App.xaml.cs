@@ -37,9 +37,10 @@ namespace Codeco.CrossPlatform
             }
 
             _initialized = true;
-
+#if DEBUG
             Log.Listeners.Add(new DelegateLogListener((_, arg2) => Debug.WriteLine(arg2)));
             LiveReload.Init();
+#endif
 
 
             InitializeComponent();
