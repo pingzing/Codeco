@@ -224,7 +224,7 @@ namespace Codeco.CrossPlatform.Services
                 .Select(x => x.Split(new[] { ',', ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries)) // Split into key-value pairs
                 .ToDictionary(
                     keySelector: keyVal1 => keyVal1[0],
-                    elementSelector: keyVal2 => keyVal2[1]);
+                    elementSelector: keyVal2 => String.Join("", keyVal2.Skip(1)));
         }
 
         public async Task<Dictionary<string, string>> GetUserFileContentsAsync(string name, FileLocation fileLocation, string password)
@@ -257,8 +257,8 @@ namespace Codeco.CrossPlatform.Services
                 }
 
                 // Split by separator, and ensure only 2 columns
-                return lines.Select(x => x.Split(new[] { ',', ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries))
-                    .All(splitStrings => splitStrings.Length == 2);
+                var splitLines = lines.Select(x => x.Split(new[] { ',', ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries));
+                return splitLines.All(splitStrings => splitStrings.Length > 2);
             }
         }
 

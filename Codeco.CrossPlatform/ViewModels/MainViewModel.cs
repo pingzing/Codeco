@@ -110,8 +110,7 @@ namespace Codeco.CrossPlatform.ViewModels
             _clipboard = clipboard;
 
             AvailableKeyboards.Add(_defaultKeyboard);
-            AvailableKeyboards.Add(_numericKeyboard);
-            CurrentInputKeyboard = _defaultKeyboard;
+            AvailableKeyboards.Add(_numericKeyboard);            
         }
 
         public override Task Activated(NavigationType navType)
@@ -127,7 +126,9 @@ namespace Codeco.CrossPlatform.ViewModels
                          .Subscribe();
 
                 RaisePropertyChanged(nameof(Files));
-            }                                  
+            }
+
+            CurrentInputKeyboard = _defaultKeyboard;
 
             return Task.CompletedTask;
         }
