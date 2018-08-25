@@ -26,7 +26,10 @@ namespace Codeco.Windows10.Services.DependencyServices
         {
             AppServiceName = "ReceiveSyncDataService",
             PackageFamilyName = "10707NeilApps.Codeco.Test_1zcj54t5p2twp", //todo: finalize this, and somehow make it not hardcoded
-        };        
+        };
+
+        // This doesn't happen in UWP, so we don't really need to handle it.
+        public event Action<string> GotOAuthUrl;
 
         public ConnectedDeviceService(IChangeJournalService changeJournalService)
         {
@@ -39,8 +42,7 @@ namespace Codeco.Windows10.Services.DependencyServices
             if (accessStatus == RemoteSystemAccessStatus.Allowed)
             {
                 _watcher = RemoteSystem.CreateWatcher();
-                _remoteSystemWatcher = CreateRemoteSystemWatcherSources(_watcher)
-                        .Merge();
+                _remoteSystemWatcher = CreateRemoteSystemWatcherSources(_watcher).Merge();
 
                 SetupLocalHandlers(_watcher);
 
@@ -118,7 +120,7 @@ namespace Codeco.Windows10.Services.DependencyServices
             watcher.RemoteSystemUpdated += Watcher_RemoteSystemUpdated;
         }        
 
-        private IObservable<CrossPlat.RemoteSystemEvent>[] CreateRemoteSystemWatcherSources(RemoteSystemWatcher remoteWatcher)
+        private IObservable<CrossPlat.RemoteSystemEvent>[] CreateRemoteSystemWatcherSources(RemoteSystemWatcher watcher)
         {
             return new[]
             {
@@ -126,8 +128,8 @@ namespace Codeco.Windows10.Services.DependencyServices
                 <TypedEventHandler<RemoteSystemWatcher, RemoteSystemAddedEventArgs>,
                 RemoteSystemWatcher,
                 RemoteSystemAddedEventArgs>(
-                    x => remoteWatcher.RemoteSystemAdded += x,
-                    x => remoteWatcher.RemoteSystemAdded -= x)
+                    x => watcher.RemoteSystemAdded += x,
+                    x => watcher.RemoteSystemAdded -= x)
                     .Select(ev => new CrossPlat.RemoteSystemEvent
                     {
                         Id = ev.EventArgs.RemoteSystem.Id,
@@ -139,8 +141,8 @@ namespace Codeco.Windows10.Services.DependencyServices
                     TypedEventHandler<RemoteSystemWatcher, RemoteSystemRemovedEventArgs>,
                     RemoteSystemWatcher,
                     RemoteSystemRemovedEventArgs>(
-                    x => remoteWatcher.RemoteSystemRemoved += x,
-                    x => remoteWatcher.RemoteSystemRemoved -= x)
+                    x => watcher.RemoteSystemRemoved += x,
+                    x => watcher.RemoteSystemRemoved -= x)
                     .Select(ev => new CrossPlat.RemoteSystemEvent
                     {
                         Id = ev.EventArgs.RemoteSystemId,
@@ -152,8 +154,8 @@ namespace Codeco.Windows10.Services.DependencyServices
                     TypedEventHandler<RemoteSystemWatcher, RemoteSystemUpdatedEventArgs>,
                     RemoteSystemWatcher,
                     RemoteSystemUpdatedEventArgs>(
-                    x => remoteWatcher.RemoteSystemUpdated += x,
-                    x => remoteWatcher.RemoteSystemUpdated -= x)
+                    x => watcher.RemoteSystemUpdated += x,
+                    x => watcher.RemoteSystemUpdated -= x)
                     .Select(ev => new CrossPlat.RemoteSystemEvent
                     {
                         Id = ev.EventArgs.RemoteSystem.Id,
@@ -161,6 +163,12 @@ namespace Codeco.Windows10.Services.DependencyServices
                         EventKind = CrossPlat.RemoteEventKind.Updated
                     })
             };
+        }
+
+        public Task<bool> InitializeAsync()
+        {
+            // No further initialization is required on UWP, so this can return immediately.
+            return Task.FromResult(true);
         }
     }
 

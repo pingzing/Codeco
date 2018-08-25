@@ -24,7 +24,7 @@
     <PackageReference Include="DynamicData" Version="6.4.0.2419" />
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="1.7.0" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="1.7.0" />
-    <PackageReference Include="MvvmLightLibs" Version="5.4.1" />
+    <PackageReference Include="MvvmLightLibsStd10" Version="5.4.1" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="Rg.Plugins.Popup" Version="1.1.4.158-pre" />
     <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
