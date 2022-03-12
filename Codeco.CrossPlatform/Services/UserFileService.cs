@@ -221,7 +221,7 @@ namespace Codeco.CrossPlatform.Services
         private Dictionary<string, string> DeserializeSimpleFormat(string contents)
         {
             return contents.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries) // split into lines
-                .Select(x => x.Split(new[] { ',', ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries)) // Split into key-value pairs
+                .Select(x => x.Split(new[] { ',', ' ', '\t', '|' }, StringSplitOptions.RemoveEmptyEntries)) // Split into key-value pairs
                 .ToDictionary(
                     keySelector: keyVal1 => keyVal1[0],
                     elementSelector: keyVal2 => String.Join("", keyVal2.Skip(1)));
@@ -257,8 +257,8 @@ namespace Codeco.CrossPlatform.Services
                 }
 
                 // Split by separator, and ensure only 2 columns
-                var splitLines = lines.Select(x => x.Split(new[] { ',', ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries));
-                return splitLines.All(splitStrings => splitStrings.Length > 2);
+                var splitLines = lines.Select(x => x.Split(new[] { ',', ' ', '\t', '|' }, StringSplitOptions.RemoveEmptyEntries));
+                return splitLines.All(splitStrings => splitStrings.Length == 2);
             }
         }
 

@@ -19,15 +19,14 @@ namespace Codeco.Windows10.Views
             RegisterXamarinDependencies();
             LoadApplication(app);
         }
-        
+
         public void RegisterXamarinDependencies()
         {
             //Dependency services            
-            SimpleIoc.Default.Register<IAppFolderService, AppFolderService>();            
-            SimpleIoc.Default.Register<INativeFileServiceFacade, NativeFileServiceFacade>();            
-            SimpleIoc.Default.Register<IPlatformColorService, PlatformColorService>();            
+            SimpleIoc.Default.Register<IAppFolderService, AppFolderService>();
+            SimpleIoc.Default.Register<INativeFileServiceFacade, NativeFileServiceFacade>();
+            SimpleIoc.Default.Register<IPlatformColorService, PlatformColorService>();
             SimpleIoc.Default.Register<IFileSystemWatcherService, FileSystemWatcherService>();
-            SimpleIoc.Default.Register<IConnectedDeviceService, ConnectedDeviceService>();
         }
     }
 }

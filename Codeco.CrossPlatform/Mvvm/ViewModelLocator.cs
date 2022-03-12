@@ -7,7 +7,6 @@ using Codeco.CrossPlatform.Views;
 using Acr.UserDialogs;
 using Rg.Plugins.Popup.Services;
 using Rg.Plugins.Popup.Contracts;
-using Plugin.FilePicker.Abstractions;
 using Codeco.CrossPlatform.Popups;
 using Codeco.Encryption;
 using System;
@@ -35,11 +34,9 @@ namespace Codeco.CrossPlatform.Mvvm
             SimpleIoc.Default.Register<IFileService, FileService>();
             //SimpleIoc.Default.Register<IFileSystemWatcherService>(() => DependencyService.Get<IFileSystemWatcherService>());
             SimpleIoc.Default.Register<IUserFileService, UserFileService>();
-            SimpleIoc.Default.Register<IFilePicker>(() => Plugin.FilePicker.CrossFilePicker.Current);
             SimpleIoc.Default.Register<IEncryptionService, EncryptionService>();
             SimpleIoc.Default.Register<IClipboard>(() => CrossClipboard.Current);
             SimpleIoc.Default.Register<IChangeJournalService, ChangeJournalService>();
-            //SimpleIoc.Default.Register<IConnectedDeviceService>(() => DependencyService.Get<IConnectedDeviceService>());
 
             //Register your ViewModels here
             SimpleIoc.Default.Register<MainViewModel>();

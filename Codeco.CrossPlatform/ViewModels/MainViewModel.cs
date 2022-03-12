@@ -5,8 +5,6 @@ using Codeco.CrossPlatform.Services;
 using Codeco.Encryption;
 using DynamicData;
 using GalaSoft.MvvmLight.Command;
-using Plugin.FilePicker;
-using Plugin.FilePicker.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -19,6 +17,8 @@ using Codeco.CrossPlatform.Extensions;
 using System.Diagnostics;
 using DynamicData.Binding;
 using Plugin.Clipboard.Abstractions;
+using Xamarin.Essentials;
+using System.IO;
 
 namespace Codeco.CrossPlatform.ViewModels
 {
@@ -26,7 +26,6 @@ namespace Codeco.CrossPlatform.ViewModels
     {
         private readonly IUserDialogs _userDialogs;
         private readonly IUserFileService _userFileService;
-        private readonly IFilePicker _filePicker;
         private readonly IClipboard _clipboard;
 
         private readonly NamedKeyboard _defaultKeyboard = new NamedKeyboard(Keyboard.Default, "Default");
@@ -100,13 +99,11 @@ namespace Codeco.CrossPlatform.ViewModels
         public MainViewModel(INavigationService navService,
                              IUserDialogs userDialogs,
                              IUserFileService userFileService,
-                             IFilePicker filePicker,
                              IClipboard clipboard) // remove this once we have the remote stuff all set up
             : base(navService)
         {
             _userDialogs = userDialogs;
             _userFileService = userFileService;
-            _filePicker = filePicker;
             _clipboard = clipboard;
 
             AvailableKeyboards.Add(_defaultKeyboard);
@@ -177,13 +174,20 @@ namespace Codeco.CrossPlatform.ViewModels
 
         private async void AddFile()
         {
-            var pickedFile = await CrossFilePicker.Current.PickFile();
+            var pickedFile = await FilePicker.PickAsync();
             if (pickedFile == null)
             {
                 return;
             }
 
-            bool isValid = await _userFileService.ValidateFileAsync(pickedFile.DataArray);
+            byte[] fileData;
+            using (var stream = await pickedFile.OpenReadAsync())
+            {
+                fileData = new byte[stream.Length];
+                await stream.ReadAsync(fileData, 0, (int)stream.Length);
+            }
+
+            bool isValid = await _userFileService.ValidateFileAsync(fileData);
             if (!isValid)
             {
                 await _userDialogs.AlertAsync(new AlertConfig
@@ -192,9 +196,10 @@ namespace Codeco.CrossPlatform.ViewModels
                     OkText = "Ok",
                     Title = "Invalid file"
                 });
+                Debug.WriteLine($"Invalid file!");
                 return;
             }
-            string pickedFileDataString = Encoding.UTF8.GetString(pickedFile.DataArray);
+            string pickedFileDataString = Encoding.UTF8.GetString(fileData);
 
             var filePopupResult = await _navigationService.ShowPopupViewModelAsync<AddFileViewModel, (string, string)>();
             if (filePopupResult.PopupChoice != Popups.PopupChoice.Ok)

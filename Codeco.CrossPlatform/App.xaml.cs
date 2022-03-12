@@ -39,7 +39,6 @@ namespace Codeco.CrossPlatform
             _initialized = true;
 #if DEBUG
             Log.Listeners.Add(new DelegateLogListener((_, arg2) => Debug.WriteLine(arg2)));
-            LiveReload.Init();
 #endif
 
 
@@ -80,7 +79,6 @@ namespace Codeco.CrossPlatform
         protected override void OnStart ()
         {
             // Handle when your app starts
-            AC.AppCenter.Start($"uwp={AppCenterConfig.UwpKey};android={AppCenterConfig.AndroidKey}", typeof(Analytics), typeof(Crashes));
             SetupPlatformThemeColorMonitoring();            
 
             MainNavigationHost.NavigateToAsync(new MainPage(), false);

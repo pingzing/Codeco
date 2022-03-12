@@ -11,17 +11,18 @@
     <AssemblyName>Codeco.Windows10</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion>10.0.16299.0</TargetPlatformVersion>
+    <TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>Codeco.Windows10_StoreKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>Codeco.Windows10_TemporaryKey.pfx</PackageCertificateKeyFile>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
-    <PackageCertificateThumbprint>82F54A56F9A9FFCD40611BC70CAE9D8FC3A794F0</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>D697C49CB153D74C258471BDEEED49448AFA494C</PackageCertificateThumbprint>
     <RuntimeIdentifiers>win10-arm;win10-arm-aot;win10-x86;win10-x86-aot;win10-x64;win10-x64-aot</RuntimeIdentifiers>
+    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -804,7 +805,6 @@
     <Content Include="Assets\StoreLogo.scale-200.png" />
     <Content Include="Assets\StoreLogo.scale-400.png" />
     <None Include="Codeco.Windows10_StoreKey.pfx" />
-    <None Include="Codeco.Windows10_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">
@@ -836,7 +836,6 @@
     <Compile Include="Models\Mocks\MockBindableStorageFile.cs" />
     <Compile Include="Models\Mocks\MockStorageFile.cs" />
     <Compile Include="Models\SavedFiles.cs" />
-    <Compile Include="Services\DependencyServices\ConnectedDeviceService.cs" />
     <Compile Include="Services\DependencyServices\PlatformColorService.cs" />
     <Compile Include="Services\DependencyServices\FileSystemWatcherService.cs" />
     <Compile Include="Services\DependencyServices\NativeFileServiceFacade.cs" />
@@ -947,6 +946,7 @@
     <Content Include="Assets\wallet.scale-300.png" />
     <Content Include="Assets\Wide310x150Logo.scale-100.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
+    <None Include="Codeco.Windows10_TemporaryKey.pfx" />
     <None Include="Package.StoreAssociation.xml" />
     <Content Include="Assets\wrench.scale-100.png" />
     <Content Include="Assets\wrench.scale-150.png" />
@@ -997,10 +997,6 @@
       <Project>{b344c5ab-fa18-45d9-b630-b0f4a7fa8dc1}</Project>
       <Name>Codeco.Encryption</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FilePicker-Plugin-for-Xamarin-and-Windows\src\Plugin.FilePicker\Plugin.FilePicker.UWP\Plugin.FilePicker.UWP.csproj">
-      <Project>{e34b516d-c0d8-450f-9db0-bb6a5b04aef1}</Project>
-      <Name>Plugin.FilePicker.UWP</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Acr.UserDialogs">
@@ -1018,8 +1014,8 @@
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
       <Version>1.1.0</Version>
     </PackageReference>
-    <PackageReference Include="MvvmLight">
-      <Version>5.4.1</Version>
+    <PackageReference Include="MvvmLightLibsStd10">
+      <Version>5.4.1.1</Version>
     </PackageReference>
     <PackageReference Include="Rg.Plugins.Popup">
       <Version>1.1.4.158-pre</Version>
@@ -1033,8 +1029,11 @@
     <PackageReference Include="Xam.Plugin.Iconize.SimpleLineIcons">
       <Version>2.0.0.37-beta</Version>
     </PackageReference>
+    <PackageReference Include="Xamarin.Essentials">
+      <Version>1.6.1</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.Forms">
-      <Version>3.1.0.583944</Version>
+      <Version>4.2.0.910310</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Plugins.Clipboard">
       <Version>2.2.1</Version>

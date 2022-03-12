@@ -1,22 +1,19 @@
-﻿using System;
-
-using Android.App;
+﻿using Android.App;
 using Android.Content.PM;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Android.OS;
-using AndroidGraphics = Android.Graphics; //Avoid namespaace collision witih Codeco.CrossPlatform.Android
 using Acr.UserDialogs;
 using Rg.Plugins.Popup;
-using Android.Util;
 using Codeco.CrossPlatform.Droid.DependencyServices;
 using Android.Support.V4.Content;
 using Android;
-using System.Threading.Tasks;
 using Android.Support.V4.App;
 using Codeco.CrossPlatform.Services.DependencyInterfaces;
 using GalaSoft.MvvmLight.Ioc;
+
+// Add some common permissions, these can be removed if not needed
+[assembly: UsesPermission(Android.Manifest.Permission.Internet)]
+[assembly: UsesPermission(Android.Manifest.Permission.WriteExternalStorage)]
+[assembly: UsesPermission(Android.Manifest.Permission.ReadExternalStorage)]
 
 namespace Codeco.CrossPlatform.Droid
 {
@@ -31,7 +28,8 @@ namespace Codeco.CrossPlatform.Droid
             base.OnCreate(bundle);
 
             Popup.Init(this, bundle);
-            UserDialogs.Init(this);            
+            UserDialogs.Init(this);
+            Xamarin.Essentials.Platform.Init(this, bundle);
 
             // Populate theme before we init the Xamarin runtime            
             PlatformColorService.CurrentTheme = Theme;
@@ -57,6 +55,9 @@ namespace Codeco.CrossPlatform.Droid
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
         {
+            Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+
             if (requestCode == 1)
             {
                 if (grantResults[0] != Permission.Granted)
@@ -68,12 +69,12 @@ namespace Codeco.CrossPlatform.Droid
 
         public override void OnBackPressed()
         {
-            if (Rg.Plugins.Popup.Popup.SendBackPressed(base.OnBackPressed))
+            if (Popup.SendBackPressed(base.OnBackPressed))
             {
                 System.Diagnostics.Debug.WriteLine("Get Popup.OnBackPressed");
             }
             else
-            {                
+            {
                 base.OnBackPressed();
             }
         }
@@ -85,7 +86,6 @@ namespace Codeco.CrossPlatform.Droid
             SimpleIoc.Default.Register<INativeFileServiceFacade, NativeFileServiceFacade>();
             SimpleIoc.Default.Register<IPlatformColorService, PlatformColorService>();
             SimpleIoc.Default.Register<IFileSystemWatcherService, FileSystemWatcherService>();
-            SimpleIoc.Default.Register<IConnectedDeviceService, ConnectedDeviceService>();
         }
     }
 }
