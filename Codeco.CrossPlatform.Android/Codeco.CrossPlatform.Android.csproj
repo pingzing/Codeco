@@ -137,9 +137,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomRenderer\OptionalSelectionListViewRenderer.cs" />
+    <Compile Include="DependencyServices\FileSystemWatcherService.cs" />
     <Compile Include="DependencyServices\PlatformColorService.cs" />
     <Compile Include="DependencyServices\AppFolderService.cs" />
-    <Compile Include="DependencyServices\FileSystemWatcherService.cs" />
     <Compile Include="DependencyServices\NativeFileServiceFacade.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />

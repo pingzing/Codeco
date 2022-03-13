@@ -21,7 +21,7 @@ namespace Codeco.CrossPlatform.Services
     public class UserFileService : IUserFileService, IInitializesAsync
     {
         private readonly string _appFolderPath;
-        public const string UserFilesFolderName = "CodecoFiles";        
+        public const string UserFilesFolderName = "CodecoFiles";
         private readonly string _localFolderPath = Path.Combine(UserFilesFolderName, FileLocation.Local.FolderName());
         private readonly string _roamedFolderPath = Path.Combine(UserFilesFolderName, FileLocation.Roamed.FolderName());
 
@@ -30,7 +30,7 @@ namespace Codeco.CrossPlatform.Services
         private readonly IFileSystemWatcherService _fileSystemWatcherService;
         private readonly IEncryptionService _encryptionService;
 
-        private SourceList<SimpleFileInfoViewModel> _filesList = new SourceList<SimpleFileInfoViewModel>();        
+        private SourceList<SimpleFileInfoViewModel> _filesList = new SourceList<SimpleFileInfoViewModel>();
         public IObservableList<SimpleFileInfoViewModel> FilesList { get; private set; }
 
         public Task Initialization { get; private set; }
@@ -81,7 +81,7 @@ namespace Codeco.CrossPlatform.Services
 
             var localFolderWatcher = _fileSystemWatcherService.ObserveFolderChanges(Path.Combine
             (
-                _appFolderPath, 
+                _appFolderPath,
                 _localFolderPath
             ));
             var roamedFolderWatcher = _fileSystemWatcherService.ObserveFolderChanges(Path.Combine
@@ -102,7 +102,7 @@ namespace Codeco.CrossPlatform.Services
                             {
                                 Name = changeEvent.Name,
                                 Path = changeEvent.FullPath,
-                                FileLocation = changeEvent.FullPath.Contains(_roamedFolderPath) ? FileLocation.Roamed  : FileLocation.Local
+                                FileLocation = changeEvent.FullPath.Contains(_roamedFolderPath) ? FileLocation.Roamed : FileLocation.Local
                             });
                             break;
                         case WatcherChangeTypes.Changed:
@@ -166,7 +166,7 @@ namespace Codeco.CrossPlatform.Services
                 FileId = Guid.NewGuid()
             };
 
-            string fileContentsJson = JsonConvert.SerializeObject(fileContents);            
+            string fileContentsJson = JsonConvert.SerializeObject(fileContents);
             string relativeFilePath = GetRelativeFilePath(fileName, fileLocation);
             var createdFile = await _fileService.CreateFileAsync(relativeFilePath);
             using (createdFile.Stream)
@@ -175,11 +175,11 @@ namespace Codeco.CrossPlatform.Services
                 {
                     await streamWriter.WriteAsync(fileContentsJson);
                 }
-            }            
+            }
 
             return createdFile.FileName;
         }
-        
+
         public async Task DeleteUserFileAsync(string fileName, FileLocation fileLocation)
         {
             await Initialization;
