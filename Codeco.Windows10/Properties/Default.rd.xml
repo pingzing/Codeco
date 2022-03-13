@@ -25,6 +25,7 @@
     
     
     <!-- Add your application specific runtime directives here. -->
+      <Type Name="System.IO.FileSystemWatcher" Dynamic="Required Public"/>
 
 
   </Application>
