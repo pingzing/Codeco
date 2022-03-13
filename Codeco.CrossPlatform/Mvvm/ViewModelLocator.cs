@@ -25,8 +25,6 @@ namespace Codeco.CrossPlatform.Mvvm
         public ViewModelLocator()
         {
             //Register (and initialize, if necessary) your services here
-            //SimpleIoc.Default.Register<IAppFolderService>(() => DependencyService.Get<IAppFolderService>());
-            //SimpleIoc.Default.Register<INativeFileServiceFacade>(() => DependencyService.Get<INativeFileServiceFacade>());
             SimpleIoc.Default.Register<IPopupNavigation>(() => PopupNavigation.Instance);
             SimpleIoc.Default.Register<INavigationService>(InitializeNavigationService);
             SimpleIoc.Default.Register<ILocalizeService>(() => DependencyService.Get<ILocalizeService>());
@@ -35,6 +33,7 @@ namespace Codeco.CrossPlatform.Mvvm
             SimpleIoc.Default.Register<IUserFileService, UserFileService>();
             SimpleIoc.Default.Register<IEncryptionService, EncryptionService>();
             SimpleIoc.Default.Register<IClipboard>(() => CrossClipboard.Current);
+            SimpleIoc.Default.Register<IMessagingCenter>(() => MessagingCenter.Instance);
 
             //Register your ViewModels here
             SimpleIoc.Default.Register<MainViewModel>();

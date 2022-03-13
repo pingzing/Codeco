@@ -19,6 +19,7 @@ using DynamicData.Binding;
 using Plugin.Clipboard.Abstractions;
 using Xamarin.Essentials;
 using System.IO;
+using Codeco.CrossPlatform.Models.Messages;
 
 namespace Codeco.CrossPlatform.ViewModels
 {
@@ -27,11 +28,15 @@ namespace Codeco.CrossPlatform.ViewModels
         private readonly IUserDialogs _userDialogs;
         private readonly IUserFileService _userFileService;
         private readonly IClipboard _clipboard;
+        private readonly IMessagingCenter _messagingCenter;
 
         private readonly NamedKeyboard _defaultKeyboard = new NamedKeyboard(Keyboard.Default, "Default");
         private readonly NamedKeyboard _numericKeyboard = new NamedKeyboard(Keyboard.Numeric, "Numeric");
 
         private IDictionary<string, string> _activeDictFile = ImmutableDictionary.Create<string, string>();
+
+        // Allow the view access to it.
+        internal IMessagingCenter MessagingCenter => _messagingCenter;
 
         private string _codeText;
         public string CodeText
@@ -76,7 +81,7 @@ namespace Codeco.CrossPlatform.ViewModels
         public ObservableCollection<NamedKeyboard> AvailableKeyboards { get; } = new ObservableCollection<NamedKeyboard>();
 
         private ReadOnlyObservableCollection<SimpleFileInfoViewModel> _files;
-        public ReadOnlyObservableCollection<SimpleFileInfoViewModel> Files => _files;        
+        public ReadOnlyObservableCollection<SimpleFileInfoViewModel> Files => _files;
 
         private RelayCommand _copyCodeTextCommand;
         public RelayCommand CopyCodeTextCommand => _copyCodeTextCommand ?? (_copyCodeTextCommand = new RelayCommand(CopyCodeText));
@@ -94,33 +99,35 @@ namespace Codeco.CrossPlatform.ViewModels
         public RelayCommand<SimpleFileInfoViewModel> SwitchItemLocationCommand => _switchItemLocationCommand ?? (_switchItemLocationCommand = new RelayCommand<SimpleFileInfoViewModel>(SwitchItemLocation));
 
         private RelayCommand<SimpleFileInfoViewModel> _setActiveFileCommand;
-        public RelayCommand<SimpleFileInfoViewModel> SetActiveFileCommand => _setActiveFileCommand ?? (_setActiveFileCommand = new RelayCommand<SimpleFileInfoViewModel>(SetActiveFile));        
+        public RelayCommand<SimpleFileInfoViewModel> SetActiveFileCommand => _setActiveFileCommand ?? (_setActiveFileCommand = new RelayCommand<SimpleFileInfoViewModel>(SetActiveFile));
 
         public MainViewModel(INavigationService navService,
                              IUserDialogs userDialogs,
                              IUserFileService userFileService,
-                             IClipboard clipboard) // remove this once we have the remote stuff all set up
+                             IClipboard clipboard,
+                             IMessagingCenter messagingCenter)
             : base(navService)
         {
             _userDialogs = userDialogs;
             _userFileService = userFileService;
             _clipboard = clipboard;
+            _messagingCenter = messagingCenter;
 
             AvailableKeyboards.Add(_defaultKeyboard);
-            AvailableKeyboards.Add(_numericKeyboard);            
+            AvailableKeyboards.Add(_numericKeyboard);
         }
 
         public override Task Activated(NavigationType navType)
         {
             if (_files == null)
             {
-                _userFileService.FilesList                    
-                         .Connect()       
-                         .Sort(SortExpressionComparer<SimpleFileInfoViewModel>
-                            .Descending(x => x.FileLocation)
-                            .ThenByAscending(x => x.Name))
-                         .Bind(out _files)
-                         .Subscribe();
+                _userFileService.FilesList
+                    .Connect()
+                    .Sort(SortExpressionComparer<SimpleFileInfoViewModel>
+                        .Descending(x => x.FileLocation)
+                        .ThenByAscending(x => x.Name)
+                    ).Bind(out _files)
+                    .Subscribe();
 
                 RaisePropertyChanged(nameof(Files));
             }
@@ -145,31 +152,6 @@ namespace Codeco.CrossPlatform.ViewModels
             {
                 CodeText = "";
             }
-        }
-
-        private async Task<string> GetPassword()
-        {
-            var result = await _userDialogs.PromptAsync(new PromptConfig
-            {
-                CancelText = "Cancel",
-                InputType = InputType.Default,
-                IsCancellable = true,
-                Message = "Password",
-                OkText = "Ok",
-                Title = "Enter password",
-                OnTextChanged = args =>
-                {
-                    args.IsValid = !String.IsNullOrWhiteSpace(args.Value);
-                },
-
-            });
-
-            if (result.Ok)
-            {
-                return result.Value;
-            }
-
-            return null;
         }
 
         private async void AddFile()
@@ -243,13 +225,12 @@ namespace Codeco.CrossPlatform.ViewModels
             ActiveFileName = obj.Name;
 
             // Switch active tab to "Active File" tab
-            // No mechanism to do this yet. Maybe use MVVM Light's Messenger
-
+            _messagingCenter.Send(this, nameof(FileSetActiveMessage));
         }
 
         private void CopyCodeText()
         {
-            _clipboard.SetText(CodeText);            
+            _clipboard.SetText(CodeText);
         }
 
         private async void RenameItem(SimpleFileInfoViewModel obj)
@@ -268,7 +249,7 @@ namespace Codeco.CrossPlatform.ViewModels
             if (promptResult.Ok)
             {
                 await _userFileService.RenameUserFile(obj.Name, obj.FileLocation, promptResult.Value);
-            }            
+            }
         }
 
         private void DeleteItem(SimpleFileInfoViewModel obj)

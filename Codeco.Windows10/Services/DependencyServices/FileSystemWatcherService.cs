@@ -21,22 +21,30 @@ namespace Codeco.Windows10.Services.DependencyServices
                     .SelectMany(fileEvents => fileEvents));
         }
 
-        private IObservable<FileChangedEvent>[] CreateFileSystemWatcherSources(FileSystemWatcher fileWatcher)
+        private IObservable<FileChangedEvent>[] CreateFileSystemWatcherSources(FileSystemWatcher watcher)
         {
             return new[] {
-                Observable.FromEventPattern<FileSystemEventArgs>(fileWatcher, nameof(FileSystemWatcher.Changed))
-                    .Select(ev => new FileChangedEvent(ev.EventArgs))
-                    // FileChanges seem to fire multiple events. Ignore them from the same file for 30ms after the first change. That seems to be good enough to block duplicates.
-                    .DistinctUntilTimeout(TimeSpan.FromMilliseconds(30), new FileChangedEqualityComparer()),
+                Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(
+                    h => watcher.Changed += h,
+                    h => watcher.Changed -= h
+                    ).Select(ev => new FileChangedEvent(ev.EventArgs))
+                        // FileChanges seem to fire multiple events. Ignore them from the same file for 30ms after the first change. That seems to be good enough to block duplicates.
+                        .DistinctUntilTimeout(TimeSpan.FromMilliseconds(30), new FileChangedEqualityComparer()),
 
-                Observable.FromEventPattern<FileSystemEventArgs>(fileWatcher, nameof(FileSystemWatcher.Created))
-                    .Select(ev => new FileChangedEvent(ev.EventArgs)),
+                 Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(
+                    h => watcher.Created += h,
+                    h => watcher.Created -= h
+                    ).Select(ev => new FileChangedEvent(ev.EventArgs)),
 
-                Observable.FromEventPattern<FileSystemEventArgs>(fileWatcher, nameof(FileSystemWatcher.Deleted))
-                    .Select(ev => new FileChangedEvent(ev.EventArgs)),
+                 Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(
+                    h => watcher.Deleted += h,
+                    h => watcher.Deleted -= h
+                    ).Select(ev => new FileChangedEvent(ev.EventArgs)),
 
-                Observable.FromEventPattern<RenamedEventArgs>(fileWatcher, nameof(FileSystemWatcher.Renamed))
-                    .Select(ev => new FileChangedEvent(ev.EventArgs))
+                Observable.FromEventPattern<RenamedEventHandler, RenamedEventArgs>(
+                    h => watcher.Renamed += h,
+                    h => watcher.Renamed -= h
+                    ).Select(ev => new FileChangedEvent(ev.EventArgs)),
             };
         }
 
